@@ -1,5 +1,19 @@
 import { describe, expect, it } from 'vitest'
-import { crearEstrellas, limitesCamara, resumirCuadros } from './espacio'
+import { crearEstrellas, crearSol, limitesCamara, resumirCuadros } from './espacio'
+
+describe('crearSol', () => {
+  it('el foco cuelga entre el zoom máximo y el plano lejano, delante de las estrellas', () => {
+    const limites = limitesCamara(1, 0.16)
+    const sol = crearSol(limites, limites.lejos * 0.5)
+    expect(Math.hypot(...sol.direccion)).toBeCloseTo(1, 6)
+    expect(sol.distancia - sol.radioBulbo * 3).toBeGreaterThan(limites.distanciaMax)
+    expect(sol.distancia + sol.radioBulbo * 3).toBeLessThan(limites.lejos * 0.5)
+  })
+
+  it('si no cabe, lo dice en vez de quedar dentro del zoom', () => {
+    expect(() => crearSol(limitesCamara(1, 0.16), 10)).toThrow(RangeError)
+  })
+})
 
 describe('resumirCuadros', () => {
   it('sin marcas o con una sola no hay medición', () => {

@@ -71,3 +71,27 @@ function redondear(valor: number, decimales: number): number {
   const f = 10 ** decimales
   return Math.round(valor * f) / f
 }
+
+export interface Sol {
+  /** Hacia dónde está el foco, visto desde el centro del planeta (unitario). */
+  direccion: [number, number, number]
+  /** A qué distancia del centro cuelga, en radios del planeta. */
+  distancia: number
+  /** Radio del bulbo de vidrio, en radios del planeta. */
+  radioBulbo: number
+}
+
+/**
+ * El Sol es un foco gigante (D-19): lejos del zoom máximo, delante de las estrellas y dentro
+ * del plano de recorte lejano. De él sale toda la luz directa del planeta.
+ */
+export function crearSol(limites: LimitesCamara, radioEstrellasMin: number): Sol {
+  const d = [5, 2, 3]
+  const l = Math.hypot(d[0], d[1], d[2])
+  const distancia = Math.min(45, radioEstrellasMin * 0.75)
+  const radioBulbo = distancia * 0.07
+  if (distancia - radioBulbo * 3 <= limites.distanciaMax || distancia + radioBulbo * 3 >= limites.lejos) {
+    throw new RangeError('sol: no cabe entre el zoom máximo y el plano lejano')
+  }
+  return { direccion: [d[0] / l, d[1] / l, d[2] / l], distancia, radioBulbo }
+}

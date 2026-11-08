@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { DIAMANTE, HONGO } from './continentes'
+import { puntoDesdeCoordenadas } from './hoja'
 import {
+  ARISTA_PABELLON,
   colorHoja,
   colorPorAltura,
   crearDatosPlaneta,
@@ -8,7 +11,12 @@ import {
   LIMITE_SUBDIVISIONES,
   OPCIONES_PLANETA,
   radioDelPunto,
+  ROCA_MINERALES,
+  TIERRA_FACETA,
+  TIERRA_TALLO,
+  VERDE_FACETA,
   VERDE_NERVADURA,
+  VETA_ORO,
 } from './planeta'
 import { crearAleatorio, crearRuido3D, fbm } from './ruido'
 
@@ -103,19 +111,21 @@ describe('crearDatosPlaneta', () => {
   it('es determinista y tiene mar y tierra', () => {
     const a = crearDatosPlaneta(opciones), b = crearDatosPlaneta(opciones)
     expect(a.posiciones).toEqual(b.posiciones)
-    expect(a.fraccionOceano).toBeGreaterThan(0.2)
-    expect(a.fraccionOceano).toBeLessThan(0.8)
+    expect(a.fraccionOceano).toBeGreaterThan(0.5)
+    expect(a.fraccionOceano).toBeLessThan(0.95)
   })
 
   it('las opciones por defecto caben en el presupuesto de la vista espacial', () => {
     expect(20 * 4 ** OPCIONES_PLANETA.subdivisiones).toBeLessThanOrEqual(100_000)
   })
 
-  it('con la resolución por defecto la hoja existe y no se come el planeta', () => {
+  it('con la resolución por defecto los tres continentes existen y no se comen el planeta', () => {
     const datos = crearDatosPlaneta(OPCIONES_PLANETA)
-    expect(datos.fraccionHoja).toBeGreaterThan(0.01)
-    expect(datos.fraccionHoja).toBeLessThan(0.15)
-    expect(datos.fraccionOceano).toBeGreaterThan(0.4)
+    for (const fraccion of Object.values(datos.fraccionContinente)) {
+      expect(fraccion).toBeGreaterThan(0.01)
+      expect(fraccion).toBeLessThan(0.15)
+    }
+    expect(datos.fraccionOceano).toBeGreaterThan(0.6)
   })
 })
 
@@ -130,14 +140,39 @@ describe('relieve y radio', () => {
   it('la nervadura de la hoja está sobre el mar y alrededor de la hoja hay mar', () => {
     const relieve = crearRelieve(OPCIONES_PLANETA)
     const nervadura = relieve([0, Math.sin(0.4), Math.cos(0.4)])
-    expect(nervadura.hoja).not.toBeNull()
+    expect(nervadura.continente).toBe('hoja')
     expect(nervadura.altura).toBeGreaterThan(OPCIONES_PLANETA.nivelMar)
     // Entre dos folíolos, cerca del centro de la hoja: mar.
     // A 15.5° del eje (entre 0° y 31°) y 0.7 rad de la base, por el mismo mapeo que hoja.test.ts.
     const a = (15.5 * Math.PI) / 180, d = 0.7, s = Math.sin(d) / d
     const hueco = relieve([Math.sin(a) * d * s, Math.cos(a) * d * s, Math.cos(d)])
-    expect(hueco.hoja).toBeNull()
+    expect(hueco.continente).toBeNull()
     expect(hueco.altura).toBeLessThan(OPCIONES_PLANETA.nivelMar)
+  })
+
+  it('fuera de los tres continentes todo es mar: sin islas', () => {
+    const relieve = crearRelieve(OPCIONES_PLANETA)
+    const aleatorio = crearAleatorio(11)
+    for (let i = 0; i < 3000; i++) {
+      const z = aleatorio() * 2 - 1, a = aleatorio() * Math.PI * 2, r = Math.sqrt(1 - z * z)
+      const punto = relieve([Math.cos(a) * r, Math.sin(a) * r, z])
+      if (punto.continente === null) expect(punto.altura).toBeLessThan(OPCIONES_PLANETA.nivelMar)
+      else expect(punto.altura).toBeGreaterThan(OPCIONES_PLANETA.nivelMar)
+    }
+  })
+
+  it('el hongo es verde y tierra; la corona del diamante, minerales con vetas de oro', () => {
+    const relieve = crearRelieve(OPCIONES_PLANETA)
+    const sombrero = relieve(puntoDesdeCoordenadas(0.15, 0.3, HONGO))
+    expect(sombrero.continente).toBe('hongo')
+    expect(sombrero.color![1]).toBeGreaterThan(sombrero.color![0]) // verde
+    expect(relieve(puntoDesdeCoordenadas(0, -0.25, HONGO)).color).toEqual(TIERRA_TALLO)
+    const corona = relieve(puntoDesdeCoordenadas(0.05, 0.3, DIAMANTE))
+    expect(corona.minerales).toBe(true)
+    expect([ROCA_MINERALES, VETA_ORO]).toContainEqual(corona.color)
+    const pabellon = relieve(puntoDesdeCoordenadas(0.05, -0.2, DIAMANTE))
+    expect(pabellon.minerales).toBe(false)
+    expect([VERDE_FACETA, TIERRA_FACETA, ARISTA_PABELLON]).toContainEqual(pabellon.color)
   })
 
   it('colorHoja: sobre la nervadura es verde claro y en el borde, oscuro', () => {

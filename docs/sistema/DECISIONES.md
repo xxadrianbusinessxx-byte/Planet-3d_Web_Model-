@@ -94,7 +94,7 @@ Formato:
 - **Por qué:** consistencia con los otros proyectos; un HTML en blanco en una presentación no
   dice qué pasó.
 
-## D-10 · Temática: un planeta inventado y cómico
+## D-10 · Temática: un planeta inventado y cómico — **en parte reemplazada por D-19** (continentes, gomitas)
 - 2026-11-08 · persona
 - **Decisión:** el planeta es **ficticio y de entretenimiento** (no lleva información delicada
   ni sensible). Todo se inventa: países, transporte, población, flora, fauna y clima. Vista
@@ -204,3 +204,21 @@ Formato:
 - **Riesgo aceptado:** la fusión final puede traer conflictos grandes. Se achica si
   `colaborativa` trae lo nuevo de `main` al empezar cada tarea (recomendado en COLABORAR §3).
 - **Revisar cuando:** la fusión final se vea demasiado grande, o se sume un tercer trabajador.
+
+## D-19 · Decoración espacial: foco-Sol, nubes rosas y verdes, hongo y diamante con minerales
+- 2026-11-08 · persona
+- **Decisión:** reemplaza de D-10 los «2–3 continentes de forma libre» y las gomitas. Los
+  continentes son **solo tres**: la hoja, uno con **forma de hongo** y otro con **forma de
+  diamante de joyería** (gema tallada: corona arriba, punta abajo, facetas marcadas), los dos
+  de **verde y tierra**; fuera de ellos todo es mar, sin islas. La **corona del diamante** es
+  la zona de **minerales raros y caros**: roca oscura con vetas de oro y un campo de
+  **cristales que sobresalen** (amatista, rubí, turquesa, oro, zafiro) con un resplandor.
+  **Sin gomitas.** **Nubes rosas y verdes** low-poly que flotan y van a la deriva (giran más
+  lento que el planeta). El **Sol es un foco (bombilla) gigante** colgado en el espacio, con
+  rosca, filamento y halo; de él sale la luz directa. Siguen la bebida azul y los anillos rosas.
+- **Alternativas:** Sol como estrella brillante; diamante en rombo (◆); minerales pintados en
+  el suelo sin piezas; nubes quietas pegadas al planeta.
+- **Por qué:** más decoración y más chiste (D-10) sin perder fps; los cristales y las nubes van
+  instanciados (una llamada de dibujo cada uno).
+- **Revisar cuando:** la sección clima (F2) haga su propio cielo: las nubes de aquí son
+  decoración de la vista espacial, no el clima.

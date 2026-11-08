@@ -1,7 +1,8 @@
-// Geometría del planeta low-poly: icosfera + relieve (hoja, continentes, fondo marino) + un
-// color plano por cara. Código puro (docs/perfil/ORDEN.md §2): devuelve arreglos; src/mundo/
-// los vuelve malla. La temática está en D-10.
-import { distanciaAlCentroHoja, HOJA, medidaHoja, type Hoja, type Vec3 } from './hoja'
+// Geometría del planeta low-poly: icosfera + relieve (los tres continentes con forma y el
+// fondo marino) + un color plano por cara. Código puro (docs/perfil/ORDEN.md §2): devuelve
+// arreglos; src/mundo/ los vuelve malla. La temática está en D-10 y D-19.
+import { DIAMANTE, HONGO, medidaDiamante, medidaHongo, type Diamante, type Hongo } from './continentes'
+import { HOJA, medidaHoja, type Hoja, type Vec3 } from './hoja'
 import { crearRuido3D, fbm } from './ruido'
 
 export interface OpcionesPlaneta {
@@ -17,10 +18,10 @@ export interface OpcionesPlaneta {
   profundidadMar: number
   frecuencia: number
   octavas: number
-  /** El continente principal. */
+  /** Los únicos tres continentes (D-19): fuera de ellos todo es mar. */
   hoja: Hoja
-  /** Radio (rad) alrededor del centro de la hoja donde no nacen otros continentes. */
-  marAlrededorHoja: number
+  hongo: Hongo
+  diamante: Diamante
 }
 
 export const OPCIONES_PLANETA: OpcionesPlaneta = {
@@ -34,7 +35,8 @@ export const OPCIONES_PLANETA: OpcionesPlaneta = {
   frecuencia: 1.8,
   octavas: 4,
   hoja: HOJA,
-  marAlrededorHoja: 1.35,
+  hongo: HONGO,
+  diamante: DIAMANTE,
 }
 
 export const LIMITE_SUBDIVISIONES = 7
@@ -97,7 +99,7 @@ export function crearIcosfera(subdivisiones: number): Icosfera {
 
 export type Color = [number, number, number]
 
-/** Paleta de los continentes libres por altura. La altura va en [-1, 1], igual que el nivel del mar. */
+/** Paleta por altura (el fondo marino; la tierra sin forma). La altura va en [-1, 1], igual que el nivel del mar. */
 export function colorPorAltura(altura: number, nivelMar: number): Color {
   if (altura < nivelMar) {
     // Fondo marino: se ve a través de la bebida azul (src/mundo/), más oscuro cuanto más hondo.
@@ -123,15 +125,32 @@ export function colorHoja(nervadura: number): Color {
   return mezclarColor(VERDE_HOJA_BORDE, VERDE_HOJA_CENTRO, Math.min(1, nervadura / 0.82))
 }
 
+// Hongo y diamante: verde y tierra (D-19); la corona del diamante, roca de minerales raros.
+export const VERDE_SOMBRERO: Color = [0.2, 0.55, 0.22]
+export const VERDE_SOMBRERO_CIMA: Color = [0.42, 0.72, 0.3]
+export const TIERRA_MANCHA: Color = [0.82, 0.7, 0.48]
+export const TIERRA_TALLO: Color = [0.56, 0.4, 0.25]
+export const VERDE_FACETA: Color = [0.3, 0.64, 0.26]
+export const TIERRA_FACETA: Color = [0.62, 0.46, 0.28]
+export const ARISTA_PABELLON: Color = [0.78, 0.9, 0.5]
+export const ROCA_MINERALES: Color = [0.3, 0.2, 0.4]
+export const VETA_ORO: Color = [1, 0.8, 0.25]
+
 function mezclarColor(a: Color, b: Color, t: number): Color {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
 }
 
+export type Continente = 'hoja' | 'hongo' | 'diamante'
+
 export interface PuntoRelieve {
   /** En [-1, 1]; debajo de nivelMar es mar. */
   altura: number
-  /** null fuera de la hoja; dentro, cercanía a la nervadura en (0, 1]. */
-  hoja: number | null
+  /** null en el mar; si no, en cuál de los tres continentes cae. */
+  continente: Continente | null
+  /** Color de la tierra en ese punto (null en el mar: lo pone colorPorAltura). */
+  color: Color | null
+  /** true en la corona del diamante, la zona de minerales raros. */
+  minerales: boolean
 }
 
 export type Relieve = (p: Vec3) => PuntoRelieve
@@ -140,17 +159,41 @@ export type Relieve = (p: Vec3) => PuntoRelieve
 export function crearRelieve(opciones: OpcionesPlaneta = OPCIONES_PLANETA): Relieve {
   const ruido = crearRuido3D(opciones.semilla)
   const f = opciones.frecuencia
+  const suelo = opciones.nivelMar + 0.05
   return (p) => {
     const detalle = fbm(ruido, p[0] * f, p[1] * f, p[2] * f, opciones.octavas)
     const enHoja = medidaHoja(p, opciones.hoja)
     if (enHoja !== null) {
       // La hoja se levanta sobre el mar y sus nervaduras son crestas.
-      return { altura: opciones.nivelMar + 0.05 + 0.2 * enHoja * enHoja + 0.04 * detalle, hoja: enHoja }
+      const altura = suelo + 0.2 * enHoja * enHoja + 0.04 * detalle
+      return { altura, continente: 'hoja', color: colorHoja(enHoja), minerales: false }
     }
-    // Lejos de la hoja nacen los otros continentes; cerca, mar abierto para que se lea su forma.
-    const cerca = distanciaAlCentroHoja(p, opciones.hoja)
-    const penalidad = cerca < opciones.marAlrededorHoja ? 0.6 * (1 - cerca / opciones.marAlrededorHoja) : 0
-    return { altura: detalle - penalidad, hoja: null }
+    const hongo = medidaHongo(p, opciones.hongo)
+    if (hongo !== null) {
+      if (hongo.parte === 'tallo') {
+        const altura = suelo + 0.04 + 0.05 * hongo.m + 0.02 * detalle
+        return { altura, continente: 'hongo', color: TIERRA_TALLO, minerales: false }
+      }
+      // El sombrero es una loma: más alta y más clara hacia la cima.
+      const altura = suelo + 0.22 * Math.pow(hongo.m, 0.7) + 0.03 * detalle
+      const color = hongo.parte === 'mancha' ? TIERRA_MANCHA : mezclarColor(VERDE_SOMBRERO, VERDE_SOMBRERO_CIMA, hongo.m)
+      return { altura, continente: 'hongo', color, minerales: false }
+    }
+    const diamante = medidaDiamante(p, opciones.diamante)
+    if (diamante !== null) {
+      if (diamante.parte === 'corona') {
+        // Meseta de roca oscura con vetas de oro en las aristas: los minerales raros.
+        const altura = suelo + 0.15 + (diamante.enArista ? 0.03 : 0) + 0.02 * detalle
+        return { altura, continente: 'diamante', color: diamante.enArista ? VETA_ORO : ROCA_MINERALES, minerales: true }
+      }
+      // Pabellón: facetas que alternan verde y tierra, más altas hacia el eje.
+      const altura = suelo + 0.04 + 0.1 * diamante.m + (diamante.enArista ? 0.025 : 0) + 0.015 * detalle
+      const color = diamante.enArista ? ARISTA_PABELLON : diamante.faceta % 2 === 0 ? VERDE_FACETA : TIERRA_FACETA
+      return { altura, continente: 'diamante', color, minerales: false }
+    }
+    // Fuera de los tres continentes, solo fondo marino: nunca sale sobre la bebida.
+    const fondo = Math.min(opciones.nivelMar - 0.03, -0.2 + 0.5 * detalle)
+    return { altura: fondo, continente: null, color: null, minerales: false }
   }
 }
 
@@ -171,8 +214,8 @@ export interface DatosPlaneta {
   triangulos: number
   /** Fracción de caras bajo el mar, en [0, 1]. */
   fraccionOceano: number
-  /** Fracción de caras que son hoja, en [0, 1]. */
-  fraccionHoja: number
+  /** Fracción de caras de cada continente, en [0, 1]. */
+  fraccionContinente: Record<Continente, number>
 }
 
 /** Calcula el planeta completo. No toca three: src/mundo/ lo convierte en BufferGeometry. */
@@ -182,40 +225,46 @@ export function crearDatosPlaneta(opciones: OpcionesPlaneta = OPCIONES_PLANETA):
 
   const n = vertices.length / 3
   const alturas = new Float32Array(n)
-  const hojas = new Float32Array(n)
-  for (let i = 0; i < n; i++) {
-    const r = relieve([vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]])
-    alturas[i] = r.altura
-    hojas[i] = r.hoja ?? 0
-  }
+  for (let i = 0; i < n; i++) alturas[i] = relieve([vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]]).altura
 
   const triangulos = caras.length / 3
   const posiciones = new Float32Array(caras.length * 3)
   const colores = new Float32Array(caras.length * 3)
+  const conteo: Record<Continente, number> = { hoja: 0, hongo: 0, diamante: 0 }
   let bajoMar = 0
-  let deHoja = 0
   for (let c = 0; c < triangulos; c++) {
-    let suma = 0, sumaHoja = 0, verticesHoja = 0
+    let suma = 0
+    const centro: Vec3 = [0, 0, 0]
     for (let k = 0; k < 3; k++) {
       const v = caras[c * 3 + k]
       const r = radioDelPunto(alturas[v], opciones)
       posiciones.set([vertices[v * 3] * r, vertices[v * 3 + 1] * r, vertices[v * 3 + 2] * r], (c * 3 + k) * 3)
       suma += alturas[v]
-      if (hojas[v] > 0) {
-        verticesHoja++
-        sumaHoja += hojas[v]
-      }
+      for (let e = 0; e < 3; e++) centro[e] += vertices[v * 3 + e]
     }
+    // El color de la cara se decide en su centro: así las siluetas y sus aristas salen nítidas.
+    const largo = Math.hypot(...centro)
+    const enCentro = relieve([centro[0] / largo, centro[1] / largo, centro[2] / largo])
     const media = suma / 3
     let color: Color
-    if (verticesHoja >= 2) {
-      deHoja++
-      color = colorHoja(sumaHoja / verticesHoja)
+    if (enCentro.continente !== null && enCentro.color !== null) {
+      conteo[enCentro.continente]++
+      color = enCentro.color
     } else {
       if (media < opciones.nivelMar) bajoMar++
       color = colorPorAltura(media, opciones.nivelMar)
     }
     for (let k = 0; k < 3; k++) colores.set(color, (c * 3 + k) * 3)
   }
-  return { posiciones, colores, triangulos, fraccionOceano: bajoMar / triangulos, fraccionHoja: deHoja / triangulos }
+  return {
+    posiciones,
+    colores,
+    triangulos,
+    fraccionOceano: bajoMar / triangulos,
+    fraccionContinente: {
+      hoja: conteo.hoja / triangulos,
+      hongo: conteo.hongo / triangulos,
+      diamante: conteo.diamante / triangulos,
+    },
+  }
 }

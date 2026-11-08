@@ -13,7 +13,7 @@
   "estado": "arrancado",
   "arrancado_el": "2026-11-08",
   "nombre": "Planeta 3D",
-  "descripcion": "Web local con Three.js que simula un planeta inventado y cómico (D-10: continente con forma de hoja, mar de bebida azul con gomitas, anillos rosas) por secciones —vista espacial, ciudades, transporte y personas—, todo desde cero. Nació como maqueta escolar y ahora es un banco de pruebas de modelos 3D en la web: planeta, terreno, ciudades y calles generados por código; piezas sueltas (personas, vehículos, edificios icónicos) generadas con IA y optimizadas. Se entrega como un solo HTML que abre con doble clic en cualquier PC, sin internet.",
+  "descripcion": "Web local con Three.js que simula un planeta inventado y cómico (D-10: continentes con forma de hoja, hongo y diamante con minerales raros, mar de bebida azul, anillos rosas, nubes rosas y verdes y un foco gigante de Sol; D-19) por secciones —vista espacial, ciudades, transporte y personas—, todo desde cero. Nació como maqueta escolar y ahora es un banco de pruebas de modelos 3D en la web: planeta, terreno, ciudades y calles generados por código; piezas sueltas (personas, vehículos, edificios icónicos) generadas con IA y optimizadas. Se entrega como un solo HTML que abre con doble clic en cualquier PC, sin internet.",
   "criterio_de_exito": "El HTML portátil abre con doble clic en otra PC sin internet ni instalación y muestra el planeta low-poly con cámara orbital y zoom, a 30 fps o más en esta laptop (Intel UHD) y con carga de menos de 5 s.",
   "contexto": {
     "tipo": "personal",

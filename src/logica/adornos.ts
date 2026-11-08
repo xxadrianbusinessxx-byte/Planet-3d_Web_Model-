@@ -1,6 +1,6 @@
-// Anillos rosas y gomitas flotando en la bebida (D-10). Código puro: devuelve arreglos.
+// Adornos de la vista espacial: anillos rosas (D-10), nubes rosas y verdes y cristales de
+// minerales raros (D-19). Código puro: devuelve arreglos; src/mundo/ los vuelve mallas.
 import type { Vec3 } from './hoja'
-import type { Relieve } from './planeta'
 import { crearAleatorio } from './ruido'
 
 export interface Anillos {
@@ -39,57 +39,170 @@ export function bandasAnillos(semilla: number, muestras: number): Uint8Array {
   return salida
 }
 
-export interface Gomitas {
-  /** Posición de cada gomita, sobre la superficie de la bebida. */
+// ── Nubes ─────────────────────────────────────────────────────────────────────────────────
+
+export interface Nubes {
+  /** Centro de cada bolita de nube (varias bolitas forman una nube). */
   posiciones: Float32Array
-  /** Normal de la superficie en cada gomita (para pararla derecha). */
-  normales: Float32Array
-  /** Giro alrededor de su normal, en radianes. */
+  /** Radio de cada bolita. */
+  radios: Float32Array
+  /** Color RGB 0–1 de cada bolita (todas las de una nube, del mismo color). */
+  colores: Float32Array
+  /** Cuántas bolitas y cuántas nubes. */
+  cantidad: number
+  nubes: number
+}
+
+export const COLORES_NUBES: [number, number, number][] = [
+  [1, 0.72, 0.87], [1, 0.58, 0.8], // rosas
+  [0.66, 0.96, 0.72], [0.5, 0.88, 0.62], // verdes
+]
+
+export interface OpcionesNubes {
+  /** Distancia al centro del planeta: entre las cimas y el halo de atmósfera. */
+  alturaMin: number
+  alturaMax: number
+  bolitasMin: number
+  bolitasMax: number
+  /** Radio de cada bolita, en unidades del planeta. */
+  radioMin: number
+  radioMax: number
+}
+
+export const OPCIONES_NUBES: OpcionesNubes = {
+  alturaMin: 1.075,
+  alturaMax: 1.095,
+  bolitasMin: 4,
+  bolitasMax: 7,
+  radioMin: 0.028,
+  radioMax: 0.055,
+}
+
+/**
+ * Nubes de bolitas repartidas al azar (con semilla) alrededor del planeta. Cada nube es una
+ * fila corta de bolitas sobre el plano tangente, más grandes al centro; mitad rosas y mitad verdes.
+ */
+export function crearNubes(semilla: number, cantidad: number, o: OpcionesNubes = OPCIONES_NUBES): Nubes {
+  if (!Number.isInteger(cantidad) || cantidad < 0) throw new RangeError('nubes: cantidad entera ≥ 0')
+  if (o.alturaMin <= 0 || o.alturaMax < o.alturaMin || o.bolitasMin < 1 || o.bolitasMax < o.bolitasMin) {
+    throw new RangeError('nubes: opciones fuera de rango')
+  }
+  const aleatorio = crearAleatorio(semilla)
+  const posiciones: number[] = [], radios: number[] = [], colores: number[] = []
+  for (let n = 0; n < cantidad; n++) {
+    const p = direccionAlAzar(aleatorio)
+    const [e1, e2] = tangentes(p)
+    const angulo = aleatorio() * Math.PI * 2
+    const eje: Vec3 = sumar(escalar(e1, Math.cos(angulo)), escalar(e2, Math.sin(angulo)))
+    const altura = o.alturaMin + (o.alturaMax - o.alturaMin) * aleatorio()
+    const bolitas = o.bolitasMin + Math.floor(aleatorio() * (o.bolitasMax - o.bolitasMin + 1))
+    const color = COLORES_NUBES[n % 2 === 0 ? Math.floor(aleatorio() * 2) : 2 + Math.floor(aleatorio() * 2)]
+    const lado: Vec3 = cruz(p, eje)
+    for (let b = 0; b < bolitas; b++) {
+      const s = bolitas === 1 ? 0 : (b / (bolitas - 1)) * 2 - 1 // de -1 a 1 a lo largo de la nube
+      const radio = (o.radioMin + (o.radioMax - o.radioMin) * aleatorio()) * (1 - 0.4 * Math.abs(s))
+      // Bolitas encimadas (paso menor que su radio) y un poco corridas a los lados: un cúmulo.
+      const largo = escalar(eje, s * o.radioMax * (bolitas - 1) * 0.32)
+      const ancho = escalar(lado, (aleatorio() - 0.5) * o.radioMax * 0.9)
+      const centro = normalizar(sumar(p, sumar(largo, ancho)))
+      posiciones.push(...escalar(centro, altura))
+      radios.push(radio)
+      colores.push(...color)
+    }
+  }
+  return {
+    posiciones: Float32Array.from(posiciones),
+    radios: Float32Array.from(radios),
+    colores: Float32Array.from(colores),
+    cantidad: radios.length,
+    nubes: cantidad,
+  }
+}
+
+// ── Cristales de minerales raros ──────────────────────────────────────────────────────────
+
+export interface Cristales {
+  /** Pie de cada cristal, sobre el suelo. */
+  posiciones: Float32Array
+  /** Hacia dónde apunta cada cristal (la normal del suelo, un poco ladeada). */
+  direcciones: Float32Array
+  /** Alto de cada cristal, en unidades del planeta. */
+  altos: Float32Array
+  /** Giro alrededor de su eje, en radianes. */
   giros: Float32Array
-  /** Color RGB 0–1 de cada una. */
+  /** Color RGB 0–1 de cada uno. */
   colores: Float32Array
   cantidad: number
 }
 
-export const COLORES_GOMITAS: [number, number, number][] = [
-  [0.95, 0.15, 0.2], [1, 0.55, 0.1], [1, 0.88, 0.15], [0.3, 0.85, 0.25], [1, 0.4, 0.75], [0.6, 0.3, 0.95],
+/** Amatista, rubí, turquesa, oro y zafiro: lo raro y caro del universo. */
+export const COLORES_CRISTALES: [number, number, number][] = [
+  [0.7, 0.35, 1], [1, 0.16, 0.36], [0.2, 0.95, 0.9], [1, 0.82, 0.2], [0.3, 0.5, 1],
 ]
 
 /**
- * Reparte gomitas al azar (con semilla) solo donde hay mar, flotando a la altura de la bebida.
- * Intenta como máximo intentosPorGomita veces cada una: si hay poco mar, salen menos.
+ * Reparte cristales en una zona. muestrear convierte dos números de [0, 1) en un punto unitario
+ * de la zona (o null si cae fuera) y radioEn da el radio del suelo en ese punto. Intenta como
+ * máximo intentosPorCristal veces cada uno: si la zona es chica, salen menos.
  */
-export function crearGomitas(
+export function crearCristales(
   semilla: number,
   cantidad: number,
-  relieve: Relieve,
-  nivelMar: number,
-  radioBebida: number,
-  intentosPorGomita = 20,
-): Gomitas {
-  if (!Number.isInteger(cantidad) || cantidad < 0) throw new RangeError('gomitas: cantidad entera ≥ 0')
+  muestrear: (u: number, v: number) => Vec3 | null,
+  radioEn: (p: Vec3) => number,
+  altoMin = 0.012,
+  altoMax = 0.035,
+  intentosPorCristal = 20,
+): Cristales {
+  if (!Number.isInteger(cantidad) || cantidad < 0) throw new RangeError('cristales: cantidad entera ≥ 0')
+  if (altoMin <= 0 || altoMax < altoMin) throw new RangeError('cristales: 0 < altoMin ≤ altoMax')
   const aleatorio = crearAleatorio(semilla)
-  const posiciones: number[] = [], normales: number[] = [], giros: number[] = [], colores: number[] = []
-  let puestas = 0
-  for (let intento = 0; intento < cantidad * intentosPorGomita && puestas < cantidad; intento++) {
-    const z = aleatorio() * 2 - 1
-    const angulo = aleatorio() * Math.PI * 2
-    const anillo = Math.sqrt(1 - z * z)
-    const p: Vec3 = [Math.cos(angulo) * anillo, Math.sin(angulo) * anillo, z]
-    const punto = relieve(p)
-    // Solo mar abierto: un margen bajo el nivel para que no queden encalladas en la costa.
-    if (punto.hoja !== null || punto.altura > nivelMar - 0.05) continue
-    posiciones.push(p[0] * radioBebida, p[1] * radioBebida, p[2] * radioBebida)
-    normales.push(...p)
+  const posiciones: number[] = [], direcciones: number[] = [], altos: number[] = [], giros: number[] = []
+  const colores: number[] = []
+  let puestos = 0
+  for (let intento = 0; intento < cantidad * intentosPorCristal && puestos < cantidad; intento++) {
+    const p = muestrear(aleatorio(), aleatorio())
+    if (p === null) continue
+    // Se hunden un poco en el suelo para que no floten sobre las caras inclinadas.
+    posiciones.push(...escalar(p, radioEn(p) - 0.002))
+    const [e1, e2] = tangentes(p)
+    const ladeo = 0.35 * (aleatorio() - 0.5), ladeo2 = 0.35 * (aleatorio() - 0.5)
+    direcciones.push(...normalizar(sumar(p, sumar(escalar(e1, ladeo), escalar(e2, ladeo2)))))
+    altos.push(altoMin + (altoMax - altoMin) * aleatorio() ** 2)
     giros.push(aleatorio() * Math.PI * 2)
-    colores.push(...COLORES_GOMITAS[Math.floor(aleatorio() * COLORES_GOMITAS.length)])
-    puestas++
+    colores.push(...COLORES_CRISTALES[Math.floor(aleatorio() * COLORES_CRISTALES.length)])
+    puestos++
   }
   return {
     posiciones: Float32Array.from(posiciones),
-    normales: Float32Array.from(normales),
+    direcciones: Float32Array.from(direcciones),
+    altos: Float32Array.from(altos),
     giros: Float32Array.from(giros),
     colores: Float32Array.from(colores),
-    cantidad: puestas,
+    cantidad: puestos,
   }
+}
+
+// ── Vectores ──────────────────────────────────────────────────────────────────────────────
+
+function direccionAlAzar(aleatorio: () => number): Vec3 {
+  const z = aleatorio() * 2 - 1
+  const angulo = aleatorio() * Math.PI * 2
+  const anillo = Math.sqrt(1 - z * z)
+  return [Math.cos(angulo) * anillo, Math.sin(angulo) * anillo, z]
+}
+
+/** Dos direcciones perpendiculares entre sí y a p (unitario). */
+function tangentes(p: Vec3): [Vec3, Vec3] {
+  const otro: Vec3 = Math.abs(p[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0]
+  const e1 = normalizar(cruz(otro, p))
+  return [e1, cruz(p, e1)]
+}
+
+const escalar = (a: Vec3, k: number): Vec3 => [a[0] * k, a[1] * k, a[2] * k]
+const sumar = (a: Vec3, b: Vec3): Vec3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
+const cruz = (a: Vec3, b: Vec3): Vec3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+function normalizar(a: Vec3): Vec3 {
+  const l = Math.hypot(...a)
+  return [a[0] / l, a[1] / l, a[2] / l]
 }

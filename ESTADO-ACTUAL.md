@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-08 (cierre de F1; el proyecto pasa a F2)
+- **Última revisión:** 2026-11-08 (decoración de la vista espacial, D-19)
 
 ---
 
@@ -12,7 +12,7 @@ Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO
 
 **Planeta 3D** (`proyecto.json` tiene la descripción y el criterio de éxito): web local con
 Three.js que simula un planeta por secciones —vista espacial, ciudades, transporte, personas—,
-todo inventado y en tono cómico (D-10). Proyecto personal (antes maqueta escolar), entrega de la vista espacial el
+todo inventado y en tono cómico (D-10, D-19). Proyecto personal (antes maqueta escolar), entrega de la vista espacial el
 2026-11-09. **F1 está cerrada desde el 2026-11-08** (criterio de éxito cumplido en esta
 laptop; falta la prueba en otra PC, F4); fase actual F2. Se entrega como **un solo HTML** que abre con doble clic en cualquier PC sin
 internet (D-07). Perfil `base`, llenado en el arranque para escena 3D web (`docs/perfil/`).
@@ -54,9 +54,9 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 
 | Qué | Cómo se comprueba | Medición |
 |---|---|---|
-| Vista espacial con la temática de D-10: continente-hoja de 7 folíolos con nervaduras, 2–3 continentes más e islas, bebida azul translúcida con 700 ositos de gomita instanciados, anillos rosas, halo de atmósfera y 2 500 estrellas (icosfera de 81 920 caras; ~209 000 triángulos en pantalla); cámara orbital con zoom acotado; tecla F oculta el texto de fps | `npm test` (39 pruebas de la lógica) | — |
-| HTML portátil: un solo `dist/index.html` de 0,56 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_1451_rendimiento.json` |
-| 75 fps (tope de la pantalla) y carga de 0,27 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-08_1451_rendimiento.json` |
+| Vista espacial con la temática de D-10 y D-19: solo tres continentes —hoja de 7 folíolos con nervaduras, hongo (sombrero verde con manchas de tierra y tallo) y diamante tallado (pabellón de facetas verde y tierra; corona de minerales con vetas de oro y 320 cristales de gema instanciados y un resplandor)—, bebida azul translúcida sin islas, 26 nubes rosas y verdes que van a la deriva, anillos rosas, halo de atmósfera, 2 500 estrellas y el Sol como foco gigante del que sale la luz (icosfera de 81 920 caras; ~121 000 triángulos en pantalla); cámara orbital con zoom acotado; tecla F oculta el texto de fps | `npm test` (55 pruebas de la lógica) | — |
+| HTML portátil: un solo `dist/index.html` de 0,58 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_1527_rendimiento.json` |
+| 75 fps (tope de la pantalla) y carga de 0,40 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-08_1527_rendimiento.json` |
 | Ante un error (sin WebGL, fallo en el bucle) la página muestra un aviso en vez de quedar en blanco (D-09) | revisión; no hay prueba automática del caso sin WebGL | — |
 
 ## 5. Deudas vivas

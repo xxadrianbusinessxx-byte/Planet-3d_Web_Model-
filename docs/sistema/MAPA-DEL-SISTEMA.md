@@ -9,4 +9,6 @@ conforme se construye el sistema; cada fila nace del primer fallo real de ese ti
 | la página queda en blanco o muestra el aviso | `src/main.ts`, `src/mundo/navegador.ts` | `npm run probar`: imprime el aviso y los errores de consola |
 | el planeta se ve distinto sin haber tocado su código | `src/logica/planeta.ts` (`OPCIONES_PLANETA`), `src/logica/ruido.ts` | `npm test`: «es determinista» |
 | la hoja se ve deforme o con huecos | `src/logica/hoja.ts` (`HOJA`, `FOLIOLOS_HOJA`); `subdivisiones` en `planeta.ts` | `npm test`: pruebas de `hoja.test.ts` |
-| gomitas encima de la tierra o anillos de frente | `src/logica/adornos.ts` (`crearGomitas`, `ANILLOS.inclinacion`) | `npm test`: «todas flotan sobre la bebida» |
+| anillos de frente, nubes dentro de la tierra o cristales flotando | `src/logica/adornos.ts` (`ANILLOS.inclinacion`, `OPCIONES_NUBES`, `crearCristales`) | `npm test`: «todas flotan entre las cimas y la atmósfera», «todos nacen en el suelo de la zona de minerales» |
+| el hongo o el diamante deformes, encimados o con islas alrededor | `src/logica/continentes.ts` (`HONGO`, `DIAMANTE`); `crearRelieve` en `planeta.ts` | `npm test`: «no se enciman», «sin islas» |
+| no se ve el foco (Sol) | `src/logica/espacio.ts` (`crearSol`), `src/mundo/decoracion.ts` (`crearFoco`) | está del lado de noche: girar la cámara hacia allá; `npm test`: «el foco cuelga entre el zoom máximo y el plano lejano» |

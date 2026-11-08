@@ -10,11 +10,15 @@ export interface Foliolo {
   largo: number
 }
 
-export interface Hoja {
-  /** Punto de la esfera (unitario) donde nacen los folíolos. */
+/** Dónde se dibuja una silueta sobre la esfera: su centro y hacia dónde queda «arriba». */
+export interface Marco {
+  /** Punto de la esfera (unitario) que es el origen de la silueta. */
   base: Vec3
-  /** Hacia dónde apunta la hoja (se proyecta sobre el plano tangente). */
+  /** Hacia dónde apunta la silueta (se proyecta sobre el plano tangente). */
   norte: Vec3
+}
+
+export interface Hoja extends Marco {
   /** Largo del folíolo central, en radianes sobre la esfera. */
   largo: number
   /** Medio ancho máximo de cada folíolo, relativo a su largo. */
@@ -50,19 +54,38 @@ export const HOJA: Hoja = {
  * Coordenadas (derecha, arriba) del punto p en el plano tangente de la base, con la distancia
  * angular conservada (proyección azimutal equidistante). p debe ser unitario.
  */
-export function coordenadasHoja(p: Vec3, hoja: Hoja): [number, number] {
-  const b = hoja.base
+export function coordenadasHoja(p: Vec3, marco: Marco): [number, number] {
+  const b = marco.base
   const coseno = Math.max(-1, Math.min(1, punto(p, b)))
   const distancia = Math.acos(coseno)
   const tangente = restar(p, escalar(b, coseno))
   const largoTangente = Math.hypot(...tangente)
   if (largoTangente < 1e-12) return [0, 0]
-  const arriba = normalizar(restar(hoja.norte, escalar(b, punto(hoja.norte, b))))
-  const derecha = cruz(arriba, b)
+  const [derecha, arriba] = ejesTangentes(marco)
   return [
     (punto(tangente, derecha) / largoTangente) * distancia,
     (punto(tangente, arriba) / largoTangente) * distancia,
   ]
+}
+
+/** Lo inverso de coordenadasHoja: el punto unitario a (derecha, arriba) radianes de la base. */
+export function puntoDesdeCoordenadas(x: number, y: number, marco: Marco): Vec3 {
+  const b = marco.base
+  const d = Math.hypot(x, y)
+  if (d < 1e-12) return [b[0], b[1], b[2]]
+  const [derecha, arriba] = ejesTangentes(marco)
+  const s = Math.sin(d) / d, c = Math.cos(d)
+  return [
+    b[0] * c + (derecha[0] * x + arriba[0] * y) * s,
+    b[1] * c + (derecha[1] * x + arriba[1] * y) * s,
+    b[2] * c + (derecha[2] * x + arriba[2] * y) * s,
+  ]
+}
+
+function ejesTangentes(marco: Marco): [Vec3, Vec3] {
+  const b = marco.base
+  const arriba = normalizar(restar(marco.norte, escalar(b, punto(marco.norte, b))))
+  return [cruz(arriba, b), arriba]
 }
 
 /**
@@ -98,7 +121,10 @@ export function medidaHoja(p: Vec3, hoja: Hoja): number | null {
   return mejor === null ? null : Math.max(mejor, 1e-6)
 }
 
-/** Distancia angular (rad) de p al centro visual de la hoja: para dejar mar alrededor. */
+/**
+ * Distancia angular (rad) de p al centro visual de la hoja. Obsoleta: sin uso desde D-19 (ya no
+ * hay continentes libres que alejar de la hoja); se retira en una tarea propia (R2).
+ */
 export function distanciaAlCentroHoja(p: Vec3, hoja: Hoja): number {
   const [x, y] = coordenadasHoja(p, hoja)
   return Math.hypot(x, y - hoja.largo * 0.35)
@@ -111,6 +137,6 @@ const restar = (a: Vec3, b: Vec3): Vec3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2
 const cruz = (a: Vec3, b: Vec3): Vec3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
 function normalizar(a: Vec3): Vec3 {
   const l = Math.hypot(...a)
-  if (l < 1e-12) throw new RangeError('hoja: el norte no puede ser paralelo a la base')
+  if (l < 1e-12) throw new RangeError('silueta: el norte no puede ser paralelo a la base')
   return escalar(a, 1 / l)
 }
