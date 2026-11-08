@@ -34,6 +34,7 @@ no alcanza, el índice está mal y se arregla aquí; no se carga todo «por si a
 |---|---|
 | `CLAUDE.md` | Entrada única del agente: arranque, autoridad, reglas, ritmo, divisiones. |
 | `AGENTS.md` | Entrada de cualquier otra IA: solo apunta a `CLAUDE.md` (D-14). |
+| `README.md` | Portada del repo en GitHub: solo apunta a `LEEME.md`, `CLAUDE.md` y `AGENTS.md`. |
 | `.gitignore` · `.gitattributes` | Qué queda fuera de git (dependencias, `dist/`, `datos/`, secretos) y finales de línea LF. |
 | `LEEME.md` | Para la persona: cómo se trabaja. |
 | `ESTADO-ACTUAL.md` | Qué es verdad hoy. Lo primero que se lee y lo primero que se actualiza. |

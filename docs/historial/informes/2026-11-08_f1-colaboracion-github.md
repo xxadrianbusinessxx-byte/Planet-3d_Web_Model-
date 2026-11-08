@@ -7,6 +7,7 @@ Talla: M · Fase: F1 · Respaldo: commit `dc73cc5` con el árbol limpio (D-04)
 | Archivo | Cambio | Por qué |
 |---|---|---|
 | remoto `origin` | `https://github.com/xxadrianbusinessxx-byte/Planet-3d_Web_Model-.git`, el repo privado que creó la persona | D-04, pendiente `repo-github` (cerrado) |
+| `README.md` (del repo de GitHub) | El repo traía un «Initial commit» con un README de solo el título: se juntó con merge (sin push forzado) y ahora apunta a `LEEME.md`, `CLAUDE.md` y `AGENTS.md`; entra a `raiz_permitida_extra` | decisión de la persona al rechazarse el primer push |
 | `docs/sistema/COLABORAR.md` (nuevo) | Único lugar del flujo: primera vez (invitar, Git Credential Manager, clonar), reparto, ciclo pull → rama → verificar → PR → fusionar, conflictos por archivo, entregas por Release, lo que no se hace | trabajar a la par sin pisarse |
 | `docs/sistema/reparto.json` (nuevo) | 12 secciones con fase y dueño; Adrian tiene espacial (en curso), poblacion, transporte, flora y recursos-naturales | respuestas de la persona (D-15) |
 | `AGENTS.md` (nuevo) | Entrada de cualquier otra IA: solo apunta a `CLAUDE.md`, nombra los seis archivos de su §1, `git pull` + `sesion.py`, `verificar.py` antes de cada commit, `docs/00-INDICE.md` | D-01 / D-14 |
