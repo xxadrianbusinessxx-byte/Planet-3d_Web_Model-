@@ -1,8 +1,8 @@
 # CLAUDE.md — punto de entrada único
 
-Este es el único archivo de entrada para el agente. Si algún día se suma otro agente,
-su archivo de entrada **apunta aquí** y no copia ninguna regla: dos copias de la misma
-regla siempre terminan desincronizadas (R1).
+Este es el único archivo de entrada para el agente. Las otras IA entran por `AGENTS.md`,
+que **apunta aquí** y no copia ninguna regla: dos copias de la misma regla siempre terminan
+desincronizadas (R1, D-14).
 
 ---
 
@@ -60,6 +60,8 @@ Las reglas propias del proyecto **no se inventan al inicio**: se ganan conforme 
 
 ## 4. Reglas de trabajo
 
+- **Al empezar:** `git pull`, la sección de la persona en el reparto y su rama
+  (`docs/sistema/COLABORAR.md`): hay otra persona trabajando a la par.
 - **Medir antes de modificar**, y otra vez al terminar con el mismo instrumento.
 - **Respaldo antes de cada tarea M o L**: `python scripts/respaldar.py "<etiqueta>"`.
 - **La decisión va en código puro**, separado de lo que habla con el mundo (hardware,

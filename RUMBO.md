@@ -24,12 +24,12 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 ## Preguntas que tocan ahora
 
-- Ninguna.
+- **ia-del-colaborador** (F1) — ¿Qué IA usa la otra persona y lee AGENTS.md? · persona
 
 ## Pendientes abiertos (por riesgo)
 
-- **repo-github** [medio] — Crear el repositorio privado planeta-3d en github.com y pasar su URL · persona
 - **otra-pc** [medio] — Probar el HTML portátil en otra PC, sin internet · persona
+- **invitar-colaborador** [medio] — Invitar a la otra persona como colaboradora del repo en GitHub · persona
 - **perfil-nuevo** [bajo] — ¿Lo que se llenó en docs/perfil/ sirve como perfil nuevo para la plantilla? · persona
 - **instalar-blender** [bajo] — Instalar Blender (gratis) para revisar los modelos IA · persona
 - **licencia-modelos-ia** [bajo] — Anotar origen y licencia de cada modelo IA · agente
@@ -46,5 +46,6 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 - 2026-11-08_f1-tematica-hoja.md
 - 2026-11-08_f1-escena-minima.md
+- 2026-11-08_f1-colaboracion-github.md
 - 2026-11-08_arranque.md
 <!-- FIN GENERADO -->

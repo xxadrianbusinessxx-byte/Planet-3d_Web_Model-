@@ -17,7 +17,7 @@ Formato:
 
 ---
 
-## D-01 · Un solo agente: Claude (núcleo; confirmada en el arranque 2026-11-08)
+## D-01 · Un solo agente: Claude (núcleo; confirmada en el arranque 2026-11-08) — **reemplazada por D-14**
 - 2026-10-29 · persona
 - **Decisión:** Claude diagnostica, implementa y revisa. `CLAUDE.md` es la única entrada.
 - **Revisar cuando:** se sume otro agente: su entrada apunta a `CLAUDE.md`.
@@ -131,3 +131,48 @@ Formato:
   IA optimizada (R7) para F3.
 - **Alternativas:** Paul tal cual (personaje con derechos de autor); un alien sin referencia.
 - **Por qué:** el guiño se mantiene y el personaje es del proyecto.
+
+## D-14 · Varias IA, una sola entrada: `CLAUDE.md`
+- 2026-11-08 · persona
+- **Decisión:** en el proyecto trabaja otra persona con su propia IA (aún no se sabe cuál).
+  **Todas las IA siguen las mismas reglas**: entran por `CLAUDE.md`; las que no son Claude
+  Code, por `AGENTS.md`, que solo apunta a `CLAUDE.md` y no copia ninguna regla. Las
+  decisiones las toman las personas; los archivos compartidos (`DECISIONES.md`,
+  `pendientes.json`, `ESTADO-ACTUAL.md`) cambian por PR que revisa la otra persona.
+- **Alternativas:** la otra IA solo toca el código de su sección; un archivo de reglas por IA.
+- **Por qué:** dos copias de una regla terminan desincronizadas (R1); con una entrada, cualquier
+  IA trabaja igual.
+- **Revisar cuando:** se sepa qué IA usa la otra persona y no lea `AGENTS.md` (se suma su
+  archivo de entrada, también solo de apunte).
+
+## D-15 · Trabajo a la par por secciones del planeta, con reparto y ramas
+- 2026-11-08 · persona
+- **Decisión:** el planeta se reparte en **secciones** (`docs/sistema/reparto.json`, fuente
+  única: espacial, continentes, ciudad, clima, zonas-de-trabajo, trabajos, poblacion,
+  transporte, flora, fauna, recursos-naturales, animaciones). Cada sección tiene un solo
+  dueño; antes de trabajar, la IA hace `git pull` y pregunta a su persona cuál toma entre las
+  libres. **Reservar** se hace con un commit directo a `main` que solo toca `reparto.json`
+  (la única excepción al PR): si git rechaza el push, alguien reservó antes. Se reserva desde
+  hoy, pero se trabaja en una sección solo cuando el proyecto llega a su fase (F1 espacial ·
+  F2 continentes, ciudad, clima · F3 el resto). Sin límite de secciones por persona. Al
+  reservar, la IA pregunta si abrir una sesión independiente por sección. El trabajo va en la
+  rama `seccion/<id>` y entra a `main` por PR **cada vez que una tarea queda en verde**, para
+  que `main` siempre construya el único HTML. Flujo completo: `docs/sistema/COLABORAR.md`.
+  Reparto inicial: Adrian tiene espacial, poblacion, transporte, flora y recursos-naturales.
+- **Alternativas:** rama por persona o por tarea; juntar al cerrar cada fase o al final del
+  proyecto; abrir todas las secciones ya; una sección a la vez por persona.
+- **Por qué:** con dueño único por sección nadie se pisa; juntar seguido deja conflictos
+  pequeños; respetar las fases mantiene la base (espacio → ciudad) antes que lo de encima.
+- **Revisar cuando:** dos personas necesiten la misma sección, o una sección nueva no encaje
+  en la lista.
+
+## D-16 · Las entregas del HTML portátil van en un Release de GitHub
+- 2026-11-08 · persona
+- **Decisión:** `dist/` sigue fuera de git (se genera con `npm run build`). En cada entrega se
+  crea un **Release** en GitHub sobre `main` con `dist/index.html` adjunto; como el repo es
+  privado, solo lo ven los colaboradores. Sin GitHub Pages.
+- **Alternativas:** solo compartir el archivo; nada en GitHub; GitHub Pages (pide repo público
+  o plan de pago y choca con D-07: el entregable es portátil, sin internet).
+- **Por qué:** el colaborador descarga el HTML listo sin construir; git no carga un archivo
+  generado que cambiaría en cada build.
+- **Revisar cuando:** haya que mostrarlo a alguien que no es colaborador del repo.

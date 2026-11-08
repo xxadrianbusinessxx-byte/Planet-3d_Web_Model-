@@ -55,15 +55,15 @@
     {
       "riesgo": "medio",
       "quien": "persona",
-      "respuesta": null,
-      "revisado": null,
-      "estado": "abierto",
+      "respuesta": "Creado por la persona: https://github.com/xxadrianbusinessxx-byte/Planet-3d_Web_Model-.git (otro nombre y otra cuenta que los de D-04). El agente agregó el remoto origin; push de main pedido por la persona en esta tarea. ESTADO-ACTUAL.md §2.",
+      "revisado": "2026-11-08",
+      "estado": "cerrado",
       "id": "repo-github",
       "tipo": "pendiente",
       "fase": "F1",
       "titulo": "Crear el repositorio privado planeta-3d en github.com y pasar su URL",
       "detalle": "Vacío (sin README ni .gitignore). El agente agrega el remoto; push solo cuando la persona lo pida (D-04).",
-      "destino": "docs/sistema/DECISIONES.md"
+      "destino": "ESTADO-ACTUAL.md"
     },
     {
       "riesgo": "bajo",
@@ -288,6 +288,60 @@
       "titulo": "¿Cómo se llama el alien, cuántos hay a la vez y qué hacen?",
       "detalle": "D-13: alien gris propio con guayabera, gorra chola y porro. Nombre propio, no «Paul».",
       "destino": "docs/sistema/DECISIONES.md"
+    },
+    {
+      "id": "invitar-colaborador",
+      "tipo": "pendiente",
+      "fase": "F1",
+      "titulo": "Invitar a la otra persona como colaboradora del repo en GitHub",
+      "detalle": "github.com → el repo → Settings → Collaborators → Add people. Ella acepta el correo, clona y se anota en docs/sistema/reparto.json (docs/sistema/COLABORAR.md §1).",
+      "riesgo": "medio",
+      "quien": "persona",
+      "destino": "docs/sistema/reparto.json",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
+    },
+    {
+      "id": "ia-del-colaborador",
+      "tipo": "pregunta",
+      "fase": "F1",
+      "titulo": "¿Qué IA usa la otra persona y lee AGENTS.md?",
+      "detalle": "D-14. Codex, Cursor, Copilot y la mayoría leen AGENTS.md; Gemini CLI lee GEMINI.md por defecto. Si la suya no lo lee, se suma su archivo de entrada, solo de apunte a CLAUDE.md, y su nombre en proyecto.json → raiz_permitida_extra.",
+      "riesgo": "bajo",
+      "quien": "persona",
+      "destino": "docs/sistema/DECISIONES.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
+    },
+    {
+      "id": "plantilla-entrada-otras-ia",
+      "tipo": "plantilla",
+      "division": "nucleo",
+      "fase": "F1",
+      "titulo": "La plantilla debería traer un AGENTS.md de apunte a CLAUDE.md",
+      "detalle": "En planeta-3d se creó a mano al sumarse otra persona con otra IA (D-14). Lección: las otras IA no cargan los imports @ de CLAUDE.md §1, así que AGENTS.md debe nombrar esos archivos para que los abran; además git pull + sesion.py antes de trabajar y verificar.py antes de cada commit. Va en raiz_permitida_extra (N1) o en RAIZ_NUCLEO.",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "CLAUDE.md",
+      "respuesta": null,
+      "revisado": "2026-11-08",
+      "estado": "abierto"
+    },
+    {
+      "id": "plantilla-colaborar-git",
+      "tipo": "plantilla",
+      "division": "nucleo",
+      "fase": "F1",
+      "titulo": "Flujo de colaboración con git para proyectos con varias personas",
+      "detalle": "planeta-3d/docs/sistema/COLABORAR.md: reparto con dueño único reservado por commit directo a main (git rechaza al segundo), ramas por sección, PR por tarea en verde, merge (no rebase) para no forzar push, y una tabla de conflictos por archivo: los generados (RUMBO, INVARIANTES) se regeneran, pendientes.json conserva las dos entradas, DECISIONES renumera quien fusiona segundo, ESTADO junta las dos verdades. Más .gitattributes con * text=auto y .claude/settings.local.json en .gitignore. Idea para sesion.py: avisar si la rama va detrás de origin y mostrar el reparto.",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "docs/normativo/ORDEN.md",
+      "respuesta": null,
+      "revisado": "2026-11-08",
+      "estado": "abierto"
     }
   ]
 }

@@ -1,4 +1,7 @@
-# Dependencias y compilados
+# Lo que queda fuera de git. Todo lo demás es contenido del repo y lo lee la otra persona y
+# su IA (docs/sistema/COLABORAR.md).
+
+# Dependencias y compilados: se regeneran con npm install y npm run build (D-16)
 node_modules/
 dist/
 .vite/
@@ -14,3 +17,11 @@ datos/
 .env
 .env.*
 !.env.example
+
+# Configuración personal de cada quien (no se comparte)
+.claude/settings.local.json
+
+# Basura del sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store

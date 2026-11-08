@@ -1,0 +1,3 @@
+# Finales de línea: en git siempre LF; cada sistema (Windows, Mac, Linux) los convierte al
+# sacar los archivos. Evita diffs y conflictos de archivo entero entre colaboradores (D-15).
+* text=auto

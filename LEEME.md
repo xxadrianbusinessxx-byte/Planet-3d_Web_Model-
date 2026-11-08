@@ -9,6 +9,12 @@ Para la persona. El agente entra por `CLAUDE.md`.
    la configuración con tus respuestas.
 3. Cada trabajo se pide con `/tarea <qué quieres>` y se cierra con `/cerrar`.
 
+## Trabajar con otra persona
+
+El repo está en GitHub y se trabaja a la par por secciones del planeta. Cómo invitar a
+alguien, reservar una sección, trabajar en ramas, juntar con `main` y entregar el HTML:
+`docs/sistema/COLABORAR.md`. Si la otra persona usa otra IA, esa IA entra por `AGENTS.md`.
+
 ## Comandos
 
 ```bash

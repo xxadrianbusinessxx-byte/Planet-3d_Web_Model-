@@ -1,0 +1,130 @@
+{
+  "_comentario": [
+    "Fuente única de las secciones del planeta y de quién trabaja en cada una (D-15).",
+    "Cómo se reserva, se suelta o se entrega una sección: docs/sistema/COLABORAR.md §2.",
+    "Se reserva con un commit directo a main que solo toca este archivo; si al hacer push git",
+    "lo rechaza, alguien reservó antes: git pull y volver a mirar.",
+    "",
+    "Campos de cada sección: id · titulo · fase (se trabaja desde que el proyecto llega a ella)",
+    "· quien (nombre de trabajadores, o null si está libre) · reservada_el · rama (seccion/<id>",
+    "cuando ya hay trabajo) · estado (libre | reservada | en-curso | hecha).",
+    "Sin límite de secciones por trabajador; se suelta la que ya no se vaya a hacer."
+  ],
+  "trabajadores": [
+    {
+      "nombre": "Adrian",
+      "github": "xxadrianbusinessxx-byte",
+      "ia": "Claude Code"
+    }
+  ],
+  "secciones": [
+    {
+      "id": "espacial",
+      "titulo": "Visualización espacial: el planeta visto desde el espacio",
+      "fase": "F1",
+      "quien": "Adrian",
+      "reservada_el": "2026-11-08",
+      "rama": null,
+      "estado": "en-curso"
+    },
+    {
+      "id": "continentes",
+      "titulo": "Continentes: países y fronteras inventados",
+      "fase": "F2",
+      "quien": null,
+      "reservada_el": null,
+      "rama": null,
+      "estado": "libre"
+    },
+    {
+      "id": "ciudad",
+      "titulo": "Ciudad: cómo se ve al bajar con el zoom",
+      "fase": "F2",
+      "quien": null,
+      "reservada_el": null,
+      "rama": null,
+      "estado": "libre"
+    },
+    {
+      "id": "clima",
+      "titulo": "Clima inventado",
+      "fase": "F2",
+      "quien": null,
+      "reservada_el": null,
+      "rama": null,
+      "estado": "libre"
+    },
+    {
+      "id": "zonas-de-trabajo",
+      "titulo": "Zonas de trabajo de la ciudad",
+      "fase": "F3",
+      "quien": null,
+      "reservada_el": null,
+      "rama": null,
+      "estado": "libre"
+    },
+    {
+      "id": "trabajos",
+      "titulo": "Trabajos de la población",
+      "fase": "F3",
+      "quien": null,
+      "reservada_el": null,
+      "rama": null,
+      "estado": "libre"
+    },
+    {
+      "id": "poblacion",
+      "titulo": "Población: los aliens (D-13)",
+      "fase": "F3",
+      "quien": "Adrian",
+      "reservada_el": "2026-11-08",
+      "rama": null,
+      "estado": "reservada"
+    },
+    {
+      "id": "transporte",
+      "titulo": "Transporte inventado",
+      "fase": "F3",
+      "quien": "Adrian",
+      "reservada_el": "2026-11-08",
+      "rama": null,
+      "estado": "reservada"
+    },
+    {
+      "id": "flora",
+      "titulo": "Flora inventada",
+      "fase": "F3",
+      "quien": "Adrian",
+      "reservada_el": "2026-11-08",
+      "rama": null,
+      "estado": "reservada"
+    },
+    {
+      "id": "fauna",
+      "titulo": "Fauna inventada",
+      "fase": "F3",
+      "quien": null,
+      "reservada_el": null,
+      "rama": null,
+      "estado": "libre"
+    },
+    {
+      "id": "recursos-naturales",
+      "titulo": "Recursos naturales",
+      "fase": "F3",
+      "quien": "Adrian",
+      "reservada_el": "2026-11-08",
+      "rama": null,
+      "estado": "reservada"
+    },
+    {
+      "id": "animaciones",
+      "titulo": "Animaciones de los modelos ya hechos",
+      "fase": "F3",
+      "quien": null,
+      "reservada_el": null,
+      "rama": null,
+      "estado": "libre"
+    }
+  ]
+}

@@ -50,7 +50,8 @@
     }
   ],
   "agentes": [
-    "claude"
+    "claude",
+    "otra IA por definir (entra por AGENTS.md, D-14)"
   ],
   "git": true,
   "respaldos": {
@@ -72,6 +73,8 @@
   "raiz_permitida_extra": [
     ".git",
     ".gitignore",
+    ".gitattributes",
+    "AGENTS.md",
     "package.json",
     "package-lock.json",
     "tsconfig.json",

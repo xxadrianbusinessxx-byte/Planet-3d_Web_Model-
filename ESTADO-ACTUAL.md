@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-08 (F1: escena mínima de la vista espacial funcionando y medida)
+- **Última revisión:** 2026-11-08 (F1: repo en GitHub y colaboración por secciones)
 
 ---
 
@@ -22,7 +22,11 @@ Comprobado en esta laptop el 2026-11-08 (`--version` de cada uno): Node 24.15.0,
 git 2.54.0, Python 3.14.3. Equipo: Intel i3-1215U, gráficos integrados Intel UHD (2 GB
 compartidos), 24 GB de RAM; libre: C: 41 GB, E: 505 GB.
 
-- **git:** local, rama `main`. **Sin remoto** todavía (pendiente `repo-github`). La CLI `gh` no está instalada.
+- **git:** rama `main`; remoto `origin` = repo privado
+  `https://github.com/xxadrianbusinessxx-byte/Planet-3d_Web_Model-.git` (lo creó la persona;
+  inicio de sesión por Git Credential Manager). La CLI `gh` no está instalada. Colaboración a
+  la par por secciones, ramas y PR: `docs/sistema/COLABORAR.md` (D-14 a D-16); otras IA
+  entran por `AGENTS.md`.
 - **npm (instalado y probado, `package.json`):** three 0.187.0, vite 8.3.6, vite-plugin-singlefile
   2.3.4, typescript 7.0.2, vitest 5.1.0, playwright 1.65.0 (usa el Edge 157 del sistema; no
   descarga navegadores). `@gltf-transform/cli` aún no (F3).
@@ -39,6 +43,7 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 | Métricas y umbrales | `docs/sistema/metricas.json` |
 | Preguntas y pendientes | `docs/sistema/pendientes.json` |
 | Decisiones tomadas | `docs/sistema/DECISIONES.md` |
+| Secciones y quién trabaja en cada una | `docs/sistema/reparto.json` |
 
 | Código, pruebas y modelos optimizados | `src/` (rutas en `docs/perfil/ORDEN.md`) |
 | Modelos IA en bruto | `datos/modelos-ia/` (fuera de git; se guarda su origen) |

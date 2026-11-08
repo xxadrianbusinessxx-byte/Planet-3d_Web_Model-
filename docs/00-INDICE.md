@@ -23,6 +23,7 @@ no alcanza, el índice está mal y se arregla aquí; no se carga todo «por si a
 | Localizar un fallo del que solo se conoce el síntoma | `docs/sistema/MAPA-DEL-SISTEMA.md` |
 | Revisar un cambio antes de darlo por bueno | `docs/normativo/CONTRATO-DE-CAMBIO.md` |
 | Ejecutar un script | `scripts/LEEME.md` (**obligatorio**) |
+| Empezar a trabajar, reservar una sección, juntar ramas, resolver un conflicto o entregar | `docs/sistema/COLABORAR.md` · `docs/sistema/reparto.json` |
 | Cerrar una fase | `docs/sistema/pendientes.json` · `docs/sistema/metricas.json` · `CLAUDE.md` §3 y §8 |
 | Responder «¿por qué se hizo así?» | el resumen del mes en `docs/historial/resumenes/`, y solo después el informe que cite |
 
@@ -32,6 +33,8 @@ no alcanza, el índice está mal y se arregla aquí; no se carga todo «por si a
 | Archivo | Qué es |
 |---|---|
 | `CLAUDE.md` | Entrada única del agente: arranque, autoridad, reglas, ritmo, divisiones. |
+| `AGENTS.md` | Entrada de cualquier otra IA: solo apunta a `CLAUDE.md` (D-14). |
+| `.gitignore` · `.gitattributes` | Qué queda fuera de git (dependencias, `dist/`, `datos/`, secretos) y finales de línea LF. |
 | `LEEME.md` | Para la persona: cómo se trabaja. |
 | `ESTADO-ACTUAL.md` | Qué es verdad hoy. Lo primero que se lee y lo primero que se actualiza. |
 | `RUMBO.md` | En qué fase estamos, qué preguntas tocan. Bloque generado. |
@@ -66,6 +69,8 @@ no alcanza, el índice está mal y se arregla aquí; no se carga todo «por si a
 | `docs/sistema/MAPA-DEL-SISTEMA.md` | Síntoma → archivos a abrir. |
 | `docs/sistema/pendientes.json` | Preguntas, pendientes y lecciones para la plantilla. |
 | `docs/sistema/metricas.json` | Métricas, umbrales y fase de cada una. |
+| `docs/sistema/reparto.json` | Secciones del planeta y quién trabaja en cada una. |
+| `docs/sistema/COLABORAR.md` | Cómo se trabaja a la par: reparto, ramas, PR, conflictos, entregas. |
 | `docs/historial/LEEME.md` | Por qué nada de esa carpeta describe el presente. |
 
 ### Otras carpetas
