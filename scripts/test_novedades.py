@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import unittest
 
-from novedades import agrupar_archivos, avisos_de_rama, es_lanzamiento, resumir_rama
+from novedades import agrupar_archivos, avisos_de_rama, es_lanzamiento, recomendaciones, resumir_rama
 
 
 class PruebaNovedades(unittest.TestCase):
@@ -55,6 +55,18 @@ class PruebaNovedades(unittest.TestCase):
         sin = avisos_de_rama("colaborativa", 0, [], 4)
         self.assertEqual(len(sin), 1)
         self.assertIn("no hace falta", sin[0])
+
+
+    def test_recomienda_lo_que_no_tiene_dueno_y_los_modelos(self):
+        local = [{"id": "ciudad", "quien": None}, {"id": "clima", "quien": None}, {"id": "flora", "quien": "Adrian"}]
+        otra = [{"id": "ciudad", "quien": None}, {"id": "clima", "quien": "colaborador"}]
+        lineas = recomendaciones([local, otra])
+        # clima tiene dueño en la otra rama: no está libre.
+        self.assertIn("Secciones sin dueño: ciudad.", lineas[0])
+        self.assertIn("D-29", lineas[-1])
+        # Sin secciones libres solo queda la de los modelos.
+        self.assertEqual(len(recomendaciones([[{"id": "flora", "quien": "Adrian"}]])), 1)
+        self.assertEqual(len(recomendaciones([])), 1)
 
 
 if __name__ == "__main__":

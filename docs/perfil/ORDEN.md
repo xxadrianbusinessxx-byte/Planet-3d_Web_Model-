@@ -62,13 +62,57 @@ El cuello de botella es la GPU integrada: se cuida el número de **llamadas de d
 - **No generar en cada cuadro:** la geometría se calcula una vez (o en un Web Worker) y se
   reutiliza.
 
-## 4. Tubería de modelos IA (F3)
+## 4. Tubería de modelos externos (D-29)
 
-1. Generar en la nube (D-06): TRELLIS.2 (Hugging Face, gratis), Meshy o Tripo (planes gratis).
-   Pedir estilo low-poly; guardar el `.glb` en bruto en `datos/modelos-ia/` con su origen y licencia.
-2. Revisar (Blender, cuando la persona lo instale): escala en metros, origen en la base, sin caras sobrantes.
-3. Optimizar con `@gltf-transform/cli`: `simplify` si sobran triángulos, luego
+Lo visible de cerca se hace con **modelos externos low-poly**; lo hecho por código con
+primitivas es un borrador hasta que llegue su modelo. Solo entra un modelo **propio o con
+licencia que lo permita** (CC0, CC-BY con crédito, o generado por nosotros); **nunca un
+personaje con dueño** ni un modelo hecho a partir de imágenes de uno (D-13). Créditos de pago:
+nunca sin OK (R6).
+
+### Dónde conseguirlos
+
+| Para qué | Página | Licencia y nota |
+|---|---|---|
+| Generar con IA desde texto o imagen | **Meshy** (meshy.ai) | plan gratis con créditos al mes; tiene opción *low poly*; CC BY 4.0 con crédito (D-06) |
+| ídem | **Tripo** (tripo3d.ai) | plan gratis; CC BY 4.0, no comercial |
+| ídem, imagen a 3D | **TRELLIS.2** (Hugging Face Spaces) | gratis, MIT; mejor partir de una imagen limpia de frente |
+| Descargar ya hechos | **Poly Pizza** (poly.pizza) | miles de low-poly; cada uno dice si es CC0 o CC-BY |
+| ídem, paquetes | **Kenney** (kenney.nl/assets) | CC0; ciudad, vehículos, naturaleza, muebles |
+| ídem, **personajes y animales ya animados** | **Quaternius** (quaternius.com) | CC0; trae caminar, correr, saludar, sentarse… |
+| ídem, de todo | **Sketchfab** (sketchfab.com) | filtrar *Downloadable* y licencia CC; revisar la de cada modelo |
+| Animar un personaje (esqueleto y movimientos) | **Mixamo** (mixamo.com) | gratis con cuenta de Adobe; esqueleto automático y cientos de animaciones para cuerpos de dos piernas |
+| Revisar, recortar, animar y exportar | **Blender** (blender.org) | gratis; pendiente `instalar-blender` |
+
+### Paso a paso
+
+1. **Conseguir el modelo** en una de las páginas. Pedir o buscar estilo *low poly*, colores
+   planos y pocas texturas. Preferir `.glb`; si solo hay `.fbx` u `.obj`, Blender lo convierte.
+2. **Entregarlo a la IA** (ver abajo). En bruto va a `datos/modelos-ia/`, fuera de git.
+3. **Blender** (lo puede hacer la persona o la IA con un script de Blender sin ventana,
+   `blender --background --python <script>.py`, una vez instalado): escala en metros, origen en
+   la base, mirando al frente; *Decimate* si sobran triángulos; quitar caras sobrantes; las
+   **anclas** de accesorios como objetos vacíos con su nombre (las del Grinder, en
+   `ANCLAS_GRINDER` de `src/logica/poblacion.ts`); **animaciones** como acciones con nombre
+   (`idle`, `fumar`, `moler`…) o traídas de Mixamo; exportar glTF binario (`.glb`) con
+   animaciones.
+4. **Optimizar** con `@gltf-transform/cli` (se instala con npm al llegar el primer modelo):
+   `simplify` si sobran triángulos, luego
    `optimize --compress meshopt --texture-compress webp --texture-size 512`. (Draco pesa menos
    pero decodifica más lento; KTX2 necesita la herramienta `ktx` instalada.)
-4. Copiar a `src/modelos/`; cargar con `GLTFLoader` + `MeshoptDecoder`.
-5. Medir su peso y triángulos contra su límite (pregunta `limites-modelo-ia`, F3).
+5. **Medir** su peso y triángulos contra su límite (pregunta `limites-modelo-ia`) y copiarlo a
+   `src/modelos/`. Se carga con `GLTFLoader` + `MeshoptDecoder`; las animaciones, con
+   `AnimationMixer`. Va **dentro** del HTML portátil (D-07): cada MB de modelo suma al peso.
+6. Medir la página con el modelo (fps y triángulos) como cualquier cambio (§P1).
+
+### Cómo se le entrega un modelo a la IA
+
+1. Guardar el archivo en la carpeta principal del proyecto, en
+   `datos/modelos-ia/<id de la sección>/<nombre>.glb` (por ejemplo
+   `datos/modelos-ia/poblacion/grinder.glb`). `datos/` no va a git: cada quien deja los suyos
+   en su PC; lo que va a git es la versión optimizada de `src/modelos/`.
+2. Junto a él, un `ORIGEN.md` con: página y enlace, autor, **licencia**, fecha, el prompt
+   usado (si es IA) y qué animaciones trae.
+3. Decirle a la sesión de la sección: «dejé `<archivo>` en `datos/modelos-ia/<sección>/`». La
+   IA lo revisa, lo optimiza, lo mide y lo mete a la página; si algo no cuadra (licencia,
+   triángulos, escala), pregunta antes.

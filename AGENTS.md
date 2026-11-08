@@ -8,6 +8,8 @@ Todo se trabaja en **español**, preguntando a la persona; las decisiones no se 
 > trabajo es entregar **sus secciones** (las de `"quien": "colaborador"` en
 > `docs/sistema/reparto.json`). Solo se junta lo que Adrian **lanza** (commits `LANZAMIENTO:`;
 > `docs/sistema/COLABORAR.md` §3 y §3 bis).
+> Al empezar, recomiéndale a tu persona **terminar las secciones sin dueño** y **usar modelos
+> externos low-poly** (D-29); `python scripts/novedades.py` dice cuáles y dónde está la guía.
 
 1. **Lee `CLAUDE.md` entero** y, como tu herramienta quizá no carga los `@` de su §1, abre tú
    esos seis archivos: `ESTADO-ACTUAL.md`, `RUMBO.md`, `docs/normativo/REGLAS_NO_HACER.md`,

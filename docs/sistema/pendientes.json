@@ -99,9 +99,9 @@
       "estado": "abierto",
       "id": "instalar-blender",
       "tipo": "pendiente",
-      "fase": "F3",
+      "fase": "F2",
       "titulo": "Instalar Blender (gratis) para revisar los modelos IA",
-      "detalle": "La persona dijo que lo instala; hace falta antes de traer las primeras piezas IA (docs/perfil/ORDEN.md §4, paso 2).",
+      "detalle": "La persona dijo que lo instala; hace falta antes de traer las primeras piezas IA (docs/perfil/ORDEN.md §4, paso 3; D-29).",
       "destino": "ESTADO-ACTUAL.md"
     },
     {
@@ -112,7 +112,7 @@
       "estado": "abierto",
       "id": "limites-modelo-ia",
       "tipo": "pregunta",
-      "fase": "F3",
+      "fase": "F2",
       "titulo": "¿Cuánto pueden pesar y cuántos triángulos pueden tener una persona, un vehículo y un edificio IA?",
       "detalle": "Límite de R7. Propuesta inicial: persona ≤ 3 000 triángulos y 150 KB; vehículo ≤ 5 000 y 250 KB; edificio icónico ≤ 20 000 y 1 MB.",
       "destino": "docs/sistema/metricas.json"

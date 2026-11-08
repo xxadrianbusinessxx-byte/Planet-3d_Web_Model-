@@ -4,7 +4,8 @@ QUÉ MIDE: los commits nuevos de origin/main (Adrian) y origin/colaborativa (los
           la última revisión en esta copia, quién los hizo, qué carpetas tocaron y si tu rama
           va detrás (D-21). Así cada IA, al empezar y después de cada push, sabe qué cambió.
           Los commits cuyo mensaje empieza con «LANZAMIENTO:» (D-27) se marcan con 🚀: son los
-          únicos que el otro debe juntar en su rama; lo demás solo se lista.
+          únicos que el otro debe juntar en su rama; lo demás solo se lista. Al final recomienda
+          tomar las secciones sin dueño y usar modelos externos low-poly (D-29).
 QUÉ ESCRIBE: `git fetch origin` (solo actualiza las referencias remotas; no toca tus archivos
              ni tus ramas) y una marca local `novedades-vistas.json` dentro de la carpeta de
              git (fuera del repo, una por copia). No hace pull, merge ni push.
@@ -99,6 +100,30 @@ def avisos_de_rama(actual: str | None, detras: int, lanzados: list[str], otros_s
     return avisos
 
 
+def recomendaciones(repartos: list[list[dict]]) -> list[str]:
+    """Lo que la IA le recomienda a su persona al empezar (D-29). repartos: la lista `secciones`
+    de reparto.json en cada copia que se pudo leer (la local y las de origin/main y
+    origin/colaborativa). Una sección está libre solo si no tiene dueño en ninguna."""
+    con_dueno = {s["id"] for r in repartos for s in r if s.get("quien")}
+    libres: list[str] = []
+    for r in repartos:
+        for s in r:
+            if s["id"] not in con_dueno and s["id"] not in libres:
+                libres.append(s["id"])
+    lineas = []
+    if libres:
+        lineas.append(
+            f"  ★ Secciones sin dueño: {', '.join(libres)}. Recomiéndale a tu persona terminarlas: "
+            "que reserve las que pueda antes de abrir otra cosa (COLABORAR §2)."
+        )
+    lineas.append(
+        "  ★ Modelos 3D (D-29): lo que se ve de cerca va con modelos externos low-poly (Meshy, Tripo, "
+        "Poly Pizza, Kenney, Quaternius, Mixamo), revisados en Blender y optimizados; las páginas y "
+        "cómo entregarlos están en docs/perfil/ORDEN.md §4. Recomiéndaselo a tu persona."
+    )
+    return lineas
+
+
 # ── Lo que habla con git ─────────────────────────────────────────────────────────────────
 
 def git(*args: str, tiempo: int = 15) -> str | None:
@@ -130,6 +155,25 @@ def leer_commits(rango: str, limite: int, *excluir: str) -> list[dict]:
 def contar(rango: str, *excluir: str) -> int:
     salida = git("rev-list", "--count", rango, *excluir)
     return int(salida.strip()) if salida and salida.strip().isdigit() else 0
+
+
+def leer_repartos() -> list[list[dict]]:
+    """Las secciones de reparto.json en esta copia y en las dos ramas de origin (las que se lean)."""
+    textos = []
+    local = RAIZ / "docs" / "sistema" / "reparto.json"
+    if local.exists():
+        textos.append(local.read_text(encoding="utf-8"))
+    for rama in RAMAS:
+        texto = git("show", f"origin/{rama}:docs/sistema/reparto.json")
+        if texto:
+            textos.append(texto)
+    repartos = []
+    for texto in textos:
+        try:
+            repartos.append(json.loads(texto).get("secciones", []))
+        except ValueError:
+            continue
+    return repartos
 
 
 def ruta_marca() -> Path | None:
@@ -184,6 +228,7 @@ def main() -> None:
         lanzados = [c["asunto"] for c in pendientes if es_lanzamiento(c["asunto"])]
         otros = len(pendientes) - len(lanzados)
     lineas += avisos_de_rama(actual, detras, lanzados, otros)
+    lineas += recomendaciones(leer_repartos())
     if hubo_algo:
         lineas.append(
             "  → Antes de tocar lo mismo, lee los commits y los informes nuevos (docs/historial/informes/) "

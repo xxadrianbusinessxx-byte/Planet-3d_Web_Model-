@@ -27,6 +27,7 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - **ia-del-colaborador** (F1) — ¿Qué IA usa la otra persona y lee AGENTS.md? · persona
 - **transicion-zoom** (F2) — ¿En qué orden se baja con el zoom y a qué distancia cambia cada perspectiva? · persona
 - **metas-ciudad** (F2) — ¿Qué fps y qué tiempo de aparición se exigen al bajar a la ciudad? · persona
+- **limites-modelo-ia** (F2) — ¿Cuánto pueden pesar y cuántos triángulos pueden tener una persona, un vehículo y un edificio IA? · persona
 - **paises-inventados** (F2) — ¿Cuántos países hay, cómo se llaman y dónde están (en la hoja, en los otros continentes)? · persona
 - **ciudad-presentacion** (F2) — ¿Cómo se ve la primera ciudad al acercarse: cuál, de qué tamaño y con qué estilo? · persona
 - **clima-inventado** (F2) — ¿Cómo es el clima del planeta y desde qué perspectiva se ve? · persona
@@ -50,8 +51,8 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 ## Últimos informes
 
 - 2026-11-08_f2-ramas-main-colaborativa.md
+- 2026-11-08_f2-poblacion-modelos-externos.md
 - 2026-11-08_f2-poblacion-grinders-playa.md
 - 2026-11-08_f2-novedades-repo.md
 - 2026-11-08_f2-espacial-paginas-aspectos.md
-- 2026-11-08_f2-espacial-nubes-costas-mar.md
 <!-- FIN GENERADO -->

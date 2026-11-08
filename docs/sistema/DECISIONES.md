@@ -364,3 +364,23 @@ Formato:
   regenerar el modelo y cambiar el cuerpo sin rehacer los accesorios.
 - **Revisar cuando:** llegue el modelo IA del cuerpo (F3, `limites-modelo-ia`) o la página
   necesite más Grinders de los que caben en la escena fija.
+
+## D-29 · Lo visible se hace con modelos externos low-poly, revisados en Blender y optimizados (cambia D-06 en parte)
+- 2026-11-08 · persona
+- **Decisión:** para que todo se vea mejor, **se prefieren modelos 3D externos low-poly**
+  (generados con IA o descargados con licencia libre) para lo que se ve de cerca: personajes,
+  animales, vehículos, edificios, plantas y objetos. Las formas hechas por código con
+  primitivas (como el Grinder de D-28) **quedan como borrador** hasta que llegue su modelo:
+  se ven demasiado planas. El terreno, el planeta y lo que se repite por miles siguen por
+  código (D-06). Cada modelo pasa por **Blender** (revisar, bajar triángulos, poner anclas,
+  animar) y por **gltf-transform** (optimizar) antes de entrar (R7); las **animaciones vienen
+  dentro del `.glb`** (Blender o Mixamo) y se reproducen en la página. Solo entra un modelo
+  **propio o con licencia que lo permita** (CC0, CC-BY con crédito, o generado por nosotros);
+  **nada de personajes con dueño** (D-13). Las páginas recomendadas, el paso a paso y **cómo se
+  le entrega el modelo a la IA** están en `docs/perfil/ORDEN.md` §4. Las preguntas
+  `limites-modelo-ia` e `instalar-blender` pasan a F2.
+- **Alternativas:** seguir con primitivas por código (se ven planas); modelar todo a mano en
+  Blender (lento).
+- **Por qué:** lo pidió la persona al ver la página Population: el modelo por código se ve plano.
+- **Revisar cuando:** llegue el primer modelo y se mida cuánto pesa el HTML portátil con él
+  (D-12) y cuántos fps quedan.

@@ -9,6 +9,12 @@
 > secciones**: las que en `reparto.json` dicen `"quien": "colaborador"` (clima, fauna, medio
 > ambiente, trabajos y zonas de trabajo; D-27). Cuando todas las secciones estén hechas,
 > Adrian junta `colaborativa` con `main` y el proyecto queda terminado (§4).
+>
+> **Lo que la IA del colaborador le recomienda al empezar** (lo imprime `novedades.py`):
+> (1) **terminar lo que no tiene dueño**: las secciones con `"quien": null` en las dos ramas
+> (hoy continentes, ciudad y animaciones), reservándolas como dice §2; (2) **usar modelos
+> externos low-poly** para lo que se ve de cerca, revisados en Blender y optimizados (D-29):
+> las páginas, el paso a paso y cómo entregárselos a la IA están en `docs/perfil/ORDEN.md` §4.
 
 - **Repositorio:** privado en GitHub, remoto `origin` (la URL está en `ESTADO-ACTUAL.md` §2).
 - **Dos ramas, nada más (D-18):** `main` (Adrian trabaja directo ahí) y `colaborativa`
