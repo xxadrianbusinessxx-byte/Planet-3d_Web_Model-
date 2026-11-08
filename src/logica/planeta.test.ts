@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { colorPorAltura, crearDatosPlaneta, crearIcosfera, LIMITE_SUBDIVISIONES, OPCIONES_PLANETA } from './planeta'
+import {
+  colorHoja,
+  colorPorAltura,
+  crearDatosPlaneta,
+  crearIcosfera,
+  crearRelieve,
+  LIMITE_SUBDIVISIONES,
+  OPCIONES_PLANETA,
+  radioDelPunto,
+  VERDE_NERVADURA,
+} from './planeta'
 import { crearAleatorio, crearRuido3D, fbm } from './ruido'
 
 describe('crearIcosfera', () => {
@@ -81,12 +91,12 @@ describe('crearDatosPlaneta', () => {
     expect([c[0], c[1], c[2]]).toEqual([c[3], c[4], c[5]])
   })
 
-  it('ningún punto queda bajo el mar ni sobre la cima permitida', () => {
+  it('ningún punto baja del fondo marino ni sube de la cima permitida', () => {
     const { posiciones } = crearDatosPlaneta(opciones)
     for (let i = 0; i < posiciones.length; i += 3) {
       const r = Math.hypot(posiciones[i], posiciones[i + 1], posiciones[i + 2])
-      expect(r).toBeGreaterThanOrEqual(opciones.radio - 1e-5)
-      expect(r).toBeLessThanOrEqual(opciones.radio * (1 + opciones.relieve) + 1e-5)
+      expect(r).toBeGreaterThanOrEqual(opciones.radio * (0.996 - opciones.profundidadMar) - 1e-5)
+      expect(r).toBeLessThanOrEqual(opciones.radio * (1.004 + opciones.relieve) + 1e-5)
     }
   })
 
@@ -98,6 +108,40 @@ describe('crearDatosPlaneta', () => {
   })
 
   it('las opciones por defecto caben en el presupuesto de la vista espacial', () => {
-    expect(20 * 4 ** OPCIONES_PLANETA.subdivisiones).toBeLessThanOrEqual(25_000)
+    expect(20 * 4 ** OPCIONES_PLANETA.subdivisiones).toBeLessThanOrEqual(100_000)
+  })
+
+  it('con la resolución por defecto la hoja existe y no se come el planeta', () => {
+    const datos = crearDatosPlaneta(OPCIONES_PLANETA)
+    expect(datos.fraccionHoja).toBeGreaterThan(0.01)
+    expect(datos.fraccionHoja).toBeLessThan(0.15)
+    expect(datos.fraccionOceano).toBeGreaterThan(0.4)
+  })
+})
+
+describe('relieve y radio', () => {
+  it('la tierra queda justo sobre la bebida y el fondo justo debajo (sin pelear con ella)', () => {
+    const o = OPCIONES_PLANETA
+    expect(radioDelPunto(o.nivelMar, o)).toBeGreaterThan(o.radio)
+    expect(radioDelPunto(o.nivelMar - 1e-6, o)).toBeLessThan(o.radio)
+    expect(radioDelPunto(-5, o)).toBeCloseTo(o.radio * (0.996 - o.profundidadMar), 6)
+  })
+
+  it('la nervadura de la hoja está sobre el mar y alrededor de la hoja hay mar', () => {
+    const relieve = crearRelieve(OPCIONES_PLANETA)
+    const nervadura = relieve([0, Math.sin(0.4), Math.cos(0.4)])
+    expect(nervadura.hoja).not.toBeNull()
+    expect(nervadura.altura).toBeGreaterThan(OPCIONES_PLANETA.nivelMar)
+    // Entre dos folíolos, cerca del centro de la hoja: mar.
+    // A 15.5° del eje (entre 0° y 31°) y 0.7 rad de la base, por el mismo mapeo que hoja.test.ts.
+    const a = (15.5 * Math.PI) / 180, d = 0.7, s = Math.sin(d) / d
+    const hueco = relieve([Math.sin(a) * d * s, Math.cos(a) * d * s, Math.cos(d)])
+    expect(hueco.hoja).toBeNull()
+    expect(hueco.altura).toBeLessThan(OPCIONES_PLANETA.nivelMar)
+  })
+
+  it('colorHoja: sobre la nervadura es verde claro y en el borde, oscuro', () => {
+    expect(colorHoja(1)).toEqual(VERDE_NERVADURA)
+    expect(colorHoja(0.01)[1]).toBeLessThan(colorHoja(0.7)[1])
   })
 })

@@ -24,7 +24,7 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 ## Preguntas que tocan ahora
 
-- **limite-peso-html** (F1) — ¿Cuánto puede pesar como máximo el HTML portátil? · persona
+- Ninguna.
 
 ## Pendientes abiertos (por riesgo)
 
@@ -41,10 +41,10 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 - `fps_espacial` — Cuadros por segundo de la vista espacial (planeta + cámara orbital) · umbral 30 fps (dura)
 - `carga_espacial_s` — Tiempo de carga del HTML portátil hasta ver el planeta · umbral 5 s (dura)
-- `peso_html_mb` — Peso del HTML portátil (todo embebido) · sin umbral: preguntar la meta
 
 ## Últimos informes
 
+- 2026-11-08_f1-tematica-hoja.md
 - 2026-11-08_f1-escena-minima.md
 - 2026-11-08_arranque.md
 <!-- FIN GENERADO -->

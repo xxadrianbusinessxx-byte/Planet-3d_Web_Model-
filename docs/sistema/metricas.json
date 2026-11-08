@@ -33,12 +33,12 @@
     },
     {
       "id": "peso_html_mb",
-      "titulo": "Peso del HTML portátil (todo embebido)",
+      "titulo": "Peso del HTML portátil (todo embebido; sin límite por D-12, se revisa en F4)",
       "unidad": "MB",
       "peor_si": "sube",
       "umbral": null,
       "tipo": "dura",
-      "fase": "F1",
+      "fase": "F4",
       "instrumento": "Nivel 3: tamaño de dist/index.html tras npx vite build, en MB."
     },
     {

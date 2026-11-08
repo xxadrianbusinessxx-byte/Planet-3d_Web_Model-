@@ -17,7 +17,6 @@ function iniciar(): void {
     vista.controles.autoRotate = true
     vista.controles.autoRotateSpeed = 3
   }
-  estado.triangulos = vista.triangulos
 
   const reloj = new Timer()
   const marcas: number[] = []
@@ -35,6 +34,7 @@ function iniciar(): void {
       return
     }
     estado.cuadros++
+    estado.triangulos = renderer.info.render.triangles
     if (estado.cargaMs === null) {
       estado.cargaMs = Math.round(performance.now())
       estado.listo = true
@@ -42,7 +42,7 @@ function iniciar(): void {
 
     ventanaHud.push(ahora)
     ventanaHud = ventanaHud.filter((t) => ahora - t <= 1000)
-    const lineaFps = `${ventanaHud.length} fps · ${vista.triangulos.toLocaleString('es')} triángulos · F oculta`
+    const lineaFps = `${ventanaHud.length} fps · ${estado.triangulos.toLocaleString('es')} triángulos · F oculta`
 
     if (!midiendo) {
       escribirHud(lineaFps)

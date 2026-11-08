@@ -13,7 +13,7 @@
   "estado": "arrancado",
   "arrancado_el": "2026-11-08",
   "nombre": "Planeta 3D",
-  "descripcion": "Web local con Three.js que simula un planeta por secciones —vista espacial, ciudades, transporte y personas—, todo desde cero. Nació como maqueta escolar y ahora es un banco de pruebas de modelos 3D en la web: planeta, terreno, ciudades y calles generados por código; piezas sueltas (personas, vehículos, edificios icónicos) generadas con IA y optimizadas. Se entrega como un solo HTML que abre con doble clic en cualquier PC, sin internet.",
+  "descripcion": "Web local con Three.js que simula un planeta inventado y cómico (D-10: continente con forma de hoja, mar de bebida azul con gomitas, anillos rosas) por secciones —vista espacial, ciudades, transporte y personas—, todo desde cero. Nació como maqueta escolar y ahora es un banco de pruebas de modelos 3D en la web: planeta, terreno, ciudades y calles generados por código; piezas sueltas (personas, vehículos, edificios icónicos) generadas con IA y optimizadas. Se entrega como un solo HTML que abre con doble clic en cualquier PC, sin internet.",
   "criterio_de_exito": "El HTML portátil abre con doble clic en otra PC sin internet ni instalación y muestra el planeta low-poly con cámara orbital y zoom, a 30 fps o más en esta laptop (Intel UHD) y con carga de menos de 5 s.",
   "contexto": {
     "tipo": "personal",
@@ -35,13 +35,13 @@
     },
     {
       "id": "F2",
-      "titulo": "Bajar a la superficie",
-      "cierre": "se puede acercar del espacio a una ciudad generada por código (terreno, calles, edificios) sin cortes y con sus métricas por sección."
+      "titulo": "Bajar con el zoom: países y una ciudad",
+      "cierre": "acercarse con el zoom pasa del espacio a una ciudad inventada generada por código (D-11), con una sola perspectiva cargada a la vez y sus métricas por sección."
     },
     {
       "id": "F3",
-      "titulo": "Transporte, personas y modelos IA",
-      "cierre": "hay vehículos y personas (piezas IA optimizadas, con instancing) moviéndose en la ciudad, dentro de sus métricas."
+      "titulo": "Población, transporte, flora, fauna y clima",
+      "cierre": "hay aliens, vehículos, flora y fauna (piezas IA optimizadas, con instancing) y clima en sus perspectivas, dentro de sus métricas."
     },
     {
       "id": "F4",

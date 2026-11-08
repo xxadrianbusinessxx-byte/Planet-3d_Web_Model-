@@ -35,7 +35,7 @@ export function limitesCamara(radio: number, relieve: number): LimitesCamara {
   return {
     distanciaMin: cima * 1.25,
     distanciaMax: radio * 9,
-    distanciaInicial: radio * 3.2,
+    distanciaInicial: radio * 4.2,
     cerca: radio * 0.05,
     lejos: radio * 120,
   }

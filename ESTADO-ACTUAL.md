@@ -12,7 +12,7 @@ Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO
 
 **Planeta 3D** (`proyecto.json` tiene la descripción y el criterio de éxito): web local con
 Three.js que simula un planeta por secciones —vista espacial, ciudades, transporte, personas—,
-todo desde cero. Proyecto personal (antes maqueta escolar), entrega de la vista espacial el
+todo inventado y en tono cómico (D-10). Proyecto personal (antes maqueta escolar), entrega de la vista espacial el
 2026-11-09. Se entrega como **un solo HTML** que abre con doble clic en cualquier PC sin
 internet (D-07). Perfil `base`, llenado en el arranque para escena 3D web (`docs/perfil/`).
 
@@ -48,9 +48,9 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 
 | Qué | Cómo se comprueba | Medición |
 |---|---|---|
-| Vista espacial: planeta low-poly (icosfera de 20 480 triángulos, relieve con semilla, mar, arena, pasto, bosque, roca, nieve), halo de atmósfera, 2 500 estrellas, cámara orbital con zoom acotado; tecla F oculta el texto de fps | `npm test` (21 pruebas de la lógica) | — |
-| HTML portátil: un solo `dist/index.html` de 0,54 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_0955_rendimiento.json` |
-| 73,8 fps (tope de la pantalla) y carga de 0,13 s a 1920×1080 en esta laptop | `npm run medir` | `mediciones/2026-11-08_0955_rendimiento.json` |
+| Vista espacial con la temática de D-10: continente-hoja de 7 folíolos con nervaduras, 2–3 continentes más e islas, bebida azul translúcida con 700 ositos de gomita instanciados, anillos rosas, halo de atmósfera y 2 500 estrellas (icosfera de 81 920 caras; ~209 000 triángulos en pantalla); cámara orbital con zoom acotado; tecla F oculta el texto de fps | `npm test` (39 pruebas de la lógica) | — |
+| HTML portátil: un solo `dist/index.html` de 0,56 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_1014_rendimiento.json` |
+| 75 fps (tope de la pantalla) y carga de 0,26 s a 1920×1080 en esta laptop | `npm run medir` | `mediciones/2026-11-08_1014_rendimiento.json` |
 | Ante un error (sin WebGL, fallo en el bucle) la página muestra un aviso en vez de quedar en blanco (D-09) | revisión; no hay prueba automática del caso sin WebGL | — |
 
 ## 5. Deudas vivas

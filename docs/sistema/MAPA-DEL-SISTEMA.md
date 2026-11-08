@@ -8,3 +8,5 @@ conforme se construye el sistema; cada fila nace del primer fallo real de ese ti
 | fps medidos sospechosamente altos, o `medir` se niega por el tamaño del lienzo | `scripts/medir_rendimiento.mjs` (pantalla completa por CDP) | `condiciones` del JSON en `mediciones/`: el lienzo debe ser 1920×1080 |
 | la página queda en blanco o muestra el aviso | `src/main.ts`, `src/mundo/navegador.ts` | `npm run probar`: imprime el aviso y los errores de consola |
 | el planeta se ve distinto sin haber tocado su código | `src/logica/planeta.ts` (`OPCIONES_PLANETA`), `src/logica/ruido.ts` | `npm test`: «es determinista» |
+| la hoja se ve deforme o con huecos | `src/logica/hoja.ts` (`HOJA`, `FOLIOLOS_HOJA`); `subdivisiones` en `planeta.ts` | `npm test`: pruebas de `hoja.test.ts` |
+| gomitas encima de la tierra o anillos de frente | `src/logica/adornos.ts` (`crearGomitas`, `ANILLOS.inclinacion`) | `npm test`: «todas flotan sobre la bebida» |

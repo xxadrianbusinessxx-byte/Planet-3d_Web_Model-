@@ -93,3 +93,41 @@ Formato:
   la escena **no se cae en blanco**: muestra lo que sí cargó y un aviso legible.
 - **Por qué:** consistencia con los otros proyectos; un HTML en blanco en una presentación no
   dice qué pasó.
+
+## D-10 · Temática: un planeta inventado y cómico
+- 2026-11-08 · persona
+- **Decisión:** el planeta es **ficticio y de entretenimiento** (no lleva información delicada
+  ni sensible). Todo se inventa: países, transporte, población, flora, fauna y clima. Vista
+  espacial: el **continente principal tiene forma de hoja de marihuana** (7 folíolos, con
+  tallo) y hay **2–3 continentes más** de forma libre; la tierra va en **verdes de hoja**; el
+  **mar es una bebida azul** (tipo licor azul) **con gomitas de colores flotando**; el planeta
+  tiene **anillos rosas**.
+- **Alternativas:** mar rosa (la primera idea, cambiada por los anillos); un solo continente-hoja; tierra de colores inventados.
+- **Por qué:** maqueta cómica y experimental; la hoja se reconoce al instante en verde.
+- **Revisar cuando:** se presente y la persona quiera otro tono.
+
+## D-11 · Las perspectivas se cambian acercándose con el zoom
+- 2026-11-08 · persona
+- **Decisión:** el visualizador tiene varias perspectivas del planeta (espacio, y después
+  ciudad, población, flora y fauna, clima). Se pasa de una a otra **acercándose con el zoom**
+  a un punto del planeta. **Solo una perspectiva está cargada a la vez**: al entrar a otra, la
+  anterior se libera (`dispose()`), para no correr todo junto (§P1).
+- **Alternativas:** menú de botones; menú y zoom.
+- **Por qué:** es más natural en la presentación; la carga por perspectiva cuida los fps.
+- **Revisar cuando:** exista la segunda perspectiva (F2); ahí se decide a qué distancia
+  cambia (pregunta `transicion-zoom`).
+
+## D-12 · El HTML portátil no tiene límite de peso
+- 2026-11-08 · persona
+- **Decisión:** `peso_html_mb` se sigue midiendo pero **sin umbral**. Su fase pasa a F4: allí
+  se vuelve a mirar al probar en otra PC.
+- **Por qué:** la persona prefiere no limitarlo; hoy pesa 0,54 MB.
+
+## D-13 · La población: un alien propio inspirado en el estilo de «Paul»
+- 2026-11-08 · persona
+- **Decisión:** el habitante general es un **alien gris low-poly propio**, que recuerda el
+  aspecto de Paul pero modificado: **guayabera, gorra chola y un porro en la mano**. No se
+  usa el nombre ni el modelo de la película; tendrá nombre propio del planeta. Es una pieza
+  IA optimizada (R7) para F3.
+- **Alternativas:** Paul tal cual (personaje con derechos de autor); un alien sin referencia.
+- **Por qué:** el guiño se mantiene y el personaje es del proyecto.
