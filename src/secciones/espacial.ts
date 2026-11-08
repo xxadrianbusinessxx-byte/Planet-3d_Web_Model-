@@ -1,13 +1,18 @@
 // Sección «vista espacial» (F1): arma la escena con la lógica y el mundo. Solo orquesta.
+// Desde D-22, también el viaje de la cámara al hacer clic en Don Foco (el Sol).
 import { DirectionalLight, Group, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { ANILLOS, bandasAnillos, crearCristales as repartirCristales, crearMapaNubes } from '../logica/adornos'
 import { puntoEnMinerales } from '../logica/continentes'
-import { crearEstrellas as posicionesEstrellas, crearSol, limitesCamara } from '../logica/espacio'
+import { crearViaje, enfocar, enViaje, esClic, type Viaje, type Vista } from '../logica/enfoque'
+import { crearEstrellas as posicionesEstrellas, crearSol, cuerpoDelFoco, limitesCamara } from '../logica/espacio'
+import { FICHA_DON_FOCO } from '../logica/fichas'
 import { puntoDesdeCoordenadas, type Vec3 } from '../logica/hoja'
 import { crearDatosPlaneta, crearRelieve, OPCIONES_PLANETA, radioDelPunto } from '../logica/planeta'
 import { crearBrilloMinerales, crearCapaNubes, crearCristales, crearFoco } from '../mundo/decoracion'
+import { crearFicha } from '../mundo/ficha'
 import { crearAnillos, crearAtmosfera, crearBebida, crearEstrellas, crearMallaPlaneta } from '../mundo/mallas'
+import { crearSeleccion } from '../mundo/seleccion'
 
 /** Mapa de nubes: 512 × 256 alcanza para masas grandes y suaves (D-20). */
 const MAPA_NUBES = { ancho: 512, alto: 256 }
@@ -80,6 +85,47 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
   controles.zoomSpeed = 0.8
   controles.rotateSpeed = 0.6
 
+  // Clic en Don Foco (D-22): la cámara viaja hasta él y aparece su ficha; Esc o el botón regresan.
+  const vistaActual = (): Vista => ({
+    posicion: camara.position.toArray() as Vec3,
+    objetivo: controles.target.toArray() as Vec3,
+  })
+  let viaje: { recorrido: Viaje; transcurrido: number; alLlegar: () => void } | null = null
+  let regreso: { vista: Vista; min: number; max: number } | null = null
+  const viajarA = (hasta: Vista, alLlegar: () => void) => {
+    controles.enabled = false
+    controles.minDistance = 0 // durante el viaje, la órbita no debe recortar la distancia
+    controles.maxDistance = Infinity
+    viaje = { recorrido: crearViaje(vistaActual(), hasta), transcurrido: 0, alLlegar }
+  }
+  const panel = crearFicha(() => {
+    if (!regreso || viaje) return
+    const r = regreso
+    panel.ocultar()
+    viajarA(r.vista, () => {
+      controles.minDistance = r.min
+      controles.maxDistance = r.max
+      regreso = null
+    })
+  })
+  crearSeleccion({
+    lienzo: renderer.domElement,
+    camara,
+    objetos: [{ id: 'don-foco', objeto: foco, pista: FICHA_DON_FOCO.pista }],
+    esClic,
+    activo: () => viaje === null && regreso === null,
+    alClic: () => {
+      regreso = { vista: vistaActual(), min: controles.minDistance, max: controles.maxDistance }
+      const cuerpo = cuerpoDelFoco(sol)
+      const enfoque = enfocar(cuerpo.centro, cuerpo.radio, camara.position.toArray() as Vec3)
+      panel.mostrar(FICHA_DON_FOCO)
+      viajarA(enfoque.vista, () => {
+        controles.minDistance = enfoque.distanciaMin
+        controles.maxDistance = enfoque.distanciaMax
+      })
+    },
+  })
+
   window.addEventListener('resize', () => {
     camara.aspect = window.innerWidth / window.innerHeight
     camara.updateProjectionMatrix()
@@ -94,6 +140,20 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
     actualizar(segundos) {
       planeta.rotation.y += segundos * GIRO_PLANETA
       nubes.rotation.y += segundos * GIRO_NUBES
+      if (viaje) {
+        viaje.transcurrido += segundos
+        const { vista, llego } = enViaje(viaje.recorrido, viaje.transcurrido)
+        camara.position.set(...vista.posicion)
+        controles.target.set(...vista.objetivo)
+        camara.lookAt(controles.target)
+        if (llego) {
+          const alLlegar = viaje.alLlegar
+          viaje = null
+          alLlegar()
+          controles.enabled = true
+        }
+        return
+      }
       controles.update(segundos)
     },
   }

@@ -1,0 +1,38 @@
+// Las fichas que aparecen al hacer clic en algo de la escena (D-22). Solo datos: el texto
+// inventado y cómico (D-10). src/mundo/ficha.ts las dibuja.
+
+export interface Ficha {
+  titulo: string
+  subtitulo: string
+  parrafos: string[]
+  /** Ficha técnica: etiqueta y valor. */
+  datos: [string, string][]
+  /** La frase final, la que se queda. */
+  lema: string
+  /** Lo que dice el letrero al pasar el ratón por encima. */
+  pista: string
+}
+
+export const FICHA_DON_FOCO: Ficha = {
+  titulo: 'Don Foco',
+  subtitulo: 'Sistema solar de alta gama · energía ilimitada de fábrica',
+  parrafos: [
+    'Aquí no hay amaneceres: hay encendidos. Don Foco cuelga del techo del universo y lleva brillando ' +
+      'desde antes de que inventaran el apagador. Sin nubes que lo tapen, sin recibos, sin apagones: ' +
+      'luz premium, veinticuatro siete, para todo el planeta.',
+    'Filamento de grado galáctico, vidrio templado en una supernova y rosca universal que entra en ' +
+      'cualquier dimensión. Cada fotón sale pulido, calientito y con actitud.',
+    '¿Energía ilimitada? Ilimitada de verdad. Don Foco no se gasta, no se funde y no se apaga, ' +
+      'porque nadie en la historia ha encontrado dónde está el apagador.',
+  ],
+  datos: [
+    ['Potencia', '∞ W (y subiendo)'],
+    ['Consumo', '0 pesos al mes'],
+    ['Vida útil', 'más larga que el universo'],
+    ['Rosca', 'E∞ universal'],
+    ['Garantía', 'eterna, sin letra chiquita'],
+    ['Modo', 'siempre ON'],
+  ],
+  lema: 'No se funde, no se apaga: ilumina y nunca paga.',
+  pista: 'Don Foco · clic para verlo',
+}

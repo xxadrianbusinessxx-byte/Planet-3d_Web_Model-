@@ -52,6 +52,6 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - 2026-11-08_f2-ramas-main-colaborativa.md
 - 2026-11-08_f2-novedades-repo.md
 - 2026-11-08_f2-espacial-nubes-costas-mar.md
+- 2026-11-08_f2-espacial-don-foco.md
 - 2026-11-08_f2-espacial-decoracion.md
-- 2026-11-08_f1-tematica-hoja.md
 <!-- FIN GENERADO -->

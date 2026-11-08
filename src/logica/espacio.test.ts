@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { crearEstrellas, crearSol, limitesCamara, resumirCuadros } from './espacio'
+import { crearEstrellas, crearSol, cuerpoDelFoco, limitesCamara, resumirCuadros } from './espacio'
+
+describe('cuerpoDelFoco', () => {
+  it('el centro sube sobre el bulbo (por la rosca) y el radio abarca bulbo y rosca', () => {
+    const limites = limitesCamara(1, 0.16)
+    const sol = crearSol(limites, limites.lejos * 0.5)
+    const { centro, radio } = cuerpoDelFoco(sol)
+    expect(centro[1]).toBeGreaterThan(sol.direccion[1] * sol.distancia)
+    expect(centro[1] - radio).toBeLessThanOrEqual(sol.direccion[1] * sol.distancia - sol.radioBulbo) // abajo del bulbo
+    expect(centro[1] + radio).toBeGreaterThanOrEqual(sol.direccion[1] * sol.distancia + sol.radioBulbo * 2.5) // arriba de la rosca
+  })
+})
 
 describe('crearSol', () => {
   it('el foco cuelga entre el zoom máximo y el plano lejano, delante de las estrellas', () => {

@@ -252,3 +252,18 @@ Formato:
 - **Por qué:** lo pidió la persona: que si uno sube algo, el otro se entere en su siguiente
   sesión con IA, en las dos direcciones.
 - **Revisar cuando:** el resumen crezca tanto que estorbe al contexto, o se sume otra rama.
+
+## D-22 · Clic para enfocar: la cámara viaja al objeto y aparece su ficha (primero, Don Foco)
+- 2026-11-08 · persona
+- **Decisión:** el Sol-foco se llama **Don Foco**. Al pasar el ratón encima aparece un letrero;
+  al hacerle **clic, la cámara viaja suave hasta él** (1,6 s) y se puede girar a su alrededor,
+  y a un lado aparece su **ficha**: descripción con tono de comercial épico («sistema solar de
+  alta gama», energía ilimitada), ficha técnica inventada y un lema. **Se vuelve** con el botón
+  «Volver al planeta» o con **Esc**, al mismo punto de vista de antes. Es el molde para enfocar
+  otras cosas de la escena (continentes, minerales): cada una con su ficha en
+  `src/logica/fichas.ts`.
+- **Alternativas:** solo la ficha, sin mover la cámara; volver con clic en el planeta; nombres
+  «El Foco Supremo» o «Bombillón 3000».
+- **Por qué:** lo pidió la persona como primera transición de escenarios.
+- **Revisar cuando:** se decida `transicion-zoom` (D-11, F2): bajar con el zoom a países y
+  ciudades es otro camino y puede reusar el viaje de cámara de aquí.

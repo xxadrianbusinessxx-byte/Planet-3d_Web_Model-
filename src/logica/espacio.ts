@@ -95,3 +95,13 @@ export function crearSol(limites: LimitesCamara, radioEstrellasMin: number): Sol
   }
   return { direccion: [d[0] / l, d[1] / l, d[2] / l], distancia, radioBulbo }
 }
+
+/**
+ * El foco entero visto como una bola, para enfocarlo con la cámara (D-22): el bulbo va de −1 a
+ * +1 radio y la rosca sube hasta ~2,6 radios, así que el centro queda arriba del bulbo.
+ */
+export function cuerpoDelFoco(sol: Sol): { centro: [number, number, number]; radio: number } {
+  const r = sol.radioBulbo
+  const [x, y, z] = sol.direccion
+  return { centro: [x * sol.distancia, y * sol.distancia + r * 0.8, z * sol.distancia], radio: r * 1.8 }
+}
