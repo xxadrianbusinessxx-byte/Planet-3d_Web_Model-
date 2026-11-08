@@ -16,7 +16,7 @@
       "titulo": "Cuadros por segundo de la vista espacial (planeta + cámara orbital)",
       "unidad": "fps",
       "peor_si": "baja",
-      "umbral": 30,
+      "umbral": 60,
       "tipo": "dura",
       "fase": "F1",
       "instrumento": "Nivel 4 (docs/perfil/PRUEBAS.md): modo ?medir del HTML portátil, órbita automática de 20 s, promedio de cuadros por segundo; esta laptop (i3-1215U, Intel UHD), navegador con ventana a pantalla completa, conectada a la corriente."
@@ -26,7 +26,7 @@
       "titulo": "Tiempo de carga del HTML portátil hasta ver el planeta",
       "unidad": "s",
       "peor_si": "sube",
-      "umbral": 5,
+      "umbral": 2,
       "tipo": "dura",
       "fase": "F1",
       "instrumento": "Nivel 4: ms desde abrir dist/index.html por file:// hasta el primer cuadro dibujado, en esta laptop; se reporta en segundos."

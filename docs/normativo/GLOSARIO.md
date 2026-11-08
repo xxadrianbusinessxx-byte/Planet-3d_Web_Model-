@@ -22,3 +22,4 @@ tarea está mal planteada. Los términos del tipo de proyecto están en `docs/pe
 | Término | Qué es realmente |
 |---|---|
 | **respaldo (aquí)** | Un commit de git con el árbol limpio antes de una tarea M o L; aquí no se hacen `.zip` (D-04). |
+| **tope de fps** | El refresco de la pantalla (74 Hz en esta laptop; la medición da ~75). Medir en el tope dice «sobra GPU», no cuánta: para saber el margen hace falta el tiempo de cuadro. |

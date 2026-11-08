@@ -176,3 +176,15 @@ Formato:
 - **Por qué:** el colaborador descarga el HTML listo sin construir; git no carga un archivo
   generado que cambiaría en cada build.
 - **Revisar cuando:** haya que mostrarlo a alguien que no es colaborador del repo.
+
+## D-17 · Umbrales de la vista espacial apretados al cerrar F1: 60 fps y 2 s
+- 2026-11-08 · persona (al cerrar F1)
+- **Decisión:** `fps_espacial` pasa de 30 a **60 fps** y `carga_espacial_s` de 5 a **2 s**,
+  los dos duros (`docs/sistema/metricas.json`). El criterio de éxito de `proyecto.json` (30 fps,
+  5 s) no cambia: es lo mínimo para entregar; los umbrales vigilan que la vista espacial no
+  empeore cuando F2 le agregue cosas.
+- **Alternativas:** dejar 30 fps y 5 s (el criterio de éxito).
+- **Por qué:** al cerrar F1 se midió 75 fps (el tope de la pantalla) y 0,27 s
+  (`mediciones/2026-11-08_1451_rendimiento.json`); con 30 y 5 un retroceso grande pasaría sin aviso.
+- **Revisar cuando:** algo de F2 que sí cumple el criterio de éxito no pase los 60 fps o los 2 s
+  (aflojarlo lo decide la persona, R4), o se mida en otra PC (F4).

@@ -90,3 +90,14 @@ ocurrieron.
 - **Se prohíbe:** cargar código, fuentes, texturas o modelos desde una URL `http(s)://`.
 - **En su lugar:** todo como dependencia de npm o archivo local, embebido por `vite build` (D-07).
 - **Verificación:** nivel 3 de `docs/perfil/PRUEBAS.md` (el HTML construido sin URLs externas) y nivel 5.
+
+## R9. No se guarda un fps medido con el lienzo más chico que la pantalla
+
+- **Qué pasó:** 2026-11-08, F1: la primera medición (`mediciones/2026-11-08_0953_rendimiento.json`)
+  salió con un lienzo de 921×928 porque `--start-fullscreen` no aplica con Playwright; dibujaba
+  menos píxeles y daba fps de más. Ganada al cerrar F1 (aprobada por la persona).
+- **Se prohíbe:** guardar o citar un fps de nivel 4 si el lienzo no ocupa la pantalla entera.
+- **En su lugar:** pedir la pantalla completa por CDP y comprobar el tamaño del lienzo antes de
+  guardar (`docs/perfil/PRUEBAS.md` §«Cómo se mide el rendimiento»).
+- **Verificación:** `scripts/medir_rendimiento.mjs` se niega a guardar y sale con error si el
+  lienzo es menor que la pantalla.
