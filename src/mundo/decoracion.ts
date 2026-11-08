@@ -1,5 +1,5 @@
-// La decoración de la vista espacial (D-19) vuelta objetos de three: el foco que hace de Sol,
-// las nubes y los cristales de minerales raros. Aquí no se decide nada: dónde va cada cosa
+// La decoración de la vista espacial (D-19, D-20) vuelta objetos de three: el foco que hace
+// de Sol, la capa de nubes y los cristales de minerales raros. Aquí no se decide nada: dónde va cada cosa
 // lo dicen src/logica/adornos.ts y src/logica/espacio.ts.
 import {
   AdditiveBlending,
@@ -8,16 +8,19 @@ import {
   Color,
   ConeGeometry,
   CylinderGeometry,
+  DataTexture,
   Group,
-  IcosahedronGeometry,
   InstancedMesh,
   LatheGeometry,
+  LinearFilter,
   Matrix4,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
   MeshPhongMaterial,
   Quaternion,
+  RGBAFormat,
+  SphereGeometry,
   SRGBColorSpace,
   Sprite,
   SpriteMaterial,
@@ -26,7 +29,7 @@ import {
   Vector3,
 } from 'three'
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js'
-import type { Cristales, Nubes } from '../logica/adornos'
+import type { Cristales, MapaNubes } from '../logica/adornos'
 import type { Vec3 } from '../logica/hoja'
 import type { Sol } from '../logica/espacio'
 
@@ -112,32 +115,25 @@ export function crearFoco(sol: Sol): Group {
   return foco
 }
 
-/** Todas las bolitas de nube en una sola llamada de dibujo, un poco aplastadas contra el cielo. */
-export function crearNubes(nubes: Nubes): InstancedMesh {
-  const geometria = new IcosahedronGeometry(1, 1)
-  geometria.deleteAttribute('uv')
-  const material = new MeshLambertMaterial({ flatShading: true, emissive: 0x2a2030 })
-  const malla = new InstancedMesh(geometria, material, Math.max(1, nubes.cantidad))
-  malla.count = nubes.cantidad
-  const posicion = new Vector3()
-  const normal = new Vector3()
-  const giro = new Quaternion()
-  const escala = new Vector3()
-  const matriz = new Matrix4()
-  const color = new Color()
-  for (let i = 0; i < nubes.cantidad; i++) {
-    posicion.fromArray(nubes.posiciones, i * 3)
-    normal.copy(posicion).normalize()
-    giro.setFromUnitVectors(ARRIBA, normal)
-    const r = nubes.radios[i]
-    escala.set(r, r * 0.62, r)
-    malla.setMatrixAt(i, matriz.compose(posicion, giro, escala))
-    color.setRGB(nubes.colores[i * 3], nubes.colores[i * 3 + 1], nubes.colores[i * 3 + 2], SRGBColorSpace)
-    malla.setColorAt(i, color)
-  }
-  malla.instanceMatrix.needsUpdate = true
-  if (malla.instanceColor) malla.instanceColor.needsUpdate = true
-  return malla
+/**
+ * La capa de nubes (D-20): una esfera un poco mayor que el planeta con el mapa de nubes
+ * medio transparente. La ilumina el foco: del lado de noche se oscurece.
+ */
+export function crearCapaNubes(mapa: MapaNubes, radio: number): Mesh {
+  const textura = new DataTexture(mapa.pixeles, mapa.ancho, mapa.alto, RGBAFormat)
+  textura.colorSpace = SRGBColorSpace
+  textura.magFilter = LinearFilter
+  textura.minFilter = LinearFilter
+  textura.needsUpdate = true
+  const material = new MeshLambertMaterial({
+    map: textura,
+    transparent: true,
+    depthWrite: false,
+    emissive: 0x24182a,
+  })
+  const capa = new Mesh(new SphereGeometry(radio, 96, 48), material)
+  capa.renderOrder = 1.5 // después de la bebida, antes de los anillos
+  return capa
 }
 
 /** Un cristal: prisma de 6 caras con punta, de alto 1 y con el pie en el origen. */

@@ -1,15 +1,17 @@
 // Sección «vista espacial» (F1): arma la escena con la lógica y el mundo. Solo orquesta.
 import { DirectionalLight, Group, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { ANILLOS, bandasAnillos, crearCristales as repartirCristales, crearNubes as repartirNubes } from '../logica/adornos'
+import { ANILLOS, bandasAnillos, crearCristales as repartirCristales, crearMapaNubes } from '../logica/adornos'
 import { puntoEnMinerales } from '../logica/continentes'
 import { crearEstrellas as posicionesEstrellas, crearSol, limitesCamara } from '../logica/espacio'
 import { puntoDesdeCoordenadas, type Vec3 } from '../logica/hoja'
 import { crearDatosPlaneta, crearRelieve, OPCIONES_PLANETA, radioDelPunto } from '../logica/planeta'
-import { crearBrilloMinerales, crearCristales, crearFoco, crearNubes } from '../mundo/decoracion'
+import { crearBrilloMinerales, crearCapaNubes, crearCristales, crearFoco } from '../mundo/decoracion'
 import { crearAnillos, crearAtmosfera, crearBebida, crearEstrellas, crearMallaPlaneta } from '../mundo/mallas'
 
-const CANTIDAD_NUBES = 26
+/** Mapa de nubes: 512 × 256 alcanza para masas grandes y suaves (D-20). */
+const MAPA_NUBES = { ancho: 512, alto: 256 }
+const ALTURA_NUBES = 1.075
 const CANTIDAD_CRISTALES = 320
 /** Las nubes giran más lento que el planeta: así se ve que van a la deriva (D-19). */
 const GIRO_PLANETA = 0.03
@@ -55,7 +57,7 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
   )
   escena.add(planeta)
   const nubes = new Group()
-  nubes.add(crearNubes(repartirNubes(opciones.semilla + 1, CANTIDAD_NUBES)))
+  nubes.add(crearCapaNubes(crearMapaNubes(opciones.semilla + 1, MAPA_NUBES.ancho, MAPA_NUBES.alto), opciones.radio * ALTURA_NUBES))
   escena.add(nubes)
   escena.add(crearAnillos(ANILLOS, bandasAnillos(opciones.semilla, 512)))
   escena.add(crearAtmosfera(opciones.radio))

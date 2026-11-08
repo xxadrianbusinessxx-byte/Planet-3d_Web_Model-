@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { DIAMANTE, HONGO } from './continentes'
-import { puntoDesdeCoordenadas } from './hoja'
+import { DIAMANTE, HONGO, medidaDiamante, medidaHongo } from './continentes'
+import { HOJA, medidaHoja, puntoDesdeCoordenadas } from './hoja'
 import {
+  ALCANCE_CONTINENTE,
   ARISTA_PABELLON,
   colorHoja,
   colorPorAltura,
   crearDatosPlaneta,
   crearIcosfera,
   crearRelieve,
+  crearTierraCercana,
   LIMITE_SUBDIVISIONES,
   OPCIONES_PLANETA,
   radioDelPunto,
@@ -129,6 +131,33 @@ describe('crearDatosPlaneta', () => {
   })
 })
 
+describe('crearTierraCercana', () => {
+  it('1 tierra adentro, cerca de 0,5 en la orilla y 0 en mar abierto', () => {
+    const cerca = crearTierraCercana(OPCIONES_PLANETA)
+    expect(cerca(puntoDesdeCoordenadas(0, 0.15, HONGO))).toBe(1)
+    expect(cerca(puntoDesdeCoordenadas(0, -0.3, DIAMANTE))).toBe(1)
+    expect(cerca([0, -1, 0])).toBe(0)
+    const orilla = cerca(puntoDesdeCoordenadas(HONGO.medioAncho * Math.sqrt(1 - (0.15 / HONGO.altoSombrero) ** 2), 0.15, HONGO))
+    expect(orilla).toBeGreaterThan(0.2)
+    expect(orilla).toBeLessThan(0.8)
+  })
+
+  it('ningún continente se sale de su alcance (si no, la costa saldría cortada)', () => {
+    const aleatorio = crearAleatorio(21)
+    const marcos = { hoja: HOJA, hongo: HONGO, diamante: DIAMANTE }
+    for (let i = 0; i < 20000; i++) {
+      const z = aleatorio() * 2 - 1, a = aleatorio() * Math.PI * 2, r = Math.sqrt(1 - z * z)
+      const p: [number, number, number] = [Math.cos(a) * r, Math.sin(a) * r, z]
+      const enCada = { hoja: medidaHoja(p, HOJA), hongo: medidaHongo(p, HONGO), diamante: medidaDiamante(p, DIAMANTE) }
+      for (const c of ['hoja', 'hongo', 'diamante'] as const) {
+        if (enCada[c] === null) continue
+        const b = marcos[c].base
+        expect(Math.acos(p[0] * b[0] + p[1] * b[1] + p[2] * b[2])).toBeLessThan(ALCANCE_CONTINENTE[c])
+      }
+    }
+  })
+})
+
 describe('relieve y radio', () => {
   it('la tierra queda justo sobre la bebida y el fondo justo debajo (sin pelear con ella)', () => {
     const o = OPCIONES_PLANETA
@@ -157,8 +186,26 @@ describe('relieve y radio', () => {
       const z = aleatorio() * 2 - 1, a = aleatorio() * Math.PI * 2, r = Math.sqrt(1 - z * z)
       const punto = relieve([Math.cos(a) * r, Math.sin(a) * r, z])
       if (punto.continente === null) expect(punto.altura).toBeLessThan(OPCIONES_PLANETA.nivelMar)
-      else expect(punto.altura).toBeGreaterThan(OPCIONES_PLANETA.nivelMar)
     }
+  })
+
+  it('tierra adentro queda sobre la bebida y la orilla baja suave bajo ella (D-20)', () => {
+    const relieve = crearRelieve(OPCIONES_PLANETA)
+    const { nivelMar } = OPCIONES_PLANETA
+    // Centro del sombrero del hongo: tierra adentro, seca.
+    expect(relieve(puntoDesdeCoordenadas(0, 0.15, HONGO)).altura).toBeGreaterThan(nivelMar)
+    // Cruzando la orilla del sombrero hacia afuera: baja sin saltos y termina bajo la bebida.
+    let anterior = relieve(puntoDesdeCoordenadas(0.3, 0.15, HONGO)).altura
+    for (let x = 0.317; x <= 0.62; x += 0.017) { // paso = una arista de la icosfera
+      const altura = relieve(puntoDesdeCoordenadas(x, 0.15, HONGO)).altura
+      expect(Math.abs(altura - anterior)).toBeLessThan(0.1) // antes, el acantilado saltaba hasta 0,4
+      anterior = altura
+    }
+    expect(anterior).toBeLessThan(nivelMar)
+    // Justo dentro de la silueta, en la orilla, ya está bajo la bebida (se ve a través de ella).
+    const borde = relieve(puntoDesdeCoordenadas(0.465, 0.15, HONGO))
+    expect(borde.continente).toBe('hongo')
+    expect(borde.altura).toBeLessThan(nivelMar)
   })
 
   it('el hongo es verde y tierra; la corona del diamante, minerales con vetas de oro', () => {

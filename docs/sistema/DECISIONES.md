@@ -205,7 +205,7 @@ Formato:
   `colaborativa` trae lo nuevo de `main` al empezar cada tarea (recomendado en COLABORAR §3).
 - **Revisar cuando:** la fusión final se vea demasiado grande, o se sume un tercer trabajador.
 
-## D-19 · Decoración espacial: foco-Sol, nubes rosas y verdes, hongo y diamante con minerales
+## D-19 · Decoración espacial: foco-Sol, nubes rosas y verdes, hongo y diamante con minerales — **las nubes, reemplazadas por D-20**
 - 2026-11-08 · persona
 - **Decisión:** reemplaza de D-10 los «2–3 continentes de forma libre» y las gomitas. Los
   continentes son **solo tres**: la hoja, uno con **forma de hongo** y otro con **forma de
@@ -222,3 +222,18 @@ Formato:
   instanciados (una llamada de dibujo cada uno).
 - **Revisar cuando:** la sección clima (F2) haga su propio cielo: las nubes de aquí son
   decoración de la vista espacial, no el clima.
+
+## D-20 · Nubes grandes y medio transparentes, costas difuminadas y mar azul radiactivo
+- 2026-11-08 · persona
+- **Decisión:** reemplaza de D-19 las nubes de bolitas. Las nubes son **pocas masas grandes,
+  medio transparentes** (opacidad máxima 0,68), rosas y verdes en tono pastel, en una capa que
+  envuelve el planeta y va a la deriva. El **borde de los continentes se funde con el agua**: en
+  una franja de 0,07 rad la tierra baja suave bajo la bebida y el fondo marino sube a su
+  encuentro (se ve a través del agua). El **mar es azul radiactivo**: azul eléctrico que brilla
+  un poco por sí mismo; el halo de atmósfera, más cian.
+- **Alternativas:** bolitas más grandes y transparentes (se encimaban y se veían manchadas);
+  nubes verdes saturadas (se confundían con tierra); mar verde fosforescente (no es azul).
+- **Por qué:** lo pidió la persona; la capa de nubes es una sola esfera con una textura, así
+  que cuesta casi nada en fps.
+- **Revisar cuando:** la sección clima (F2) haga su propio cielo, o si la orilla hundida
+  esconde demasiado las puntas de la hoja.

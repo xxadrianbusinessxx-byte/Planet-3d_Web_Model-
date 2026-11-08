@@ -9,6 +9,8 @@ conforme se construye el sistema; cada fila nace del primer fallo real de ese ti
 | la página queda en blanco o muestra el aviso | `src/main.ts`, `src/mundo/navegador.ts` | `npm run probar`: imprime el aviso y los errores de consola |
 | el planeta se ve distinto sin haber tocado su código | `src/logica/planeta.ts` (`OPCIONES_PLANETA`), `src/logica/ruido.ts` | `npm test`: «es determinista» |
 | la hoja se ve deforme o con huecos | `src/logica/hoja.ts` (`HOJA`, `FOLIOLOS_HOJA`); `subdivisiones` en `planeta.ts` | `npm test`: pruebas de `hoja.test.ts` |
-| anillos de frente, nubes dentro de la tierra o cristales flotando | `src/logica/adornos.ts` (`ANILLOS.inclinacion`, `OPCIONES_NUBES`, `crearCristales`) | `npm test`: «todas flotan entre las cimas y la atmósfera», «todos nacen en el suelo de la zona de minerales» |
+| anillos de frente o cristales flotando | `src/logica/adornos.ts` (`ANILLOS.inclinacion`, `crearCristales`) | `npm test`: «todos nacen en el suelo de la zona de minerales» |
+| nubes demasiado opacas, muy pocas o confundidas con tierra | `src/logica/adornos.ts` (`OPCIONES_NUBES`, `ROSA_NUBE`, `VERDE_NUBE`); la capa en `src/mundo/decoracion.ts` (`crearCapaNubes`) | `npm test`: «pocas masas grandes», «medio transparentes» |
+| la orilla con escalón o las puntas de la hoja hundidas de más | `src/logica/planeta.ts` (`ANCHO_COSTA`, `crearTierraCercana`, `ALCANCE_CONTINENTE`) | `npm test`: «la orilla baja suave bajo ella», «ningún continente se sale de su alcance» |
 | el hongo o el diamante deformes, encimados o con islas alrededor | `src/logica/continentes.ts` (`HONGO`, `DIAMANTE`); `crearRelieve` en `planeta.ts` | `npm test`: «no se enciman», «sin islas» |
 | no se ve el foco (Sol) | `src/logica/espacio.ts` (`crearSol`), `src/mundo/decoracion.ts` (`crearFoco`) | está del lado de noche: girar la cámara hacia allá; `npm test`: «el foco cuelga entre el zoom máximo y el plano lejano» |

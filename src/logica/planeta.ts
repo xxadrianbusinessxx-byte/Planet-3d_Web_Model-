@@ -155,8 +155,89 @@ export interface PuntoRelieve {
 
 export type Relieve = (p: Vec3) => PuntoRelieve
 
-/** El relieve del planeta en cada dirección (p unitario). Determinista con la semilla. */
+/**
+ * Hasta qué distancia angular (rad) de su base llega cada continente: fuera de ahí no se
+ * prueba la silueta (así la costa suave no cuesta en el mar abierto). La prueba lo comprueba.
+ */
+export const ALCANCE_CONTINENTE: Record<Continente, number> = { hoja: 1.05, hongo: 0.75, diamante: 0.8 }
+
+/** Radio (rad) del anillo exterior con que se mira cuánta tierra hay cerca: el ancho de la costa suave (D-20). */
+export const ANCHO_COSTA = 0.07
+const MUESTRAS_COSTA = 8
+
+const suavizar = (borde0: number, borde1: number, x: number) => {
+  const t = Math.min(1, Math.max(0, (x - borde0) / (borde1 - borde0)))
+  return t * t * (3 - 2 * t)
+}
+
+/**
+ * Qué fracción de dos anillos (radio ANCHO_COSTA y su mitad) alrededor de p es tierra, en [0, 1]: 1 tierra
+ * adentro, ~0,5 sobre la orilla, 0 en mar abierto. Con esto la costa baja suave bajo la bebida.
+ */
+export function crearTierraCercana(opciones: OpcionesPlaneta = OPCIONES_PLANETA): (p: Vec3) => number {
+  const marcos = [
+    { marco: opciones.hoja, alcance: Math.cos(ALCANCE_CONTINENTE.hoja + ANCHO_COSTA) },
+    { marco: opciones.hongo, alcance: Math.cos(ALCANCE_CONTINENTE.hongo + ANCHO_COSTA) },
+    { marco: opciones.diamante, alcance: Math.cos(ALCANCE_CONTINENTE.diamante + ANCHO_COSTA) },
+  ]
+  const esTierra = (q: Vec3) =>
+    medidaHoja(q, opciones.hoja) !== null || medidaHongo(q, opciones.hongo) !== null || medidaDiamante(q, opciones.diamante) !== null
+  return (p) => {
+    const cerca = marcos.some(({ marco, alcance }) => p[0] * marco.base[0] + p[1] * marco.base[1] + p[2] * marco.base[2] > alcance)
+    if (!cerca) return 0
+    const otro: Vec3 = Math.abs(p[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0]
+    const e1 = normalizar3(cruz3(otro, p))
+    const e2 = cruz3(p, e1)
+    // Dos anillos (a medio radio y al radio entero), girados entre sí: la fracción sale en
+    // dieciseisavos y la orilla baja en escalones chicos.
+    const anillo = (radio: number, desfase: number) => {
+      let n = 0
+      for (let i = 0; i < MUESTRAS_COSTA; i++) {
+        const a = ((i + desfase) / MUESTRAS_COSTA) * Math.PI * 2
+        const c = Math.cos(a) * radio, s = Math.sin(a) * radio
+        if (esTierra(normalizar3([p[0] + e1[0] * c + e2[0] * s, p[1] + e1[1] * c + e2[1] * s, p[2] + e1[2] * c + e2[2] * s]))) n++
+      }
+      return n
+    }
+    // El anillo exterior decide casi siempre: todo tierra o todo mar, igual que el centro.
+    const exterior = anillo(ANCHO_COSTA, 0)
+    const centro = esTierra(p)
+    if (exterior === MUESTRAS_COSTA && centro) return 1
+    if (exterior === 0 && !centro) return 0
+    return (exterior + anillo(ANCHO_COSTA * 0.5, 0.5)) / (MUESTRAS_COSTA * 2)
+  }
+}
+
+const cruz3 = (a: Vec3, b: Vec3): Vec3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+function normalizar3(a: Vec3): Vec3 {
+  const l = Math.hypot(a[0], a[1], a[2])
+  return [a[0] / l, a[1] / l, a[2] / l]
+}
+
+/**
+ * El relieve del planeta en cada dirección (p unitario). Determinista con la semilla. Cerca de
+ * la orilla (D-20) la tierra baja suave bajo la bebida y el fondo marino sube a su encuentro.
+ */
 export function crearRelieve(opciones: OpcionesPlaneta = OPCIONES_PLANETA): Relieve {
+  const tierraCercana = crearTierraCercana(opciones)
+  const orilla = opciones.nivelMar - 0.03
+  const relieveSeco = crearRelieveSeco(opciones)
+  return (p) => {
+    const punto = relieveSeco(p)
+    const cerca = tierraCercana(p)
+    if (punto.continente !== null) {
+      // Tierra adentro (cerca = 1) queda igual; en la orilla se hunde poco a poco bajo la bebida.
+      const t = suavizar(0.45, 1, cerca)
+      return { ...punto, altura: orilla + (punto.altura - orilla) * t }
+    }
+    // Plataforma: el fondo sube hacia la orilla y se ve más claro a través de la bebida.
+    const t = suavizar(0, 0.5, cerca)
+    return { ...punto, altura: punto.altura + (orilla - 0.005 - punto.altura) * t }
+  }
+}
+
+/** El relieve sin la costa suave: cada continente con su forma y el fondo marino. */
+function crearRelieveSeco(opciones: OpcionesPlaneta): Relieve {
   const ruido = crearRuido3D(opciones.semilla)
   const f = opciones.frecuencia
   const suelo = opciones.nivelMar + 0.05
@@ -222,6 +303,8 @@ export interface DatosPlaneta {
 export function crearDatosPlaneta(opciones: OpcionesPlaneta = OPCIONES_PLANETA): DatosPlaneta {
   const { vertices, caras } = crearIcosfera(opciones.subdivisiones)
   const relieve = crearRelieve(opciones)
+  // El color de una cara no depende de la costa suave: basta el relieve seco (es 3 veces más barato).
+  const relieveSeco = crearRelieveSeco(opciones)
 
   const n = vertices.length / 3
   const alturas = new Float32Array(n)
@@ -244,7 +327,7 @@ export function crearDatosPlaneta(opciones: OpcionesPlaneta = OPCIONES_PLANETA):
     }
     // El color de la cara se decide en su centro: así las siluetas y sus aristas salen nítidas.
     const largo = Math.hypot(...centro)
-    const enCentro = relieve([centro[0] / largo, centro[1] / largo, centro[2] / largo])
+    const enCentro = relieveSeco([centro[0] / largo, centro[1] / largo, centro[2] / largo])
     const media = suma / 3
     let color: Color
     if (enCentro.continente !== null && enCentro.color !== null) {

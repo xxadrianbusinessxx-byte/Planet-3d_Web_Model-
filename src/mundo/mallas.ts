@@ -66,7 +66,7 @@ export function crearAtmosfera(radio: number): Mesh {
     depthWrite: false,
     side: BackSide,
     blending: AdditiveBlending,
-    uniforms: { colorAire: { value: new Color(0x5aa8ff) }, bordePlaneta: { value: bordePlaneta } },
+    uniforms: { colorAire: { value: new Color(0x2fc8ff) }, bordePlaneta: { value: bordePlaneta } },
     vertexShader: /* glsl */ `
       varying vec3 vNormal;
       varying vec3 vVista;
@@ -89,14 +89,19 @@ export function crearAtmosfera(radio: number): Mesh {
   return new Mesh(new SphereGeometry(radio * escala, 48, 24), material)
 }
 
-/** La bebida azul (D-10): una esfera translúcida y brillante; deja ver el fondo marino. */
+/**
+ * La bebida azul (D-10), en un tono radiactivo (D-20): azul eléctrico que brilla un poco por sí
+ * mismo, translúcida para dejar ver el fondo marino y la orilla hundida de los continentes.
+ */
 export function crearBebida(radio: number): Mesh {
   const material = new MeshPhongMaterial({
-    color: 0x1e9bff,
-    specular: 0xbfeaff,
-    shininess: 90,
+    color: 0x08c4ff,
+    emissive: 0x0a3dff,
+    emissiveIntensity: 0.75,
+    specular: 0xd8ffff,
+    shininess: 110,
     transparent: true,
-    opacity: 0.78,
+    opacity: 0.7,
     depthWrite: false,
   })
   const bebida = new Mesh(new SphereGeometry(radio, 96, 64), material)

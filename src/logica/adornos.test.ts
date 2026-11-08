@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { bandasAnillos, COLORES_CRISTALES, COLORES_NUBES, crearCristales, crearNubes, OPCIONES_NUBES } from './adornos'
+import {
+  bandasAnillos,
+  COLORES_CRISTALES,
+  crearCristales,
+  crearMapaNubes,
+  direccionDeTexel,
+  OPCIONES_NUBES,
+  ROSA_NUBE,
+  VERDE_NUBE,
+} from './adornos'
 import { DIAMANTE, puntoEnMinerales } from './continentes'
 import type { Vec3 } from './hoja'
 import { crearRelieve, OPCIONES_PLANETA, radioDelPunto } from './planeta'
@@ -24,38 +33,54 @@ describe('bandasAnillos', () => {
   })
 })
 
-describe('crearNubes', () => {
-  it('rechaza cantidades y opciones inválidas y acepta cero', () => {
-    expect(() => crearNubes(1, -1)).toThrow(RangeError)
-    expect(() => crearNubes(1, 3, { ...OPCIONES_NUBES, bolitasMin: 0 })).toThrow(RangeError)
-    expect(crearNubes(1, 0).cantidad).toBe(0)
+describe('direccionDeTexel', () => {
+  it('cae donde la pone una SphereGeometry de three', () => {
+    const [x, y, z] = direccionDeTexel(0.25, 0.5)
+    expect(x).toBeCloseTo(0, 6)
+    expect(y).toBeCloseTo(0, 6)
+    expect(z).toBeCloseTo(1, 6)
+    expect(direccionDeTexel(0.3, 1)[1]).toBeCloseTo(1, 6) // v = 1: polo norte
+    expect(direccionDeTexel(0.3, 0)[1]).toBeCloseTo(-1, 6)
+  })
+})
+
+describe('crearMapaNubes', () => {
+  it('rechaza tamaños y opciones inválidos', () => {
+    expect(() => crearMapaNubes(1, 1, 8)).toThrow(RangeError)
+    expect(() => crearMapaNubes(1, 8.5, 8)).toThrow(RangeError)
+    expect(() => crearMapaNubes(1, 8, 8, { ...OPCIONES_NUBES, opacidadMax: 1.5 })).toThrow(RangeError)
+    expect(() => crearMapaNubes(1, 8, 8, { ...OPCIONES_NUBES, transicion: 0 })).toThrow(RangeError)
   })
 
-  it('todas flotan entre las cimas y la atmósfera, con 4 a 7 bolitas cada una', () => {
-    const n = crearNubes(4, 40)
-    expect(n.nubes).toBe(40)
-    expect(n.cantidad).toBeGreaterThanOrEqual(40 * OPCIONES_NUBES.bolitasMin)
-    expect(n.cantidad).toBeLessThanOrEqual(40 * OPCIONES_NUBES.bolitasMax)
-    for (let i = 0; i < n.cantidad; i++) {
-      const r = Math.hypot(n.posiciones[i * 3], n.posiciones[i * 3 + 1], n.posiciones[i * 3 + 2])
-      expect(r).toBeGreaterThanOrEqual(OPCIONES_NUBES.alturaMin - 1e-6)
-      expect(r).toBeLessThanOrEqual(OPCIONES_NUBES.alturaMax + 1e-6)
-      expect(n.radios[i]).toBeGreaterThan(0)
+  const mapa = crearMapaNubes(8, 128, 64)
+
+  it('pocas masas grandes: cubren buena parte del cielo pero no todo', () => {
+    expect(mapa.pixeles.length).toBe(128 * 64 * 4)
+    expect(mapa.cobertura).toBeGreaterThan(0.2)
+    expect(mapa.cobertura).toBeLessThan(0.6)
+  })
+
+  it('medio transparentes: ninguna pasa de la opacidad máxima y hay cielo despejado', () => {
+    let maximo = 0, despejado = 0
+    for (let k = 3; k < mapa.pixeles.length; k += 4) {
+      maximo = Math.max(maximo, mapa.pixeles[k])
+      if (mapa.pixeles[k] === 0) despejado++
     }
+    expect(maximo).toBeLessThanOrEqual(Math.round(OPCIONES_NUBES.opacidadMax * 255))
+    expect(maximo).toBeGreaterThan(100)
+    expect(despejado).toBeGreaterThan(0)
   })
 
   it('las hay rosas y verdes, y es determinista', () => {
-    const n = crearNubes(4, 40)
-    const verdes = COLORES_NUBES.slice(2).map((c) => c.join())
-    let hayRosa = false, hayVerde = false
-    for (let i = 0; i < n.cantidad; i++) {
-      const c = [n.colores[i * 3], n.colores[i * 3 + 1], n.colores[i * 3 + 2]].map((v) => Math.fround(v))
-      const clave = verdes.find((v) => v.split(',').map((x) => Math.fround(Number(x))).join() === c.join())
-      if (clave) hayVerde = true
-      else hayRosa = true
+    let rosas = 0, verdes = 0
+    for (let k = 0; k < mapa.pixeles.length; k += 4) {
+      if (mapa.pixeles[k + 3] < 20) continue
+      if (mapa.pixeles[k] === ROSA_NUBE[0] && mapa.pixeles[k + 1] === ROSA_NUBE[1]) rosas++
+      if (mapa.pixeles[k] === VERDE_NUBE[0] && mapa.pixeles[k + 1] === VERDE_NUBE[1]) verdes++
     }
-    expect(hayRosa && hayVerde).toBe(true)
-    expect(crearNubes(4, 40).posiciones).toEqual(n.posiciones)
+    expect(rosas).toBeGreaterThan(0)
+    expect(verdes).toBeGreaterThan(0)
+    expect(crearMapaNubes(8, 128, 64).pixeles).toEqual(mapa.pixeles)
   })
 })
 

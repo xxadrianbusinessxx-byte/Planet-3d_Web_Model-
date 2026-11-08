@@ -1,7 +1,7 @@
-// Adornos de la vista espacial: anillos rosas (D-10), nubes rosas y verdes y cristales de
-// minerales raros (D-19). Código puro: devuelve arreglos; src/mundo/ los vuelve mallas.
+// Adornos de la vista espacial: anillos rosas (D-10), nubes rosas y verdes (D-19, D-20) y
+// cristales de minerales raros (D-19). Código puro: devuelve arreglos; src/mundo/ los vuelve mallas.
 import type { Vec3 } from './hoja'
-import { crearAleatorio } from './ruido'
+import { crearAleatorio, crearRuido3D, fbm } from './ruido'
 
 export interface Anillos {
   radioInterior: number
@@ -41,82 +41,78 @@ export function bandasAnillos(semilla: number, muestras: number): Uint8Array {
 
 // ── Nubes ─────────────────────────────────────────────────────────────────────────────────
 
-export interface Nubes {
-  /** Centro de cada bolita de nube (varias bolitas forman una nube). */
-  posiciones: Float32Array
-  /** Radio de cada bolita. */
-  radios: Float32Array
-  /** Color RGB 0–1 de cada bolita (todas las de una nube, del mismo color). */
-  colores: Float32Array
-  /** Cuántas bolitas y cuántas nubes. */
-  cantidad: number
-  nubes: number
-}
-
-export const COLORES_NUBES: [number, number, number][] = [
-  [1, 0.72, 0.87], [1, 0.58, 0.8], // rosas
-  [0.66, 0.96, 0.72], [0.5, 0.88, 0.62], // verdes
-]
-
 export interface OpcionesNubes {
-  /** Distancia al centro del planeta: entre las cimas y el halo de atmósfera. */
-  alturaMin: number
-  alturaMax: number
-  bolitasMin: number
-  bolitasMax: number
-  /** Radio de cada bolita, en unidades del planeta. */
-  radioMin: number
-  radioMax: number
+  /** Frecuencia del ruido: baja = pocas masas grandes (D-20). */
+  frecuencia: number
+  octavas: number
+  /** Densidad del ruido desde la que empieza a haber nube, y cuánto tarda en llenarse. */
+  umbral: number
+  transicion: number
+  /** Opacidad máxima: medio transparentes (D-20). */
+  opacidadMax: number
 }
 
 export const OPCIONES_NUBES: OpcionesNubes = {
-  alturaMin: 1.075,
-  alturaMax: 1.095,
-  bolitasMin: 4,
-  bolitasMax: 7,
-  radioMin: 0.028,
-  radioMax: 0.055,
+  frecuencia: 1.5,
+  octavas: 5,
+  umbral: 0.02,
+  transicion: 0.24,
+  opacidadMax: 0.68,
+}
+
+/** Rosa y verde (D-19), en 0–255. */
+export const ROSA_NUBE: [number, number, number] = [255, 135, 210]
+export const VERDE_NUBE: [number, number, number] = [160, 255, 195]
+
+/**
+ * La dirección (unitaria) que cae en el punto (u, v) de una textura equirectangular puesta
+ * sobre una SphereGeometry de three (u da la vuelta, v = 0 en el polo sur, v = 1 en el norte).
+ */
+export function direccionDeTexel(u: number, v: number): Vec3 {
+  const phi = u * Math.PI * 2
+  const theta = (1 - v) * Math.PI
+  return [-Math.cos(phi) * Math.sin(theta), Math.cos(theta), Math.sin(phi) * Math.sin(theta)]
+}
+
+export interface MapaNubes {
+  /** RGBA 0–255, fila 0 abajo (polo sur), como la espera una DataTexture. */
+  pixeles: Uint8Array
+  ancho: number
+  alto: number
+  /** Fracción del cielo con algo de nube, en [0, 1]. */
+  cobertura: number
 }
 
 /**
- * Nubes de bolitas repartidas al azar (con semilla) alrededor del planeta. Cada nube es una
- * fila corta de bolitas sobre el plano tangente, más grandes al centro; mitad rosas y mitad verdes.
+ * Las nubes como un mapa que envuelve el planeta: pocas masas grandes y medio transparentes,
+ * rosas o verdes según la región. El ruido se toma en 3D sobre la esfera: no hay costura.
  */
-export function crearNubes(semilla: number, cantidad: number, o: OpcionesNubes = OPCIONES_NUBES): Nubes {
-  if (!Number.isInteger(cantidad) || cantidad < 0) throw new RangeError('nubes: cantidad entera ≥ 0')
-  if (o.alturaMin <= 0 || o.alturaMax < o.alturaMin || o.bolitasMin < 1 || o.bolitasMax < o.bolitasMin) {
-    throw new RangeError('nubes: opciones fuera de rango')
+export function crearMapaNubes(semilla: number, ancho: number, alto: number, o: OpcionesNubes = OPCIONES_NUBES): MapaNubes {
+  if (!Number.isInteger(ancho) || !Number.isInteger(alto) || ancho < 2 || alto < 2) {
+    throw new RangeError('nubes: el mapa necesita ancho y alto enteros ≥ 2')
   }
-  const aleatorio = crearAleatorio(semilla)
-  const posiciones: number[] = [], radios: number[] = [], colores: number[] = []
-  for (let n = 0; n < cantidad; n++) {
-    const p = direccionAlAzar(aleatorio)
-    const [e1, e2] = tangentes(p)
-    const angulo = aleatorio() * Math.PI * 2
-    const eje: Vec3 = sumar(escalar(e1, Math.cos(angulo)), escalar(e2, Math.sin(angulo)))
-    const altura = o.alturaMin + (o.alturaMax - o.alturaMin) * aleatorio()
-    const bolitas = o.bolitasMin + Math.floor(aleatorio() * (o.bolitasMax - o.bolitasMin + 1))
-    const color = COLORES_NUBES[n % 2 === 0 ? Math.floor(aleatorio() * 2) : 2 + Math.floor(aleatorio() * 2)]
-    const lado: Vec3 = cruz(p, eje)
-    for (let b = 0; b < bolitas; b++) {
-      const s = bolitas === 1 ? 0 : (b / (bolitas - 1)) * 2 - 1 // de -1 a 1 a lo largo de la nube
-      const radio = (o.radioMin + (o.radioMax - o.radioMin) * aleatorio()) * (1 - 0.4 * Math.abs(s))
-      // Bolitas encimadas (paso menor que su radio) y un poco corridas a los lados: un cúmulo.
-      const largo = escalar(eje, s * o.radioMax * (bolitas - 1) * 0.32)
-      const ancho = escalar(lado, (aleatorio() - 0.5) * o.radioMax * 0.9)
-      const centro = normalizar(sumar(p, sumar(largo, ancho)))
-      posiciones.push(...escalar(centro, altura))
-      radios.push(radio)
-      colores.push(...color)
+  if (o.transicion <= 0 || o.opacidadMax < 0 || o.opacidadMax > 1) throw new RangeError('nubes: opciones fuera de rango')
+  const densidad = crearRuido3D(semilla)
+  const tono = crearRuido3D(semilla + 101)
+  const pixeles = new Uint8Array(ancho * alto * 4)
+  let conNube = 0
+  for (let j = 0; j < alto; j++) {
+    for (let i = 0; i < ancho; i++) {
+      const p = direccionDeTexel((i + 0.5) / ancho, (j + 0.5) / alto)
+      const f = o.frecuencia
+      const d = fbm(densidad, p[0] * f, p[1] * f, p[2] * f, o.octavas)
+      const t = Math.min(1, Math.max(0, (d - o.umbral) / o.transicion))
+      const alfa = t * t * (3 - 2 * t) * o.opacidadMax
+      // Rosa o verde por regiones grandes, con una mezcla corta entre las dos.
+      const r = fbm(tono, p[0] * 0.8, p[1] * 0.8, p[2] * 0.8, 2)
+      const verde = Math.min(1, Math.max(0, (r + 0.06) / 0.12))
+      const k = (j * ancho + i) * 4
+      for (let c = 0; c < 3; c++) pixeles[k + c] = Math.round(ROSA_NUBE[c] + (VERDE_NUBE[c] - ROSA_NUBE[c]) * verde)
+      pixeles[k + 3] = Math.round(alfa * 255)
+      if (alfa > 0.02) conNube++
     }
   }
-  return {
-    posiciones: Float32Array.from(posiciones),
-    radios: Float32Array.from(radios),
-    colores: Float32Array.from(colores),
-    cantidad: radios.length,
-    nubes: cantidad,
-  }
+  return { pixeles, ancho, alto, cobertura: conNube / (ancho * alto) }
 }
 
 // ── Cristales de minerales raros ──────────────────────────────────────────────────────────
@@ -184,13 +180,6 @@ export function crearCristales(
 }
 
 // ── Vectores ──────────────────────────────────────────────────────────────────────────────
-
-function direccionAlAzar(aleatorio: () => number): Vec3 {
-  const z = aleatorio() * 2 - 1
-  const angulo = aleatorio() * Math.PI * 2
-  const anillo = Math.sqrt(1 - z * z)
-  return [Math.cos(angulo) * anillo, Math.sin(angulo) * anillo, z]
-}
 
 /** Dos direcciones perpendiculares entre sí y a p (unitario). */
 function tangentes(p: Vec3): [Vec3, Vec3] {
