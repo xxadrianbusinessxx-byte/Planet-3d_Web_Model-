@@ -279,9 +279,9 @@
     {
       "riesgo": "bajo",
       "quien": "persona",
-      "respuesta": null,
-      "revisado": null,
-      "estado": "abierto",
+      "respuesta": "Se llaman Grinders; en la página Population hay uno grande que posa al frente y una ronda de 6 en la orilla del mar quemando y moliendo (D-28).",
+      "revisado": "2026-11-08",
+      "estado": "cerrado",
       "id": "alien-detalle",
       "tipo": "pregunta",
       "fase": "F3",

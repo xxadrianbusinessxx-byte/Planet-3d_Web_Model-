@@ -91,13 +91,13 @@
     },
     {
       "id": "poblacion",
-      "titulo": "Población: los aliens (D-13)",
+      "titulo": "Población: los aliens (D-13, D-28)",
       "fase": "F2",
       "continente": "the-leaf",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
       "rama": "main",
-      "estado": "reservada"
+      "estado": "hecha"
     },
     {
       "id": "transporte",

@@ -344,3 +344,23 @@ Formato:
   importante sí llegue a los dos.
 - **Revisar cuando:** se una el colaborador (poner su nombre en el reparto) o una sección
   necesite algo de otra que no se lanzó.
+
+## D-28 · La población son los Grinders: playa, ronda de 6 y uno que posa (página Population)
+- 2026-11-08 · persona (qué muestra); agente (la forma)
+- **Decisión:** (1) La especie se llama **Grinders** (cierra `alien-detalle`). Viven **en la
+  orilla del mar quemando y moliendo**. (2) La página Population de The Leaf muestra **un
+  Grinder grande que posa al frente** (el retrato de la especie, sin nombre propio) y **una
+  ronda de 6** detrás que se pasa el porro, en una **playa con hamacas y una palapita**, con
+  **movimiento suave** (se mecen, sale humo, giran los molinillos). (3) **Por código ahora, IA
+  después:** hoy el Grinder es low-poly por código y es un diseño propio (cabeza de pera,
+  mejillas verdes); **no se parte del modelo de la película** (se mantiene D-13). (4) **La
+  plantilla de accesorios:** el modelo IA de F3 será solo el cuerpo, con objetos vacíos
+  llamados `ancla-cabeza`, `ancla-torso`, `ancla-mano-der` y `ancla-mano-izq`
+  (`ANCLAS_GRINDER` en `src/logica/poblacion.ts`); la guayabera, la gorra, el porro y el
+  molinillo se enganchan ahí. (5) El texto de la ficha lo aprobó la persona.
+- **Alternativas:** Chillers, Greyzies o Toketos como nombre; una multitud de ~40 o uno solo;
+  adaptar un modelo de Paul (descartado por D-13); el modelo IA ya vestido.
+- **Por qué:** lo decidió la persona; el cuerpo con anclas deja cambiar accesorios sin
+  regenerar el modelo y cambiar el cuerpo sin rehacer los accesorios.
+- **Revisar cuando:** llegue el modelo IA del cuerpo (F3, `limites-modelo-ia`) o la página
+  necesite más Grinders de los que caben en la escena fija.

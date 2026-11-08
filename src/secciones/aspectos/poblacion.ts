@@ -1,6 +1,13 @@
-// Página «Población» (sección poblacion de reparto.json, en The Leaf; D-26). Hoy es de prueba: la ficha sin
-// descripción y un marcador. Aquí se arma lo que muestra este aspecto; su lógica va en
-// src/logica/.
-import { paginaDePrueba } from './pagina'
+// Página «Population» (sección poblacion de reparto.json, en The Leaf; D-13, D-26, D-28): los
+// Grinders en la orilla del mar quemando y moliendo. Solo orquesta: el texto y lo que se decide
+// están en src/logica/poblacion.ts; el dibujo, en src/mundo/poblacion.ts.
+import { FICHA_POBLACION } from '../../logica/poblacion'
+import { armarPoblacion } from '../../mundo/poblacion'
+import type { PaginaAspecto } from './pagina'
 
-export const PAGINA = paginaDePrueba('poblacion', 'Population', '👽', 0x9be15d)
+export const PAGINA: PaginaAspecto = {
+  id: 'poblacion',
+  pestana: 'Population',
+  ficha: FICHA_POBLACION,
+  armar: armarPoblacion,
+}

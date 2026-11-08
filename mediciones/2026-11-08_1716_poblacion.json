@@ -1,0 +1,18 @@
+{
+  "fecha": "2026-11-08T17:16",
+  "tipo": "rendimiento",
+  "comando": "npm run build y un script de Playwright de la sesión (no está en scripts/): abre dist/index.html por file:// en msedge a pantalla completa por CDP, hace clic en The Leaf, espera la página Population y cuenta 10 s de requestAnimationFrame",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080 px (pixelRatio 1); página Population de The Leaf (primera pestaña); 1 Grinder grande + 6 en ronda, playa, palapa, 2 hamacas, humo; antes de esta tarea la página de prueba tenía 54 triángulos (HUD, npm run dev)",
+  "valores": {
+    "peso_html_mb": 0.61
+  },
+  "detalle": {
+    "fps_pagina_poblacion": 74.5,
+    "triangulos_pagina_poblacion": 7452,
+    "entrada_desde_clic_s": 1.807,
+    "percentil_95_ms": 13.4,
+    "triangulos_antes": 54,
+    "nota": "74,5 fps es el tope de la pantalla de 74 Hz: sobra GPU, no se sabe cuánta. entrada_desde_clic_s incluye el acercamiento de 1,2 s y los fundidos.",
+    "nota_metricas": "las cifras de la página van en detalle porque metricas.json aún no tiene métricas por página (pregunta para la persona)"
+  }
+}

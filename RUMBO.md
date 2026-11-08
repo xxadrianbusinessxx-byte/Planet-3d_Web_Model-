@@ -50,8 +50,8 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 ## Últimos informes
 
 - 2026-11-08_f2-ramas-main-colaborativa.md
+- 2026-11-08_f2-poblacion-grinders-playa.md
 - 2026-11-08_f2-novedades-repo.md
 - 2026-11-08_f2-espacial-paginas-aspectos.md
 - 2026-11-08_f2-espacial-nubes-costas-mar.md
-- 2026-11-08_f2-espacial-escenarios-continentes.md
 <!-- FIN GENERADO -->
