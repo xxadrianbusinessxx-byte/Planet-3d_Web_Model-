@@ -19,4 +19,6 @@ tarea está mal planteada. Los términos del tipo de proyecto están en `docs/pe
 
 ## Términos del proyecto
 
-Ninguno todavía. Se agregan cuando una confusión cuesta algo.
+| Término | Qué es realmente |
+|---|---|
+| **respaldo (aquí)** | Un commit de git con el árbol limpio antes de una tarea M o L; aquí no se hacen `.zip` (D-04). |

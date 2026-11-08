@@ -10,5 +10,66 @@
     "Aflojar un umbral lo decide la persona y queda en DECISIONES.md (R4). Apretarlo cuando",
     "la métrica mejora es parte del trabajo. El perfil siembra sus métricas al crear el proyecto."
   ],
-  "metricas": []
+  "metricas": [
+    {
+      "id": "fps_espacial",
+      "titulo": "Cuadros por segundo de la vista espacial (planeta + cámara orbital)",
+      "unidad": "fps",
+      "peor_si": "baja",
+      "umbral": 30,
+      "tipo": "dura",
+      "fase": "F1",
+      "instrumento": "Nivel 4 (docs/perfil/PRUEBAS.md): modo ?medir del HTML portátil, órbita automática de 20 s, promedio de cuadros por segundo; esta laptop (i3-1215U, Intel UHD), navegador con ventana a pantalla completa, conectada a la corriente."
+    },
+    {
+      "id": "carga_espacial_s",
+      "titulo": "Tiempo de carga del HTML portátil hasta ver el planeta",
+      "unidad": "s",
+      "peor_si": "sube",
+      "umbral": 5,
+      "tipo": "dura",
+      "fase": "F1",
+      "instrumento": "Nivel 4: ms desde abrir dist/index.html por file:// hasta el primer cuadro dibujado, en esta laptop; se reporta en segundos."
+    },
+    {
+      "id": "peso_html_mb",
+      "titulo": "Peso del HTML portátil (todo embebido)",
+      "unidad": "MB",
+      "peor_si": "sube",
+      "umbral": null,
+      "tipo": "dura",
+      "fase": "F1",
+      "instrumento": "Nivel 3: tamaño de dist/index.html tras npx vite build, en MB."
+    },
+    {
+      "id": "fps_ciudad",
+      "titulo": "Cuadros por segundo con la cámara en una ciudad",
+      "unidad": "fps",
+      "peor_si": "baja",
+      "umbral": null,
+      "tipo": "dura",
+      "fase": "F2",
+      "instrumento": "Nivel 4 (docs/perfil/PRUEBAS.md): modo ?medir del HTML portátil, recorrido automático de 20 s por la ciudad, promedio de cuadros por segundo; esta laptop (i3-1215U, Intel UHD), navegador con ventana a pantalla completa, conectada a la corriente."
+    },
+    {
+      "id": "carga_ciudad_s",
+      "titulo": "Tiempo en que aparece la ciudad al bajar desde el espacio",
+      "unidad": "s",
+      "peor_si": "sube",
+      "umbral": null,
+      "tipo": "dura",
+      "fase": "F2",
+      "instrumento": "Nivel 4: ms desde que la cámara cruza el umbral de la sección hasta que la ciudad está dibujada, en esta laptop."
+    },
+    {
+      "id": "fps_transporte_personas",
+      "titulo": "Cuadros por segundo con vehículos y personas en movimiento",
+      "unidad": "fps",
+      "peor_si": "baja",
+      "umbral": null,
+      "tipo": "dura",
+      "fase": "F3",
+      "instrumento": "Nivel 4 (docs/perfil/PRUEBAS.md): modo ?medir del HTML portátil, recorrido automático de 20 s con tráfico y personas, promedio de cuadros por segundo; esta laptop (i3-1215U, Intel UHD), navegador con ventana a pantalla completa, conectada a la corriente."
+    }
+  ]
 }

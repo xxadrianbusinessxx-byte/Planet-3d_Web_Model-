@@ -52,4 +52,41 @@ están en `docs/perfil/REGLAS.md`. Todas se confirman en el arranque.
 
 ## Reglas propias del proyecto
 
-Ninguna todavía.
+Pedidas por la persona en el arranque (2026-11-08) como riesgos previstos; todavía no
+ocurrieron.
+
+## R5. Ninguna clave de IA en el código ni en git
+
+- **Qué pasó:** riesgo previsto. Las claves de Meshy, Tripo u otros generadores dan acceso a
+  créditos de pago; un repo que se comparte las expondría.
+- **Se prohíbe:** escribir una clave o token en `src/`, en scripts o en cualquier archivo con
+  seguimiento de git.
+- **En su lugar:** `.env` (declarado en `archivos_secretos`, ignorado por `.gitignore`), con
+  un `.env.example` sin valores.
+- **Verificación:** `scripts/verificar_orden.py` N5 (secretos en el código) y `.gitignore`.
+
+## R6. No gastar créditos de pago de IA sin OK
+
+- **Qué pasó:** riesgo previsto: un generador cobra por modelo y los planes gratis se acaban rápido.
+- **Se prohíbe:** usar créditos de pago o contratar un plan sin que la persona lo apruebe en esa tarea.
+- **En su lugar:** planes gratis (D-06); si no alcanzan, pedir OK con el costo exacto.
+- **Verificación:** revisión.
+
+## R7. Ningún modelo IA entra sin optimizar
+
+- **Qué pasó:** riesgo previsto: la salida de un generador pesa decenas de MB y hunde los fps
+  en gráficos integrados.
+- **Se prohíbe:** poner en `src/modelos/` un modelo que no pasó la tubería de
+  `docs/perfil/ORDEN.md` §4.
+- **En su lugar:** en bruto en `datos/modelos-ia/`; optimizado con `gltf-transform` (meshopt),
+  dentro de su límite de peso y triángulos.
+- **Verificación:** revisión hasta F3; entonces, guardián que revise extensión meshopt y peso
+  de cada `.glb` de `src/modelos/`.
+
+## R8. El HTML portátil no depende de internet
+
+- **Qué pasó:** riesgo previsto: una CDN o una fuente de Google en línea dejan la maqueta en
+  blanco en una PC sin red.
+- **Se prohíbe:** cargar código, fuentes, texturas o modelos desde una URL `http(s)://`.
+- **En su lugar:** todo como dependencia de npm o archivo local, embebido por `vite build` (D-07).
+- **Verificación:** nivel 3 de `docs/perfil/PRUEBAS.md` (el HTML construido sin URLs externas) y nivel 5.

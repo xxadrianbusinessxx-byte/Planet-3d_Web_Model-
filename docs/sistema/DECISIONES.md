@@ -17,19 +17,79 @@ Formato:
 
 ---
 
-## D-01 · Un solo agente: Claude (núcleo, se confirma en el arranque)
+## D-01 · Un solo agente: Claude (núcleo; confirmada en el arranque 2026-11-08)
 - 2026-10-29 · persona
 - **Decisión:** Claude diagnostica, implementa y revisa. `CLAUDE.md` es la única entrada.
 - **Revisar cuando:** se sume otro agente: su entrada apunta a `CLAUDE.md`.
 
-## D-02 · Sin git: respaldos por tarea (núcleo, se confirma en el arranque)
+## D-02 · Sin git: respaldos por tarea (núcleo) — **reemplazada por D-04**
 - 2026-10-29 · persona
 - **Decisión:** antes de cada tarea M o L se hace un respaldo `.zip` con
   `scripts/respaldar.py`; el historial de cambios son los informes.
 - **Alternativas:** git local.
 - **Revisar cuando:** se necesite colaborar con otras personas sobre el mismo código.
 
-## D-03 · Perfil base
+## D-03 · Perfil base (confirmada en el arranque 2026-11-08)
 - Creación del proyecto · plantilla
 - **Decisión:** el proyecto empieza con el perfil `base`; `docs/perfil/` se llena en el arranque.
 - **Revisar cuando:** exista un perfil que encaje, o este proyecto se vuelva uno.
+
+## D-04 · Git con repositorio privado en GitHub; sin respaldos .zip
+- 2026-11-08 · persona
+- **Decisión:** el proyecto usa git (rama `main`). El respaldo antes de una tarea M o L es un
+  **commit** con el árbol limpio (y otro al terminar); no se hacen `.zip` con
+  `scripts/respaldar.py`. El remoto es un repositorio **privado** en GitHub que crea la persona
+  en github.com y pasa la URL; el agente solo agrega el remoto. **Nada de push sin que la
+  persona lo pida en esa tarea.** `datos/` (modelos IA en bruto) no entra al repo: se conserva
+  su origen (enlace o archivo descargado del generador).
+- **Alternativas:** git + `.zip` antes de cada tarea M/L; instalar la CLI `gh` (no está instalada).
+- **Por qué:** git ya guarda cada estado; el `.zip` duplicaría el respaldo y el espacio.
+- **Revisar cuando:** haya un modelo en bruto que no se pueda volver a descargar.
+
+## D-05 · Three.js (WebGLRenderer) + Vite + TypeScript
+- 2026-11-08 · persona
+- **Decisión:** motor `three` (r187, npm 0.187.0) con **`WebGLRenderer`**; construcción con
+  **Vite 8**; código en **TypeScript**; pruebas con **Vitest**.
+- **Alternativas:** `WebGPURenderer` (cae a WebGL 2 si no hay WebGPU, pero WebGPU no está
+  garantizado en cualquier PC); JavaScript sin tipos.
+- **Por qué:** el entregable debe correr en cualquier PC; WebGL es lo más compatible. TypeScript
+  detecta errores antes de correr.
+- **Revisar cuando:** una sección no llegue a sus fps con WebGL: medir `WebGPURenderer` en esta laptop.
+
+## D-06 · Modelos: mezcla de código e IA
+- 2026-11-08 · persona
+- **Decisión:** planeta, terreno, ciudades y calles se **generan por código** (deterministas, con
+  semilla). La IA se usa solo para **piezas sueltas** (personas, vehículos, edificios icónicos), y
+  cada pieza entra **optimizada** (R7). Generadores en la nube (la GPU local no corre los
+  locales): TRELLIS.2 en Hugging Face (gratis, licencia MIT), Meshy gratis (100 créditos/mes,
+  CC BY 4.0 con atribución), Tripo gratis (CC BY 4.0, no comercial). Créditos de pago: nunca
+  sin OK de la persona (R6).
+- **Alternativas:** todo con IA; todo a mano en Blender.
+- **Por qué:** lo procedural pesa casi nada y escala con nivel de detalle; la IA acelera las
+  piezas con forma propia.
+- **Revisar cuando:** F3, al traer las primeras piezas IA (límites de peso y triángulos).
+
+## D-07 · Entregable portátil: un solo HTML, sin internet
+- 2026-11-08 · persona
+- **Decisión:** `vite build` con `vite-plugin-singlefile` produce **un solo `dist/index.html`**
+  con todo embebido (código, texturas, modelos). Abre con **doble clic** desde una carpeta o
+  USB, en cualquier PC, **sin internet ni instalación** (R8).
+- **Alternativas:** página publicada en internet; las dos.
+- **Por qué:** se presenta en otra PC cuyo equipo y red no se conocen.
+- **Revisar cuando:** el HTML crezca tanto que tarde en abrir (métrica `peso_html_mb`).
+
+## D-08 · Estilo low-poly y vista espacial primero
+- 2026-11-08 · persona
+- **Decisión:** estilo **low-poly estilizado** (colores planos, pocos polígonos). Orden de
+  secciones: vista espacial (F1) → bajar a una ciudad (F2) → transporte y personas (F3).
+- **Por qué:** low-poly se ve bien y corre fluido en gráficos integrados; la vista espacial es
+  la base sobre la que se baja a lo demás.
+- **Revisar cuando:** la persona quiera más realismo en una sección.
+
+## D-09 · Nombres en español; ante duda o error, estado seguro y aviso
+- 2026-11-08 · persona
+- **Decisión:** identificadores en **español sin acentos ni ñ** (`crearPlaneta`); lo de Three.js
+  queda en inglés. Ante una duda o un error (un modelo que no carga, un WebGL que no arranca),
+  la escena **no se cae en blanco**: muestra lo que sí cargó y un aviso legible.
+- **Por qué:** consistencia con los otros proyectos; un HTML en blanco en una presentación no
+  dice qué pasó.

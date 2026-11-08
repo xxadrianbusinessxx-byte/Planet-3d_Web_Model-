@@ -21,9 +21,9 @@
       "riesgo": "alto",
       "quien": "persona",
       "destino": "docs/perfil/ORDEN.md",
-      "respuesta": null,
-      "revisado": null,
-      "estado": "abierto"
+      "respuesta": "Three.js r187 + Vite 8 + TypeScript + Vitest; código en src/ (logica, mundo, secciones, modelos). D-05, docs/perfil/ORDEN.md.",
+      "revisado": "2026-11-08",
+      "estado": "cerrado"
     },
     {
       "id": "como-se-prueba",
@@ -34,9 +34,9 @@
       "riesgo": "alto",
       "quien": "persona",
       "destino": "docs/perfil/PRUEBAS.md",
-      "respuesta": null,
-      "revisado": null,
-      "estado": "abierto"
+      "respuesta": "Niveles 1–5 en docs/perfil/PRUEBAS.md; scripts/pasos_perfil.py los corre en cuanto exista package.json (F1).",
+      "revisado": "2026-11-08",
+      "estado": "cerrado"
     },
     {
       "id": "perfil-nuevo",
@@ -51,6 +51,138 @@
       "respuesta": null,
       "revisado": null,
       "estado": "abierto"
+    },
+    {
+      "riesgo": "medio",
+      "quien": "persona",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "repo-github",
+      "tipo": "pendiente",
+      "fase": "F1",
+      "titulo": "Crear el repositorio privado planeta-3d en github.com y pasar su URL",
+      "detalle": "Vacío (sin README ni .gitignore). El agente agrega el remoto; push solo cuando la persona lo pida (D-04).",
+      "destino": "docs/sistema/DECISIONES.md"
+    },
+    {
+      "riesgo": "bajo",
+      "quien": "persona",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "limite-peso-html",
+      "tipo": "pregunta",
+      "fase": "F1",
+      "titulo": "¿Cuánto puede pesar como máximo el HTML portátil?",
+      "detalle": "En el arranque se dejó sin límite. Con la primera medición de peso_html_mb (F1) se propone un umbral; la persona decide.",
+      "destino": "docs/sistema/metricas.json"
+    },
+    {
+      "riesgo": "medio",
+      "quien": "persona",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "metas-ciudad",
+      "tipo": "pregunta",
+      "fase": "F2",
+      "titulo": "¿Qué fps y qué tiempo de aparición se exigen al bajar a la ciudad?",
+      "detalle": "Umbrales de fps_ciudad y carga_ciudad_s. Propuesta: 30 fps y 2 s.",
+      "destino": "docs/sistema/metricas.json"
+    },
+    {
+      "riesgo": "bajo",
+      "quien": "persona",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "instalar-blender",
+      "tipo": "pendiente",
+      "fase": "F3",
+      "titulo": "Instalar Blender (gratis) para revisar los modelos IA",
+      "detalle": "La persona dijo que lo instala; hace falta antes de traer las primeras piezas IA (docs/perfil/ORDEN.md §4, paso 2).",
+      "destino": "ESTADO-ACTUAL.md"
+    },
+    {
+      "riesgo": "medio",
+      "quien": "persona",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "limites-modelo-ia",
+      "tipo": "pregunta",
+      "fase": "F3",
+      "titulo": "¿Cuánto pueden pesar y cuántos triángulos pueden tener una persona, un vehículo y un edificio IA?",
+      "detalle": "Límite de R7. Propuesta inicial: persona ≤ 3 000 triángulos y 150 KB; vehículo ≤ 5 000 y 250 KB; edificio icónico ≤ 20 000 y 1 MB.",
+      "destino": "docs/sistema/metricas.json"
+    },
+    {
+      "riesgo": "medio",
+      "quien": "persona",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "metas-transporte-personas",
+      "tipo": "pregunta",
+      "fase": "F3",
+      "titulo": "¿Cuántos vehículos y personas a la vez, y a cuántos fps?",
+      "detalle": "Umbral de fps_transporte_personas y tamaño de la multitud.",
+      "destino": "docs/sistema/metricas.json"
+    },
+    {
+      "riesgo": "bajo",
+      "quien": "agente",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "licencia-modelos-ia",
+      "tipo": "pendiente",
+      "fase": "F3",
+      "titulo": "Anotar origen y licencia de cada modelo IA",
+      "detalle": "Meshy y Tripo gratis son CC BY 4.0 (atribución; Tripo no comercial). La pantalla de créditos del HTML los nombra.",
+      "destino": "docs/perfil/ORDEN.md"
+    },
+    {
+      "riesgo": "medio",
+      "quien": "persona",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "otra-pc",
+      "tipo": "pendiente",
+      "fase": "F4",
+      "titulo": "Probar el HTML portátil en otra PC, sin internet",
+      "detalle": "Nivel 5: doble clic desde USB; anotar equipo, navegador y fps en mediciones/.",
+      "destino": "mediciones/"
+    },
+    {
+      "riesgo": "bajo",
+      "quien": "agente",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "plantilla-git-crear-proyecto",
+      "tipo": "plantilla",
+      "division": "nucleo",
+      "fase": "F1",
+      "titulo": "crear_proyecto.py con \"git\": true debe permitir .git y .gitignore en la raíz y sembrar un .gitignore",
+      "detalle": "En planeta-3d (primer proyecto con git) se hizo a mano: raiz_permitida_extra con .git y .gitignore, y el .gitignore sembrado.",
+      "destino": "proyecto.json"
+    },
+    {
+      "riesgo": "bajo",
+      "quien": "agente",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto",
+      "id": "plantilla-respaldo-git",
+      "tipo": "plantilla",
+      "division": "nucleo",
+      "fase": "F1",
+      "titulo": "Con git, el respaldo debería poder ser un commit: respaldar.py, sesion.py y CLAUDE.md §4 solo conocen el .zip",
+      "detalle": "planeta-3d decidió solo git (D-04). sesion.py sigue avisando «Sin respaldos todavía» y el arranque §5.8 pide respaldar.py; aquí se resolvió con D-04 y un término en el GLOSARIO. Propuesta: respaldos.modo = \"git\" | \"zip\" | \"ambos\".",
+      "destino": "scripts/respaldar.py"
     }
   ]
 }

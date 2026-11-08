@@ -1,4 +1,4 @@
-# INVARIANTES — 11 principios, uno por línea
+# INVARIANTES — 14 principios, uno por línea
 
 **Generado por `python scripts/gen_invariantes.py` — no editar a mano.** El § es esa
 sección de `docs/normativo/FILOSOFIA.md` (núcleo) o de `docs/perfil/FILOSOFIA.md`
@@ -17,3 +17,6 @@ sección de `docs/normativo/FILOSOFIA.md` (núcleo) o de `docs/perfil/FILOSOFIA.
 | §9 | núcleo | Sin una decisión válida no hay acción irreversible; la duda y el error terminan en estado seguro y aviso. |
 | §10 | núcleo | No se optimiza un tramo sin haber medido antes cuánto pesa cada uno. |
 | §11 | núcleo | Ningún secreto aparece en el código fuera de los archivos de secretos declarados. |
+| §P1 | perfil | Ninguna sección se da por terminada sin su medición de fps, carga y peso en esta laptop. |
+| §P2 | perfil | Todo modelo de IA entra a la escena optimizado y dentro de su límite de peso. |
+| §P3 | perfil | El entregable abre con doble clic en cualquier PC, sin internet ni instalación. |

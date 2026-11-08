@@ -10,18 +10,18 @@
     "perfil_version": "1.0",
     "creado_el": "2026-11-08"
   },
-  "estado": "sin-arrancar",
-  "arrancado_el": null,
-  "nombre": null,
-  "descripcion": null,
-  "criterio_de_exito": null,
+  "estado": "arrancado",
+  "arrancado_el": "2026-11-08",
+  "nombre": "Planeta 3D",
+  "descripcion": "Web local con Three.js que simula un planeta por secciones —vista espacial, ciudades, transporte y personas—, todo desde cero. Nació como maqueta escolar y ahora es un banco de pruebas de modelos 3D en la web: planeta, terreno, ciudades y calles generados por código; piezas sueltas (personas, vehículos, edificios icónicos) generadas con IA y optimizadas. Se entrega como un solo HTML que abre con doble clic en cualquier PC, sin internet.",
+  "criterio_de_exito": "El HTML portátil abre con doble clic en otra PC sin internet ni instalación y muestra el planeta low-poly con cámara orbital y zoom, a 30 fps o más en esta laptop (Intel UHD) y con carga de menos de 5 s.",
   "contexto": {
-    "tipo": null,
-    "fecha_entrega": null
+    "tipo": "personal",
+    "fecha_entrega": "2026-11-09"
   },
   "perfil": "base",
   "variante": null,
-  "fase_actual": "F0",
+  "fase_actual": "F1",
   "fases": [
     {
       "id": "F0",
@@ -30,23 +30,23 @@
     },
     {
       "id": "F1",
-      "titulo": "Primera versión funcionando",
-      "cierre": "existe la versión más pequeña que hace algo útil de punta a punta, con sus pruebas en verificar.py."
+      "titulo": "Vista espacial portátil",
+      "cierre": "el HTML portátil muestra el planeta low-poly con cámara orbital y zoom, cumple fps y carga en esta laptop, y verificar.py corre sus niveles 1–3."
     },
     {
       "id": "F2",
-      "titulo": "Lo esencial completo",
-      "cierre": "todo lo que pide el criterio de éxito existe y tiene pruebas."
+      "titulo": "Bajar a la superficie",
+      "cierre": "se puede acercar del espacio a una ciudad generada por código (terreno, calles, edificios) sin cortes y con sus métricas por sección."
     },
     {
       "id": "F3",
-      "titulo": "Prueba real",
-      "cierre": "se probó con usuarios o condiciones reales y hay métricas de esa prueba."
+      "titulo": "Transporte, personas y modelos IA",
+      "cierre": "hay vehículos y personas (piezas IA optimizadas, con instancing) moviéndose en la ciudad, dentro de sus métricas."
     },
     {
       "id": "F4",
-      "titulo": "Entrega",
-      "cierre": "está entregado y documentado lo necesario para usarlo y mantenerlo."
+      "titulo": "Prueba en otra PC y entrega",
+      "cierre": "se abrió con doble clic en otra PC, se midió allí y está documentado cómo usarlo y mantenerlo."
     }
   ],
   "agentes": [
@@ -55,17 +55,37 @@
   "git": true,
   "respaldos": {
     "carpeta": null,
-    "antes_de_cada_tarea": "M y L"
+    "antes_de_cada_tarea": "M y L",
+    "modo": "git (commit antes y después; sin .zip, D-04)"
   },
-  "carpetas_codigo": [],
-  "archivos_secretos": [],
-  "idioma_identificadores": null,
+  "carpetas_codigo": [
+    "src"
+  ],
+  "archivos_secretos": [
+    ".env"
+  ],
+  "idioma_identificadores": "español sin acentos ni ñ",
   "informe_talla_por_defecto": "M",
   "presupuesto_contexto": {
     "techo_tokens_arranque": 10000
   },
   "raiz_permitida_extra": [
     ".git",
-    ".gitignore"
-  ]
+    ".gitignore",
+    "package.json",
+    "package-lock.json",
+    "tsconfig.json",
+    "vite.config.ts",
+    "index.html",
+    "public",
+    "node_modules",
+    "dist"
+  ],
+  "stack": {
+    "motor": "three 0.187 (WebGLRenderer)",
+    "construccion": "vite 8 + vite-plugin-singlefile",
+    "lenguaje": "TypeScript",
+    "pruebas": "vitest",
+    "modelos": "@gltf-transform/cli (meshopt)"
+  }
 }
