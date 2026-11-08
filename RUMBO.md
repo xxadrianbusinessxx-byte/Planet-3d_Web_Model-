@@ -49,9 +49,9 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 ## Últimos informes
 
+- 2026-11-08_f2-ramas-main-colaborativa.md
 - 2026-11-08_f1-tematica-hoja.md
 - 2026-11-08_f1-espacial-cierre.md
 - 2026-11-08_f1-escena-minima.md
 - 2026-11-08_f1-colaboracion-github.md
-- 2026-11-08_arranque.md
 <!-- FIN GENERADO -->

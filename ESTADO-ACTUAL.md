@@ -26,8 +26,8 @@ compartidos), 24 GB de RAM; libre: C: 41 GB, E: 505 GB.
 - **git:** rama `main`; remoto `origin` = repo privado
   `https://github.com/xxadrianbusinessxx-byte/Planet-3d_Web_Model-.git` (lo creó la persona;
   inicio de sesión por Git Credential Manager). La CLI `gh` no está instalada. Colaboración a
-  la par por secciones, ramas y PR: `docs/sistema/COLABORAR.md` (D-14 a D-16); otras IA
-  entran por `AGENTS.md`.
+  la par por secciones: Adrian en `main`, los demás en la rama `colaborativa`, que se junta al
+  final (`docs/sistema/COLABORAR.md`, D-18); otras IA entran por `AGENTS.md`.
 - **npm (instalado y probado, `package.json`):** three 0.187.0, vite 8.3.6, vite-plugin-singlefile
   2.3.4, typescript 7.0.2, vitest 5.1.0, playwright 1.65.0 (usa el Edge 157 del sistema; no
   descarga navegadores). `@gltf-transform/cli` aún no (F3).

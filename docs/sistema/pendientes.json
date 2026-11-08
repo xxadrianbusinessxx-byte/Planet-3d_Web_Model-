@@ -335,7 +335,7 @@
       "division": "nucleo",
       "fase": "F1",
       "titulo": "Flujo de colaboración con git para proyectos con varias personas",
-      "detalle": "planeta-3d/docs/sistema/COLABORAR.md: reparto con dueño único reservado por commit directo a main (git rechaza al segundo), ramas por sección, PR por tarea en verde, merge (no rebase) para no forzar push, y una tabla de conflictos por archivo: los generados (RUMBO, INVARIANTES) se regeneran, pendientes.json conserva las dos entradas, DECISIONES renumera quien fusiona segundo, ESTADO junta las dos verdades. Más .gitattributes con * text=auto y .claude/settings.local.json en .gitignore. Idea para sesion.py: avisar si la rama va detrás de origin y mostrar el reparto.",
+      "detalle": "planeta-3d/docs/sistema/COLABORAR.md: reparto con dueño único reservado por commit directo a main (git rechaza al segundo), ramas por sección, PR por tarea en verde, merge (no rebase) para no forzar push, y una tabla de conflictos por archivo: los generados (RUMBO, INVARIANTES) se regeneran, pendientes.json conserva las dos entradas, DECISIONES renumera quien fusiona segundo, ESTADO junta las dos verdades. Más .gitattributes con * text=auto y .claude/settings.local.json en .gitignore. Idea para sesion.py: avisar si la rama va detrás de origin y mostrar el reparto. Actualización (D-18): planeta-3d pasó a dos ramas, main del dueño y colaborativa para los demás, con fusión final; el reparto se mira en las dos ramas. Una plantilla podría ofrecer los dos modos (rama por sección con PR, o dueño + colaborativa).",
       "riesgo": "bajo",
       "quien": "agente",
       "destino": "docs/normativo/ORDEN.md",

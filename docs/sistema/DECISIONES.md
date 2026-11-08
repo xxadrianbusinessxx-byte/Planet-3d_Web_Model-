@@ -132,7 +132,7 @@ Formato:
 - **Alternativas:** Paul tal cual (personaje con derechos de autor); un alien sin referencia.
 - **Por qué:** el guiño se mantiene y el personaje es del proyecto.
 
-## D-14 · Varias IA, una sola entrada: `CLAUDE.md`
+## D-14 · Varias IA, una sola entrada: `CLAUDE.md` — **en parte reemplazada por D-18** (sin PR)
 - 2026-11-08 · persona
 - **Decisión:** en el proyecto trabaja otra persona con su propia IA (aún no se sabe cuál).
   **Todas las IA siguen las mismas reglas**: entran por `CLAUDE.md`; las que no son Claude
@@ -145,7 +145,7 @@ Formato:
 - **Revisar cuando:** se sepa qué IA usa la otra persona y no lea `AGENTS.md` (se suma su
   archivo de entrada, también solo de apunte).
 
-## D-15 · Trabajo a la par por secciones del planeta, con reparto y ramas
+## D-15 · Trabajo a la par por secciones del planeta, con reparto y ramas — **en parte reemplazada por D-18** (ramas, reserva y cuándo se junta)
 - 2026-11-08 · persona
 - **Decisión:** el planeta se reparte en **secciones** (`docs/sistema/reparto.json`, fuente
   única: espacial, continentes, ciudad, clima, zonas-de-trabajo, trabajos, poblacion,
@@ -188,3 +188,19 @@ Formato:
   (`mediciones/2026-11-08_1451_rendimiento.json`); con 30 y 5 un retroceso grande pasaría sin aviso.
 - **Revisar cuando:** algo de F2 que sí cumple el criterio de éxito no pase los 60 fps o los 2 s
   (aflojarlo lo decide la persona, R4), o se mida en otra PC (F4).
+
+## D-18 · Dos ramas: `main` para Adrian, `colaborativa` para los demás; se juntan al final
+- 2026-11-08 · persona
+- **Decisión:** Adrian trabaja **directo en `main`**, sin ramas. Cualquier otro trabajador
+  sube **todo** a una sola rama `colaborativa` y nunca hace commit ni push a `main`. Al
+  **final del proyecto**, Adrian junta `colaborativa` con `main` en una sesión de fusión
+  final. Reemplaza de D-15 las ramas `seccion/<id>`, el PR por cada tarea en verde y la
+  reserva por commit directo a `main`; de D-14, el PR para los archivos compartidos. Sigue de
+  D-15: las secciones, el reparto (ahora se mira en las dos ramas y se reserva en la propia),
+  las fases, sin límite y la sesión independiente por sección. Flujo: `docs/sistema/COLABORAR.md`.
+- **Alternativas:** rama por sección con PR por tarea (D-15); juntar al cerrar cada fase.
+- **Por qué:** Adrian trabaja solo y sin preocuparse por ramas; el otro trabajador tiene un
+  solo lugar donde subir.
+- **Riesgo aceptado:** la fusión final puede traer conflictos grandes. Se achica si
+  `colaborativa` trae lo nuevo de `main` al empezar cada tarea (recomendado en COLABORAR §3).
+- **Revisar cuando:** la fusión final se vea demasiado grande, o se sume un tercer trabajador.

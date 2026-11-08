@@ -1,13 +1,13 @@
 {
   "_comentario": [
-    "Fuente única de las secciones del planeta y de quién trabaja en cada una (D-15).",
+    "Fuente única de las secciones del planeta y de quién trabaja en cada una (D-15, D-18).",
     "Cómo se reserva, se suelta o se entrega una sección: docs/sistema/COLABORAR.md §2.",
-    "Se reserva con un commit directo a main que solo toca este archivo; si al hacer push git",
-    "lo rechaza, alguien reservó antes: git pull y volver a mirar.",
+    "Existe en main y en colaborativa: antes de elegir se mira en las dos; se reserva con un",
+    "commit en la rama propia y push inmediato.",
     "",
     "Campos de cada sección: id · titulo · fase (se trabaja desde que el proyecto llega a ella)",
-    "· quien (nombre de trabajadores, o null si está libre) · reservada_el · rama (seccion/<id>",
-    "cuando ya hay trabajo) · estado (libre | reservada | en-curso | hecha).",
+    "· quien (nombre de trabajadores, o null si está libre) · reservada_el · rama (main si es",
+    "de Adrian, colaborativa si es de otro) · estado (libre | reservada | en-curso | hecha).",
     "Sin límite de secciones por trabajador; se suelta la que ya no se vaya a hacer."
   ],
   "trabajadores": [
@@ -24,7 +24,7 @@
       "fase": "F1",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
-      "rama": "seccion/espacial",
+      "rama": "main",
       "estado": "en-curso"
     },
     {
@@ -78,7 +78,7 @@
       "fase": "F3",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
-      "rama": null,
+      "rama": "main",
       "estado": "reservada"
     },
     {
@@ -87,7 +87,7 @@
       "fase": "F3",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
-      "rama": null,
+      "rama": "main",
       "estado": "reservada"
     },
     {
@@ -96,7 +96,7 @@
       "fase": "F3",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
-      "rama": null,
+      "rama": "main",
       "estado": "reservada"
     },
     {
@@ -114,7 +114,7 @@
       "fase": "F3",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
-      "rama": null,
+      "rama": "main",
       "estado": "reservada"
     },
     {

@@ -11,8 +11,9 @@ Para la persona. El agente entra por `CLAUDE.md`.
 
 ## Trabajar con otra persona
 
-El repo está en GitHub y se trabaja a la par por secciones del planeta. Cómo invitar a
-alguien, reservar una sección, trabajar en ramas, juntar con `main` y entregar el HTML:
+El repo está en GitHub y se trabaja a la par por secciones del planeta. Tú trabajas directo
+en `main`; la otra persona sube todo a la rama `colaborativa` y al final se juntan (D-18).
+Cómo invitar a alguien, reservar una sección, la fusión final y entregar el HTML:
 `docs/sistema/COLABORAR.md`. Si la otra persona usa otra IA, esa IA entra por `AGENTS.md`.
 
 ## Comandos
