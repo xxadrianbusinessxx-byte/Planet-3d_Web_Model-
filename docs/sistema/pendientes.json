@@ -1,0 +1,56 @@
+{
+  "_comentario": [
+    "Preguntas, pendientes y lecciones que NINGÚN script puede medir. Se edita a mano.",
+    "Lo que sí se puede medir no va aquí: va a docs/sistema/metricas.json (una sola fuente).",
+    "",
+    "Campos: id · tipo (pregunta | pendiente | plantilla) · fase (cuándo toca) · titulo ·",
+    "detalle · riesgo (alto | medio | bajo) · quien (persona | agente) · destino (archivo que",
+    "se actualiza al resolverlo) · respuesta · revisado (fecha de la última comprobación real)",
+    "· estado (abierto | cerrado). Las de tipo plantilla llevan además division (nucleo | perfil).",
+    "",
+    "Una pregunta toca cuando su fase es menor o igual a la fase_actual de proyecto.json; el",
+    "hook de sesión y RUMBO.md la muestran. El perfil siembra sus preguntas al crear el proyecto."
+  ],
+  "pendientes": [
+    {
+      "id": "herramientas-y-carpetas",
+      "tipo": "pregunta",
+      "fase": "F1",
+      "titulo": "¿Con qué lenguajes y herramientas se construye, y en qué carpetas vive el código?",
+      "detalle": "Si el arranque no lo cerró. Llena docs/perfil/ORDEN.md y proyecto.json → carpetas_codigo.",
+      "riesgo": "alto",
+      "quien": "persona",
+      "destino": "docs/perfil/ORDEN.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
+    },
+    {
+      "id": "como-se-prueba",
+      "tipo": "pregunta",
+      "fase": "F1",
+      "titulo": "¿Con qué se prueba cada nivel?",
+      "detalle": "Llena docs/perfil/PRUEBAS.md y scripts/pasos_perfil.py. Mientras no exista, verificar.py solo corre los guardianes.",
+      "riesgo": "alto",
+      "quien": "persona",
+      "destino": "docs/perfil/PRUEBAS.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
+    },
+    {
+      "id": "perfil-nuevo",
+      "tipo": "plantilla",
+      "division": "perfil",
+      "fase": "F3",
+      "titulo": "¿Lo que se llenó en docs/perfil/ sirve como perfil nuevo para la plantilla?",
+      "detalle": "Si el proyecto funciona, su docs/perfil/ y sus scripts *_perfil.py son la semilla de un perfil propio.",
+      "riesgo": "bajo",
+      "quien": "persona",
+      "destino": "docs/sistema/DECISIONES.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
+    }
+  ]
+}

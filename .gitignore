@@ -1,0 +1,16 @@
+# Dependencias y compilados
+node_modules/
+dist/
+.vite/
+
+# Generados por las herramientas del proyecto
+.panel/
+__pycache__/
+
+# Datos grandes y modelos en bruto: viven fuera del repo (docs/normativo/ORDEN.md §5)
+datos/
+
+# Secretos (proyecto.json → archivos_secretos)
+.env
+.env.*
+!.env.example

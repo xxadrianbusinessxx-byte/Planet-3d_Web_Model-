@@ -1,0 +1,71 @@
+{
+  "_comentario": [
+    "Fuente única de la configuración del proyecto. La llena el arranque (docs/ARRANQUE.md).",
+    "null = todavía no se sabe. Un null no se rellena inventando: se pregunta, o se deja",
+    "como pregunta en docs/sistema/pendientes.json con la fase en la que hay que hacerla.",
+    "Las llaves propias del tipo de proyecto (hardware, stack…) las agrega el perfil al crear."
+  ],
+  "plantilla": {
+    "version": "2.4",
+    "perfil_version": "1.0",
+    "creado_el": "2026-11-08"
+  },
+  "estado": "sin-arrancar",
+  "arrancado_el": null,
+  "nombre": null,
+  "descripcion": null,
+  "criterio_de_exito": null,
+  "contexto": {
+    "tipo": null,
+    "fecha_entrega": null
+  },
+  "perfil": "base",
+  "variante": null,
+  "fase_actual": "F0",
+  "fases": [
+    {
+      "id": "F0",
+      "titulo": "Arranque",
+      "cierre": "el cuestionario de docs/ARRANQUE.md está respondido y proyecto.json está lleno."
+    },
+    {
+      "id": "F1",
+      "titulo": "Primera versión funcionando",
+      "cierre": "existe la versión más pequeña que hace algo útil de punta a punta, con sus pruebas en verificar.py."
+    },
+    {
+      "id": "F2",
+      "titulo": "Lo esencial completo",
+      "cierre": "todo lo que pide el criterio de éxito existe y tiene pruebas."
+    },
+    {
+      "id": "F3",
+      "titulo": "Prueba real",
+      "cierre": "se probó con usuarios o condiciones reales y hay métricas de esa prueba."
+    },
+    {
+      "id": "F4",
+      "titulo": "Entrega",
+      "cierre": "está entregado y documentado lo necesario para usarlo y mantenerlo."
+    }
+  ],
+  "agentes": [
+    "claude"
+  ],
+  "git": true,
+  "respaldos": {
+    "carpeta": null,
+    "antes_de_cada_tarea": "M y L"
+  },
+  "carpetas_codigo": [],
+  "archivos_secretos": [],
+  "idioma_identificadores": null,
+  "informe_talla_por_defecto": "M",
+  "presupuesto_contexto": {
+    "techo_tokens_arranque": 10000
+  },
+  "raiz_permitida_extra": [
+    ".git",
+    ".gitignore"
+  ]
+}

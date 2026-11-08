@@ -1,0 +1,14 @@
+{
+  "_comentario": [
+    "Fuente única de métricas y umbrales. Las lee scripts/verificar_metricas.py, que toma el",
+    "valor más reciente de cada una en mediciones/.",
+    "",
+    "Campos: id · titulo · unidad · peor_si (sube | baja) · umbral (null = aún no se sabe) ·",
+    "tipo (dura | trinquete) · fase (desde cuándo importa) · instrumento (cómo se mide) ·",
+    "variante (opcional: solo aplica a esa variante del perfil).",
+    "",
+    "Aflojar un umbral lo decide la persona y queda en DECISIONES.md (R4). Apretarlo cuando",
+    "la métrica mejora es parte del trabajo. El perfil siembra sus métricas al crear el proyecto."
+  ],
+  "metricas": []
+}
