@@ -10,10 +10,11 @@ Todo se trabaja en **español**, preguntando a la persona; las decisiones no se 
 1. **Lee `CLAUDE.md` entero** y, como tu herramienta quizá no carga los `@` de su §1, abre tú
    esos seis archivos: `ESTADO-ACTUAL.md`, `RUMBO.md`, `docs/normativo/REGLAS_NO_HACER.md`,
    `docs/normativo/INVARIANTES.md`, `docs/normativo/GLOSARIO.md`, `docs/perfil/REGLAS.md`.
-2. **Antes de trabajar:** `git switch colaborativa`, `git pull` y `python scripts/sesion.py`.
+2. **Antes de trabajar:** `git switch colaborativa`, `git pull`, `python scripts/sesion.py` y
+   `python scripts/novedades.py` (qué subió Adrian o alguien más; léelo y adapta tu tarea, D-21).
    Luego sigue `docs/sistema/COLABORAR.md`: qué sección es de tu persona
    (`docs/sistema/reparto.json`, mirado en las dos ramas) y cómo se trabaja.
 3. **Antes de cada commit:** `python scripts/verificar.py` en verde. Push (a `colaborativa`) solo si
-   tu persona lo pide.
+   tu persona lo pide, y **después de cada push** otra vez `python scripts/novedades.py`.
 4. **Dónde está cada cosa:** `docs/00-INDICE.md` (qué leer según la tarea). Antes de correr
    un script, su fila en `scripts/LEEME.md`.

@@ -237,3 +237,18 @@ Formato:
   que cuesta casi nada en fps.
 - **Revisar cuando:** la sección clima (F2) haga su propio cielo, o si la orilla hundida
   esconde demasiado las puntas de la hoja.
+
+## D-21 · Cada IA revisa lo nuevo del repo al empezar y después de cada push
+- 2026-11-08 · persona
+- **Decisión:** al abrir una sesión y después de cada push, la IA corre
+  `python scripts/novedades.py`: trae lo de GitHub (`git fetch`, sin tocar archivos ni ramas) y
+  resume los commits nuevos de `main` (Adrian) y de `colaborativa` (los demás) desde la última
+  revisión en esa copia, con autor y carpetas tocadas, y avisa si la rama va detrás. La IA lo
+  lee antes de la tarea y, si lo nuevo toca lo mismo, se lo dice a su persona y adapta la tarea.
+  En Claude Code lo corre solo un hook SessionStart versionado (`.claude/settings.json`, junto
+  con `sesion.py`); las otras IA lo tienen como paso en `AGENTS.md` y `COLABORAR.md` §3.
+- **Alternativas:** avisos de GitHub (no notifica los push por correo); un hook de git
+  (`post-merge`/`pre-push` no se comparten por el repo); solo leer `git log` a mano.
+- **Por qué:** lo pidió la persona: que si uno sube algo, el otro se entere en su siguiente
+  sesión con IA, en las dos direcciones.
+- **Revisar cuando:** el resumen crezca tanto que estorbe al contexto, o se sume otra rama.

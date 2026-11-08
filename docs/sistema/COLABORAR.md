@@ -83,11 +83,15 @@ a su `fase` (`proyecto.json` → `fase_actual`).
 ## 3. El ciclo de cada tarea
 
 ```
-pull → tarea → verificar → commit → push a su rama
+pull → novedades → tarea → verificar → commit → push a su rama → novedades
 ```
 
 1. **Al día:** Adrian, `git switch main` y `git pull`. Cualquier otro,
-   `git switch colaborativa` y `git pull`. Después `python scripts/sesion.py`.
+   `git switch colaborativa` y `git pull`. Después `python scripts/sesion.py` y
+   **`python scripts/novedades.py`** (D-21): dice qué subió cada quien desde la última vez
+   (commits, autor y carpetas tocadas) y si tu rama va detrás. **La IA lo lee antes de la
+   tarea** y, si lo nuevo toca lo mismo, lo dice a su persona y adapta la tarea. En Claude Code
+   los dos corren solos al abrir la sesión (hook de `.claude/settings.json`).
 2. **Recomendado para `colaborativa`:** traer lo nuevo de `main` al empezar cada tarea, con
    `git pull origin main` dentro de `colaborativa` (merge, no rebase). No toca `main` y deja
    la fusión final pequeña; si sale un conflicto, se resuelve con la tabla de §4.
@@ -96,7 +100,10 @@ pull → tarea → verificar → commit → push a su rama
    `src/secciones/` y su lógica en `src/logica/` (`docs/perfil/ORDEN.md`).
 5. **Verificar:** `python scripts/verificar.py` en verde. Sin verde no hay commit.
 6. **Commit y push a su rama**, cuando su persona lo pida (D-04): `git push origin main`
-   (Adrian) o `git push origin colaborativa` (los demás).
+   (Adrian) o `git push origin colaborativa` (los demás). **Después de cada push,
+   `python scripts/novedades.py` otra vez**: si la otra persona subió algo mientras tanto, se
+   ve ahí y se decide si adaptarse ya o en la siguiente tarea. GitHub no avisa de los push por
+   correo: este paso es el aviso, en las dos direcciones.
 7. Si la sección quedó terminada, `estado: "hecha"` en el reparto de su rama.
 
 ## 4. La fusión final y los conflictos

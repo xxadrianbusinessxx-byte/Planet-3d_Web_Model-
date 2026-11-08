@@ -61,7 +61,8 @@ Las reglas propias del proyecto **no se inventan al inicio**: se ganan conforme 
 ## 4. Reglas de trabajo
 
 - **Al empezar:** `git pull` y `docs/sistema/COLABORAR.md`: Adrian trabaja en `main`;
-  cualquier otro trabajador, solo en la rama `colaborativa` (D-18).
+  cualquier otro trabajador, solo en la rama `colaborativa` (D-18). Lee lo que imprime
+  `python scripts/novedades.py` (lo corre el hook; repítelo después de cada push, D-21).
 - **Medir antes de modificar**, y otra vez al terminar con el mismo instrumento.
 - **Respaldo antes de cada tarea M o L**: `python scripts/respaldar.py "<etiqueta>"`.
 - **La decisión va en código puro**, separado de lo que habla con el mundo (hardware,

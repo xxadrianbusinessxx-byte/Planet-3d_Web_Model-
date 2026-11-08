@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && PY=$(command -v python || command -v python3) && \"$PY\" scripts/sesion.py; \"$PY\" scripts/novedades.py; true",
+            "timeout": 45,
+            "statusMessage": "Revisando el estado y lo nuevo del repo…"
+          }
+        ]
+      }
+    ]
+  }
+}

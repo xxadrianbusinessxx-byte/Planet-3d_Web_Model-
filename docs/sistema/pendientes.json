@@ -342,6 +342,20 @@
       "respuesta": null,
       "revisado": "2026-11-08",
       "estado": "abierto"
+    },
+    {
+      "id": "plantilla-novedades-repo",
+      "tipo": "plantilla",
+      "division": "nucleo",
+      "fase": "F2",
+      "titulo": "Con git y varias personas, sesion.py (o un novedades.py) debería resumir lo nuevo del remoto",
+      "detalle": "planeta-3d/scripts/novedades.py (D-21): git fetch con GIT_TERMINAL_PROMPT=0 y tiempo límite, commits nuevos por rama desde una marca local en la carpeta de git (rev-parse --git-common-dir, sirve en worktrees), carpetas tocadas, aviso si la rama va detrás; nunca falla. Más el hook SessionStart versionado en .claude/settings.json, que la plantilla documenta en sesion.py pero no trae.",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "scripts/sesion.py",
+      "respuesta": null,
+      "revisado": "2026-11-08",
+      "estado": "abierto"
     }
   ]
 }

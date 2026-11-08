@@ -41,6 +41,8 @@ Los scripts propios del proyecto van debajo, con su fila.
 
 | Script | Riesgo | Qué hace |
 |---|---|---|
+| `novedades.py` | ESCRIBE (solo `git fetch` y una marca local en la carpeta de git) | Qué subió cada quien a `origin/main` y `origin/colaborativa` desde la última revisión en esta copia, y si tu rama va detrás (D-21). No hace pull, merge ni push. `--sin-fetch`, `--no-marcar`. Lo corre el hook SessionStart. |
+| `test_novedades.py` | LEE | Prueba la lógica pura de `novedades.py`, sin git ni red. |
 
 ## Carpetas
 
