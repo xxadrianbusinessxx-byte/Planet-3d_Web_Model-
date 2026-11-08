@@ -295,3 +295,19 @@ Formato:
   fundido; nombres propios nuevos para los continentes.
 - **Por qué:** lo pidió la persona; cada continente mostrará un ámbito distinto del planeta.
 - **Revisar cuando:** se responda `ambito-continentes` (qué muestra cada escenario).
+
+## D-25 · Qué aspectos del planeta se ven en cada continente
+- 2026-11-08 · persona
+- **Decisión:** cada continente muestra varios aspectos, **cada uno como una página** dentro de
+  su escenario fijo (D-24):
+  - **The Leaf:** estilo de vida, población y transporte.
+  - **The Mushroom:** clima, flora, fauna y medio ambiente (cómo se ve la tierra en general).
+  - **The Diamond:** trabajos (con las zonas de trabajo) y recursos del planeta.
+
+  Ciudad, países y fronteras y animaciones no van en un continente. La fuente única de qué
+  sección va dónde es el campo `continente` de `docs/sistema/reparto.json`; se agregaron las
+  secciones **estilo-de-vida** y **medio-ambiente** (libres).
+- **Alternativas:** las que propuso el agente (Leaf con trabajo, clima y flora; Mushroom con
+  estilo de vida y población; Diamond con recursos, transporte y ciudad).
+- **Por qué:** lo decidió la persona al cerrar la pregunta `ambito-continentes`.
+- **Revisar cuando:** se construya la primera página de un continente y se vea si cabe todo.

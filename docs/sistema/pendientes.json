@@ -366,9 +366,9 @@
       "riesgo": "medio",
       "quien": "persona",
       "destino": "docs/sistema/DECISIONES.md",
-      "respuesta": null,
-      "revisado": null,
-      "estado": "abierto"
+      "respuesta": "The Leaf: estilo de vida, población y transporte. The Mushroom: clima, flora, fauna y medio ambiente. The Diamond: trabajos (y zonas de trabajo) y recursos del planeta. Ciudad y países y fronteras no van en un continente. D-25; campo continente en reparto.json.",
+      "revisado": "2026-11-08",
+      "estado": "cerrado"
     }
   ]
 }
