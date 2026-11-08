@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-08 (arranque terminado; F1 sin empezar)
+- **Última revisión:** 2026-11-08 (F1: escena mínima de la vista espacial funcionando y medida)
 
 ---
 
@@ -23,9 +23,10 @@ git 2.54.0, Python 3.14.3. Equipo: Intel i3-1215U, gráficos integrados Intel UH
 compartidos), 24 GB de RAM; libre: C: 41 GB, E: 505 GB.
 
 - **git:** local, rama `main`. **Sin remoto** todavía (pendiente `repo-github`). La CLI `gh` no está instalada.
-- **Three.js, Vite, TypeScript, Vitest:** decididos (D-05), **no instalados**: los instala la
-  primera tarea de F1. Versiones vigentes en npm hoy: three 0.187.0, vite 8.3.6,
-  vite-plugin-singlefile 2.3.4, vitest 5.1.0, @gltf-transform/cli 4.5.1.
+- **npm (instalado y probado, `package.json`):** three 0.187.0, vite 8.3.6, vite-plugin-singlefile
+  2.3.4, typescript 7.0.2, vitest 5.1.0, playwright 1.65.0 (usa el Edge 157 del sistema; no
+  descarga navegadores). `@gltf-transform/cli` aún no (F3).
+- **Pantalla:** 1920×1080 a 74 Hz: es el tope de fps medible.
 - **Blender:** no instalado (pendiente `instalar-blender`, F3).
 
 ## 3. Fuentes únicas
@@ -45,8 +46,15 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 
 ## 4. Qué funciona hoy
 
-Nada todavía. Cada fila nueva lleva su medición: `mediciones/<archivo>`.
+| Qué | Cómo se comprueba | Medición |
+|---|---|---|
+| Vista espacial: planeta low-poly (icosfera de 20 480 triángulos, relieve con semilla, mar, arena, pasto, bosque, roca, nieve), halo de atmósfera, 2 500 estrellas, cámara orbital con zoom acotado; tecla F oculta el texto de fps | `npm test` (21 pruebas de la lógica) | — |
+| HTML portátil: un solo `dist/index.html` de 0,54 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_0955_rendimiento.json` |
+| 73,8 fps (tope de la pantalla) y carga de 0,13 s a 1920×1080 en esta laptop | `npm run medir` | `mediciones/2026-11-08_0955_rendimiento.json` |
+| Ante un error (sin WebGL, fallo en el bucle) la página muestra un aviso en vez de quedar en blanco (D-09) | revisión; no hay prueba automática del caso sin WebGL | — |
 
 ## 5. Deudas vivas
 
-Ninguna.
+- Los fps se miden con el tope de 74 Hz de la pantalla: hoy no se sabe cuánta GPU sobra.
+- El modo `?medir` (cuándo empieza y termina) vive en `src/main.ts`, que debería solo orquestar.
+- No se ha probado en otra PC ni sin WebGL (pendiente `otra-pc`, F4).

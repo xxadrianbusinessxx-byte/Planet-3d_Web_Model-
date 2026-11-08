@@ -4,10 +4,11 @@ QUÉ MIDE: nada por sí mismo; verificar.py llama a pasos(contexto).
 QUÉ ESCRIBE: nada. `npm run build` escribe en dist/ (generado).
 CÓMO SE EJECUTA: no se ejecuta solo.
 
-Corre lo que exista (docs/perfil/PRUEBAS.md): nivel 1 si package.json define `test`, tipos si
-hay tsconfig.json, nivel 3 si define `build`. Si hay package.json pero no npm, es FALLA: «no se
-pudo probar» no es «pasó». Los niveles 2 y 4 (HTML por file:// y fps reales) llegan en F1.
-Adaptado de registro-personal.
+Corre lo que exista (docs/perfil/PRUEBAS.md): nivel 1 (`npm test`), tipos (`tsc`), nivel 3
+(`npm run build`), nivel 2 (`npm run probar`, abre el HTML construido por file://) y, solo con
+--real, nivel 4 (`npm run medir`, fps en esta laptop; escribe en mediciones/). Si hay
+package.json pero no npm, es FALLA: «no se pudo probar» no es «pasó». Adaptado de
+registro-personal.
 """
 from __future__ import annotations
 
@@ -25,7 +26,7 @@ N1, TIPOS, N2, N3, N4 = (
 
 def pasos(contexto: dict) -> list:
     raiz = contexto["raiz"]
-    n4 = (N4, None, "se agrega en F1 (docs/perfil/PRUEBAS.md)" if contexto["real"] else "solo con --real")
+    n4 = (N4, None, "solo con --real")
     paquete = raiz / "package.json"
     if not paquete.exists():
         motivo = "todavía no hay package.json (lo crea la primera tarea de F1)"
@@ -47,14 +48,21 @@ def pasos(contexto: dict) -> list:
     else:
         lista.append((TIPOS, None, "no hay tsconfig.json"))
 
-    lista.append((N2, None, "se agrega en F1 (docs/perfil/PRUEBAS.md)"))
-
+    # El nivel 2 prueba el HTML construido: va después del nivel 3.
     if contexto["rapido"]:
         lista.append((N3, None, "omitido con --rapido"))
+        lista.append((N2, None, "omitido con --rapido (necesita el build)"))
     elif "build" in scripts:
-        lista.append((N3, [npm, "run", "build"], ""))
+        lista.append((N3, [npm, "run", "build", "--silent"], ""))
+        if "probar" in scripts:
+            lista.append((N2, [npm, "run", "probar", "--silent"], ""))
+        else:
+            lista.append((N2, None, "!package.json no define el script probar"))
     else:
         lista.append((N3, None, "!package.json no define el script build"))
 
-    lista.append(n4)
+    if contexto["real"] and not contexto["rapido"] and "medir" in scripts:
+        lista.append((N4, [npm, "run", "medir", "--silent"], ""))
+    else:
+        lista.append(n4)
     return lista

@@ -35,6 +35,7 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - **licencia-modelos-ia** [bajo] — Anotar origen y licencia de cada modelo IA · agente
 - **plantilla-git-crear-proyecto** [bajo] — crear_proyecto.py con "git": true debe permitir .git y .gitignore en la raíz y sembrar un .gitignore · agente
 - **plantilla-respaldo-git** [bajo] — Con git, el respaldo debería poder ser un commit: respaldar.py, sesion.py y CLAUDE.md §4 solo conocen el .zip · agente
+- **plantilla-medir-fps-playwright** [bajo] — Medir fps con Playwright: la pantalla completa se pide por CDP y se comprueba el tamaño del lienzo · agente
 
 ## Métricas de esta fase
 
@@ -44,5 +45,6 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 ## Últimos informes
 
+- 2026-11-08_f1-escena-minima.md
 - 2026-11-08_arranque.md
 <!-- FIN GENERADO -->

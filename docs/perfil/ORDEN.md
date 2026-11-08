@@ -23,9 +23,21 @@ capas está en `docs/normativo/ORDEN.md` §2; las decisiones de herramienta, en 
 | la que habla con el mundo (`src/mundo/`) | `three` completo, DOM, archivos | decisiones propias (umbrales, qué detalle mostrar) |
 | la que orquesta | las otras dos | lógica propia |
 
-Candidata a regla P1 (se agrega a `scripts/reglas_perfil.py` con su prueba cuando exista
-`src/logica/`): ningún archivo de `src/logica/` menciona `window`, `document`, `WebGLRenderer`,
-`Loader` ni importa de `../mundo`.
+**Regla P1** (`scripts/reglas_perfil.py`, prueba en `scripts/test_reglas_perfil.py`): ningún
+archivo de `src/logica/` usa `window`, `document`, un renderer, un cargador, el reloj
+(`performance.now`, `Date`) ni `Math.random`, ni importa de `src/mundo/`. Los comentarios no cuentan.
+
+### Reglas por ruta
+
+Fuente de `.claude/rules/` (lo genera `python scripts/gen_reglas_ruta.py`).
+
+<!-- REGLAS POR RUTA -->
+| Archivo | Rutas | Regla |
+|---|---|---|
+| `logica` | `src/logica/**` | Código puro (P1): recibe opciones y devuelve arreglos o datos. Nada de `window`, `document`, renderer, cargadores, reloj ni `Math.random` (usar `crearAleatorio(semilla)`). Cada función nueva lleva su `.test.ts` con los casos de borde primero. |
+| `mundo` | `src/mundo/**` | Solo convierte datos en objetos de three y habla con el navegador. Ningún umbral ni decisión: va a `src/logica/`. Ante un error, `mostrarAviso` en vez de dejar la página en blanco (D-09). |
+| `secciones` | `src/secciones/**`, `src/main.ts` | Solo orquesta: arma la sección con `logica` y `mundo`. Toda sección nueva trae su medición de fps, carga y peso (§P1). |
+<!-- FIN REGLAS POR RUTA -->
 
 ## 3. Cómo corre eficiente en esta laptop (Intel UHD, gráficos integrados)
 

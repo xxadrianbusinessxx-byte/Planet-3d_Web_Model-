@@ -5,5 +5,6 @@ conforme se construye el sistema; cada fila nace del primer fallo real de ese ti
 
 | Síntoma | Abrir primero | Diagnóstico que lo confirma |
 |---|---|---|
-
-Todavía no hay filas.
+| fps medidos sospechosamente altos, o `medir` se niega por el tamaño del lienzo | `scripts/medir_rendimiento.mjs` (pantalla completa por CDP) | `condiciones` del JSON en `mediciones/`: el lienzo debe ser 1920×1080 |
+| la página queda en blanco o muestra el aviso | `src/main.ts`, `src/mundo/navegador.ts` | `npm run probar`: imprime el aviso y los errores de consola |
+| el planeta se ve distinto sin haber tocado su código | `src/logica/planeta.ts` (`OPCIONES_PLANETA`), `src/logica/ruido.ts` | `npm test`: «es determinista» |

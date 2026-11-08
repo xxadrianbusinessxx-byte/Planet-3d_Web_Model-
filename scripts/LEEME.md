@@ -10,6 +10,8 @@ Todos son Python 3.11+ sin dependencias externas y se ejecutan desde la raíz de
 
 | Script | Riesgo | Qué hace |
 |---|---|---|
+| `probar_html.mjs` | LEE | Nivel 2: `dist/` con un solo `index.html` sin URLs externas (R8); lo abre por `file://` en Edge/Chrome sin ventana y exige 30 cuadros sin errores ni pedidos a la red. `npm run probar` (después de `npm run build`). |
+| `medir_rendimiento.mjs` | ESCRIBE (`mediciones/`) | Nivel 4: abre `dist/index.html` en modo `?medir` con ventana a pantalla completa (por CDP) en la GPU real y guarda `fps_espacial`, `carga_espacial_s` y `peso_html_mb` en un JSON nuevo. Se niega si el lienzo no ocupa la pantalla. Nunca sobrescribe. `npm run medir` (~30 s, no tocar la ventana). |
 | `verificar.py` | LEE · con `--real`, **SISTEMA REAL** | El árbitro: núcleo + pasos del perfil. `--rapido` sin construir; `--real` nivel 4. |
 | `verificar_orden.py` | LEE | Reglas N1–N6 del núcleo y las P del perfil. |
 | `verificar_docs.py` | LEE | D1 rutas vivas · D2 coste de arranque · D3 índice completo · D4 pendientes bien formados. |

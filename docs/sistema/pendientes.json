@@ -69,13 +69,13 @@
       "riesgo": "bajo",
       "quien": "persona",
       "respuesta": null,
-      "revisado": null,
+      "revisado": "2026-11-08",
       "estado": "abierto",
       "id": "limite-peso-html",
       "tipo": "pregunta",
       "fase": "F1",
       "titulo": "¿Cuánto puede pesar como máximo el HTML portátil?",
-      "detalle": "En el arranque se dejó sin límite. Con la primera medición de peso_html_mb (F1) se propone un umbral; la persona decide.",
+      "detalle": "En el arranque se dejó sin límite. Primera medición: 0,54 MB (mediciones/2026-11-08_0955_rendimiento.json). Propuesta: umbral duro de 5 MB. La persona decide.",
       "destino": "docs/sistema/metricas.json"
     },
     {
@@ -183,6 +183,20 @@
       "titulo": "Con git, el respaldo debería poder ser un commit: respaldar.py, sesion.py y CLAUDE.md §4 solo conocen el .zip",
       "detalle": "planeta-3d decidió solo git (D-04). sesion.py sigue avisando «Sin respaldos todavía» y el arranque §5.8 pide respaldar.py; aquí se resolvió con D-04 y un término en el GLOSARIO. Propuesta: respaldos.modo = \"git\" | \"zip\" | \"ambos\".",
       "destino": "scripts/respaldar.py"
+    },
+    {
+      "id": "plantilla-medir-fps-playwright",
+      "tipo": "plantilla",
+      "division": "perfil",
+      "fase": "F1",
+      "titulo": "Medir fps con Playwright: la pantalla completa se pide por CDP y se comprueba el tamaño del lienzo",
+      "detalle": "En planeta-3d, --start-fullscreen y --kiosk no aplicaron con Playwright: el lienzo salió de 921×928 y los fps parecían buenos. Solución: Browser.setWindowBounds con windowState fullscreen y rechazar la medición si el lienzo no ocupa la pantalla. Además, el fps tope es el refresco de la pantalla (74 Hz aquí). Sirve a un futuro perfil de escena 3D web (scripts/medir_rendimiento.mjs).",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "docs/perfil/PRUEBAS.md",
+      "respuesta": null,
+      "revisado": "2026-11-08",
+      "estado": "abierto"
     }
   ]
 }
