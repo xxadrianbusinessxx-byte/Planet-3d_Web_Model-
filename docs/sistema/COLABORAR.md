@@ -17,7 +17,17 @@ dice cómo se reparte, se junta y se entrega.
    *Settings* → *Collaborators* → *Add people* → su usuario. Le llega un correo y la acepta.
 2. **Git para Windows** (trae Git Credential Manager). Al primer `git clone` o `git push`
    se abre el navegador para iniciar sesión en GitHub: no se guardan contraseñas ni tokens en
-   ningún archivo (R5).
+   ningún archivo (R5). Además hacen falta, con estas versiones o más nuevas (si no,
+   `verificar.py` falla sin decir por qué):
+
+   | Programa | Versión mínima | Para qué | En la laptop de Adrian |
+   |---|---|---|---|
+   | Node.js (trae npm) | 22.12 | construir y probar (lo pide Vitest; Vite pide 20.19) | 24.15 |
+   | Python | 3.10 | los scripts de `scripts/` | 3.14 |
+   | Edge o Chrome | el del sistema | las pruebas del HTML (Playwright usa el navegador instalado; no descarga uno) | Edge 157 |
+
+   Para comprobarlo: `node --version` y `python --version`. En Mac o Linux, donde dice
+   `python` se escribe `python3` (no está probado fuera de Windows).
 3. **Clonar e instalar:**
 
    ```bash
