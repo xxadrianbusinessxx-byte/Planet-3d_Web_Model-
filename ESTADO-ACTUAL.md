@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-08 (el planeta es Charlie's World y tiene su ficha, D-23)
+- **Última revisión:** 2026-11-08 (página en inglés y escenarios fijos de los continentes, D-24)
 
 ---
 
@@ -54,10 +54,11 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 
 | Qué | Cómo se comprueba | Medición |
 |---|---|---|
-| Vista espacial con la temática de D-10 y D-19: solo tres continentes —hoja de 7 folíolos con nervaduras, hongo (sombrero verde con manchas de tierra y tallo) y diamante tallado (pabellón de facetas verde y tierra; corona de minerales con vetas de oro y 320 cristales de gema instanciados y un resplandor)—, bebida azul radiactiva y translúcida sin islas, con las orillas de los continentes fundidas en el agua; una capa de nubes grandes, rosas y verdes, medio transparentes, que va a la deriva; anillos rosas, halo de atmósfera, 2 500 estrellas y el Sol como foco gigante del que sale la luz (icosfera de 81 920 caras; ~117 000 triángulos en pantalla); cámara orbital con zoom acotado; tecla F oculta el texto de fps | `npm test` (74 pruebas de la lógica) | — |
+| Vista espacial con la temática de D-10 y D-19: solo tres continentes —hoja de 7 folíolos con nervaduras, hongo (sombrero verde con manchas de tierra y tallo) y diamante tallado (pabellón de facetas verde y tierra; corona de minerales con vetas de oro y 320 cristales de gema instanciados y un resplandor)—, bebida azul radiactiva y translúcida sin islas, con las orillas de los continentes fundidas en el agua; una capa de nubes grandes, rosas y verdes, medio transparentes, que va a la deriva; anillos rosas, halo de atmósfera, 2 500 estrellas y el Sol como foco gigante del que sale la luz (icosfera de 81 920 caras; ~117 000 triángulos en pantalla); cámara orbital con zoom acotado; tecla F oculta el texto de fps | `npm test` (80 pruebas de la lógica) | — |
 | Clic en Don Foco (el Sol) o en el planeta (Charlie's World): letrero al pasar el ratón, la cámara viaja en 1,6 s, ficha con descripción y ficha técnica; Esc o el botón regresan a la vista de antes; gana el objeto más cercano (D-22, D-23) | `npm test` (`enfoque.test.ts`) y a mano | — |
-| HTML portátil: un solo `dist/index.html` de 0,58 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_1614_rendimiento.json` |
-| 75 fps (tope de la pantalla) y carga de 0,65 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-08_1614_rendimiento.json` |
+| Clic en un continente (The Leaf, The Mushroom, The Diamond): la cámara se acerca, fundido a blanco y escenario fijo de prueba (suelo y fondo blancos, sin girar ni zoom) con su ficha de color propio; Esc regresa (D-24). Todo lo visible de la página está en inglés | `npm test` (`escenarios.test.ts`) y a mano | — |
+| HTML portátil: un solo `dist/index.html` de 0,59 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_1625_rendimiento.json` |
+| 75 fps (tope de la pantalla) y carga de 0,71 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-08_1625_rendimiento.json` |
 | Al abrir cada sesión de Claude Code (hook de `.claude/settings.json`) y después de cada push, `scripts/novedades.py` resume lo nuevo de `main` y `colaborativa` en GitHub (D-21) | `python scripts/test_novedades.py` (5 pruebas) y `python scripts/novedades.py` | — |
 | Ante un error (sin WebGL, fallo en el bucle) la página muestra un aviso en vez de quedar en blanco (D-09) | revisión; no hay prueba automática del caso sin WebGL | — |
 

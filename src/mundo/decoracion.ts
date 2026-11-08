@@ -41,7 +41,7 @@ function texturaResplandor(colorCentro: string, colorMedio: string): CanvasTextu
   const lienzo = document.createElement('canvas')
   lienzo.width = lienzo.height = lado
   const ctx = lienzo.getContext('2d')
-  if (!ctx) throw new Error('el navegador no da un lienzo 2D para el resplandor')
+  if (!ctx) throw new Error('the browser did not provide a 2D canvas for the glow')
   const g = ctx.createRadialGradient(lado / 2, lado / 2, 0, lado / 2, lado / 2, lado / 2)
   g.addColorStop(0, colorCentro)
   g.addColorStop(0.25, colorMedio)
@@ -144,7 +144,7 @@ function geometriaCristal(): BufferGeometry {
   punta.translate(0, 0.85, 0)
   for (const g of [cuerpo, punta]) g.deleteAttribute('uv')
   const cristal = mergeGeometries([cuerpo.toNonIndexed(), punta.toNonIndexed()])
-  if (!cristal) throw new Error('no se pudo armar el cristal')
+  if (!cristal) throw new Error('could not build the crystal mesh')
   cristal.computeVertexNormals()
   return cristal
 }

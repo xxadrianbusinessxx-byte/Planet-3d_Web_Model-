@@ -86,7 +86,7 @@ Formato:
   la base sobre la que se baja a lo demás.
 - **Revisar cuando:** la persona quiera más realismo en una sección.
 
-## D-09 · Nombres en español; ante duda o error, estado seguro y aviso
+## D-09 · Nombres en español; ante duda o error, estado seguro y aviso — **lo que se ve en la página, en inglés desde D-24**
 - 2026-11-08 · persona
 - **Decisión:** identificadores en **español sin acentos ni ñ** (`crearPlaneta`); lo de Three.js
   queda en inglés. Ante una duda o un error (un modelo que no carga, un WebGL que no arranca),
@@ -279,3 +279,19 @@ Formato:
 - **Alternativas:** ninguna planteada; el texto lo escribió el agente desde la idea de la persona.
 - **Por qué:** lo pidió la persona, como la ficha de Don Foco.
 - **Revisar cuando:** se muestre a un público para el que el tema no sea adecuado.
+
+## D-24 · La página en inglés, una paleta por ficha y escenarios fijos para los continentes
+- 2026-11-08 · persona
+- **Decisión:** (1) **Lo que se ve en la página va en inglés**: fichas, botones, letreros, HUD,
+  avisos y título («Charlie's World»). El código, los documentos y los commits siguen en
+  español (D-09); la conversación con la persona también. (2) **Cada ficha tiene su color**:
+  Don Foco dorado, **Charlie's World verde con morado**, The Leaf verde lima, The Mushroom
+  naranja tierra, The Diamond cian con violeta. (3) Los continentes se llaman **The Leaf, The
+  Mushroom y The Diamond**. Al hacer clic en uno, la **cámara se acerca** (1,2 s), **fundido a
+  blanco** y se entra a un **escenario fijo** (sin girar ni zoom, para no hacerlo inmersivo)
+  con su ficha; Esc o el botón regresan con otro fundido a la vista de antes. Hoy los tres
+  escenarios son de prueba: **suelo y fondo blancos** y la ficha sin descripción.
+- **Alternativas:** también el código o todo en inglés; corte directo sin acercamiento ni
+  fundido; nombres propios nuevos para los continentes.
+- **Por qué:** lo pidió la persona; cada continente mostrará un ámbito distinto del planeta.
+- **Revisar cuando:** se responda `ambito-continentes` (qué muestra cada escenario).

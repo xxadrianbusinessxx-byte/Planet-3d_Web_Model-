@@ -79,7 +79,7 @@ describe('FICHA_DON_FOCO', () => {
     expect(FICHA_DON_FOCO.parrafos.length).toBeGreaterThanOrEqual(2)
     expect(FICHA_DON_FOCO.datos.length).toBeGreaterThanOrEqual(3)
     expect(FICHA_DON_FOCO.lema.length).toBeGreaterThan(0)
-    expect(FICHA_DON_FOCO.subtitulo.toLowerCase()).toContain('energía ilimitada')
+    expect(FICHA_DON_FOCO.subtitulo.toLowerCase()).toContain('unlimited energy')
   })
 })
 
@@ -99,10 +99,10 @@ describe('enfocarPlaneta', () => {
 })
 
 describe('FICHA_CHARLIES_WORLD', () => {
-  it("se llama Charlie's World, tiene casinos 48/7 y su botón cierra en vez de «volver al planeta»", () => {
+  it("se llama Charlie's World, tiene casinos 48/7 y su botón cierra en vez de volver al planeta", () => {
     expect(FICHA_CHARLIES_WORLD.titulo).toBe("Charlie's World")
     expect(FICHA_CHARLIES_WORLD.datos.some(([, v]) => v.includes('48/7'))).toBe(true)
-    expect(FICHA_CHARLIES_WORLD.boton.toLowerCase()).toContain('cerrar')
-    expect(FICHA_DON_FOCO.boton.toLowerCase()).toContain('volver')
+    expect(FICHA_CHARLIES_WORLD.boton.toLowerCase()).toContain('close')
+    expect(FICHA_DON_FOCO.boton.toLowerCase()).toContain('back')
   })
 })

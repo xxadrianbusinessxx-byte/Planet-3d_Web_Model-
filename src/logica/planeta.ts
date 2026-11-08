@@ -351,3 +351,11 @@ export function crearDatosPlaneta(opciones: OpcionesPlaneta = OPCIONES_PLANETA):
     },
   }
 }
+
+/** En qué continente cae la dirección p (unitaria), o null si es mar (D-24: a qué escenario se entra). */
+export function continenteEn(p: Vec3, opciones: OpcionesPlaneta = OPCIONES_PLANETA): Continente | null {
+  if (medidaHoja(p, opciones.hoja) !== null) return 'hoja'
+  if (medidaHongo(p, opciones.hongo) !== null) return 'hongo'
+  if (medidaDiamante(p, opciones.diamante) !== null) return 'diamante'
+  return null
+}

@@ -356,6 +356,19 @@
       "respuesta": null,
       "revisado": "2026-11-08",
       "estado": "abierto"
+    },
+    {
+      "id": "ambito-continentes",
+      "tipo": "pregunta",
+      "fase": "F2",
+      "titulo": "¿Qué ámbito del planeta muestra el escenario de cada continente (The Leaf, The Mushroom, The Diamond)?",
+      "detalle": "D-24: hoy los tres escenarios son de prueba (suelo y fondo blancos, ficha sin descripción). Con la respuesta se llena cada escenario y su ficha.",
+      "riesgo": "medio",
+      "quien": "persona",
+      "destino": "docs/sistema/DECISIONES.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
     }
   ]
 }

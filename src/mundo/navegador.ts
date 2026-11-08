@@ -46,9 +46,9 @@ export function crearRenderizador(): WebGLRenderer {
     renderer = new WebGLRenderer({ antialias: true, powerPreference: 'high-performance' })
   } catch (error) {
     throw new Error(
-      'Este equipo o navegador no pudo iniciar WebGL, que hace falta para dibujar el planeta. ' +
-        'Prueba con Chrome o Edge actualizados y con la aceleración por hardware activada. ' +
-        `(Detalle: ${error instanceof Error ? error.message : String(error)})`,
+      'This computer or browser could not start WebGL, which is needed to draw the planet. ' +
+        'Try an up-to-date Chrome or Edge with hardware acceleration turned on. ' +
+        `(Details: ${error instanceof Error ? error.message : String(error)})`,
     )
   }
   // Primera palanca de rendimiento en gráficos integrados (docs/perfil/ORDEN.md §3).

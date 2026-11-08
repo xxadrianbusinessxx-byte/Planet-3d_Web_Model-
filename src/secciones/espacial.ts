@@ -1,16 +1,20 @@
 // Sección «vista espacial» (F1): arma la escena con la lógica y el mundo. Solo orquesta.
-// Desde D-22 y D-23, también el viaje de la cámara al hacer clic en Don Foco o en Charlie's World.
+// Desde D-22 a D-24, también los clics: viaje a Don Foco o a Charlie's World y entrada a los
+// escenarios fijos de los continentes.
 import { DirectionalLight, Group, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { ANILLOS, bandasAnillos, crearCristales as repartirCristales, crearMapaNubes } from '../logica/adornos'
 import { puntoEnMinerales } from '../logica/continentes'
 import { crearViaje, enfocar, enfocarPlaneta, enViaje, esClic, type Enfoque, type Viaje, type Vista } from '../logica/enfoque'
 import { crearEstrellas as posicionesEstrellas, crearSol, cuerpoDelFoco, limitesCamara } from '../logica/espacio'
-import { FICHA_CHARLIES_WORLD, FICHA_DON_FOCO, type Ficha } from '../logica/fichas'
+import { DISTANCIA_ACERCAR, DURACION_ACERCAR_S, DURACION_FUNDIDO_MS, escenarioDe } from '../logica/escenarios'
+import { FICHA_CHARLIES_WORLD, FICHA_DON_FOCO, FICHA_THE_DIAMOND, FICHA_THE_LEAF, FICHA_THE_MUSHROOM, type Ficha } from '../logica/fichas'
 import { puntoDesdeCoordenadas, type Vec3 } from '../logica/hoja'
-import { crearDatosPlaneta, crearRelieve, OPCIONES_PLANETA, radioDelPunto } from '../logica/planeta'
+import { continenteEn, crearDatosPlaneta, crearRelieve, OPCIONES_PLANETA, radioDelPunto, type Continente } from '../logica/planeta'
 import { crearBlancoDeClic, crearBrilloMinerales, crearCapaNubes, crearCristales, crearFoco } from '../mundo/decoracion'
+import { crearEscenario, type EscenaFija } from '../mundo/escenario'
 import { crearFicha } from '../mundo/ficha'
+import { crearFundido } from '../mundo/fundido'
 import { crearAnillos, crearAtmosfera, crearBebida, crearEstrellas, crearMallaPlaneta } from '../mundo/mallas'
 import { crearSeleccion } from '../mundo/seleccion'
 
@@ -21,6 +25,8 @@ const CANTIDAD_CRISTALES = 320
 /** Las nubes giran más lento que el planeta: así se ve que van a la deriva (D-19). */
 const GIRO_PLANETA = 0.03
 const GIRO_NUBES = 0.019
+
+const FICHA_DE: Record<Continente, Ficha> = { hoja: FICHA_THE_LEAF, hongo: FICHA_THE_MUSHROOM, diamante: FICHA_THE_DIAMOND }
 
 export interface VistaEspacial {
   escena: Scene
@@ -85,22 +91,56 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
   controles.zoomSpeed = 0.8
   controles.rotateSpeed = 0.6
 
-  // Clic en Don Foco (D-22): la cámara viaja hasta él y aparece su ficha; Esc o el botón regresan.
+  // Clic en Don Foco o en el planeta (D-22, D-23): la cámara viaja y aparece su ficha. Clic en
+  // un continente (D-24): la cámara se acerca, fundido a blanco y escenario fijo. Esc o el botón
+  // regresan a la vista de antes.
   const vistaActual = (): Vista => ({
     posicion: camara.position.toArray() as Vec3,
     objetivo: controles.target.toArray() as Vec3,
   })
+  const ponerVista = (v: Vista) => {
+    camara.position.set(...v.posicion)
+    controles.target.set(...v.objetivo)
+    camara.lookAt(controles.target)
+  }
   let viaje: { recorrido: Viaje; transcurrido: number; alLlegar: () => void } | null = null
   let regreso: { vista: Vista; min: number; max: number } | null = null
-  const viajarA = (hasta: Vista, alLlegar: () => void) => {
+  let enEscenario: EscenaFija | null = null
+  let ocupado = false // durante un fundido no se aceptan más órdenes
+  const viajarA = (hasta: Vista, alLlegar: () => void, duracion?: number) => {
     controles.enabled = false
     controles.minDistance = 0 // durante el viaje, la órbita no debe recortar la distancia
     controles.maxDistance = Infinity
-    viaje = { recorrido: crearViaje(vistaActual(), hasta), transcurrido: 0, alLlegar }
+    viaje = { recorrido: crearViaje(vistaActual(), hasta, duracion), transcurrido: 0, alLlegar }
   }
-  const panel = crearFicha(() => {
-    if (!regreso || viaje) return
+  const fundido = crearFundido(DURACION_FUNDIDO_MS)
+  const escenarios = new Map<Continente, EscenaFija>()
+  const escenarioDelContinente = (c: Continente) => {
+    let e = escenarios.get(c)
+    if (!e) {
+      e = crearEscenario(escenarioDe(c))
+      escenarios.set(c, e)
+    }
+    return e
+  }
+
+  const panel = crearFicha(async () => {
+    if (!regreso || viaje || ocupado) return
     const r = regreso
+    if (enEscenario) {
+      ocupado = true
+      await fundido.aBlanco()
+      panel.ocultar()
+      enEscenario = null
+      ponerVista(r.vista)
+      controles.minDistance = r.min
+      controles.maxDistance = r.max
+      controles.enabled = true
+      regreso = null
+      await fundido.desdeBlanco()
+      ocupado = false
+      return
+    }
     panel.ocultar()
     viajarA(r.vista, () => {
       controles.minDistance = r.min
@@ -116,18 +156,47 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
       controles.maxDistance = enfoque.distanciaMax
     })
   }
-  // Charlie's World (D-23): el planeta se elige con un blanco invisible que lo envuelve.
+  const entrarAlContinente = (c: Continente, direccion: Vec3) => {
+    regreso = { vista: vistaActual(), min: controles.minDistance, max: controles.maxDistance }
+    const sobre = enfocarPlaneta(DISTANCIA_ACERCAR, limites.distanciaMin, limites.distanciaMax, direccion)
+    viajarA(
+      sobre.vista,
+      async () => {
+        controles.enabled = false // en el escenario no se gira ni se hace zoom
+        ocupado = true
+        await fundido.aBlanco()
+        enEscenario = escenarioDelContinente(c)
+        panel.mostrar(FICHA_DE[c])
+        await fundido.desdeBlanco()
+        ocupado = false
+      },
+      DURACION_ACERCAR_S,
+    )
+  }
+
+  // El planeta se elige con un blanco invisible que lo envuelve (D-23); el punto donde pega el
+  // rayo, llevado al giro del planeta, dice si es un continente o mar (D-24).
   const blancoPlaneta = crearBlancoDeClic(opciones.radio * ALTURA_NUBES)
   escena.add(blancoPlaneta)
+  let direccionTocada: Vec3 = [0, 0, 1]
   crearSeleccion({
     lienzo: renderer.domElement,
     camara,
     objetos: [
-      { id: 'don-foco', objeto: foco, pista: FICHA_DON_FOCO.pista },
-      { id: 'charlies-world', objeto: blancoPlaneta, pista: FICHA_CHARLIES_WORLD.pista },
+      { objeto: foco, describir: () => ({ id: 'don-foco', pista: FICHA_DON_FOCO.pista }) },
+      {
+        objeto: blancoPlaneta,
+        describir: (punto) => {
+          const mundo = punto.clone().normalize()
+          direccionTocada = mundo.toArray() as Vec3
+          const local = planeta.worldToLocal(punto.clone()).normalize().toArray() as Vec3
+          const c = continenteEn(local, opciones)
+          return c ? { id: c, pista: FICHA_DE[c].pista } : { id: 'charlies-world', pista: FICHA_CHARLIES_WORLD.pista }
+        },
+      },
     ],
     esClic,
-    activo: () => viaje === null && regreso === null,
+    activo: () => viaje === null && regreso === null && !ocupado,
     alClic: (id) => {
       const desde = camara.position.toArray() as Vec3
       if (id === 'don-foco') {
@@ -135,35 +204,42 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
         ir(enfocar(cuerpo.centro, cuerpo.radio, desde), FICHA_DON_FOCO)
       } else if (id === 'charlies-world') {
         ir(enfocarPlaneta(limites.distanciaInicial, limites.distanciaMin, limites.distanciaMax, desde), FICHA_CHARLIES_WORLD)
+      } else if (id === 'hoja' || id === 'hongo' || id === 'diamante') {
+        entrarAlContinente(id, direccionTocada)
       }
     },
   })
 
   window.addEventListener('resize', () => {
-    camara.aspect = window.innerWidth / window.innerHeight
-    camara.updateProjectionMatrix()
+    for (const c of [camara, ...[...escenarios.values()].map((e) => e.camara)]) {
+      c.aspect = window.innerWidth / window.innerHeight
+      c.updateProjectionMatrix()
+    }
     renderer.setSize(window.innerWidth, window.innerHeight)
   })
 
   return {
-    escena,
-    camara,
+    get escena() {
+      return enEscenario ? enEscenario.escena : escena
+    },
+    get camara() {
+      return enEscenario ? enEscenario.camara : camara
+    },
     controles,
     triangulos: datos.triangulos,
     actualizar(segundos) {
       planeta.rotation.y += segundos * GIRO_PLANETA
       nubes.rotation.y += segundos * GIRO_NUBES
+      if (enEscenario) return // cámara fija: nada que mover
       if (viaje) {
         viaje.transcurrido += segundos
         const { vista, llego } = enViaje(viaje.recorrido, viaje.transcurrido)
-        camara.position.set(...vista.posicion)
-        controles.target.set(...vista.objetivo)
-        camara.lookAt(controles.target)
+        ponerVista(vista)
         if (llego) {
           const alLlegar = viaje.alLlegar
           viaje = null
-          alLlegar()
           controles.enabled = true
+          alLlegar()
         }
         return
       }

@@ -1,12 +1,17 @@
 // Clic y «pasar por encima» sobre objetos de la escena (D-22): lanza un rayo desde el ratón y
 // avisa qué objeto tocó. Qué cuenta como clic lo decide src/logica/enfoque.ts (esClic).
-import { Object3D, PerspectiveCamera, Raycaster, Vector2 } from 'three'
+import { Object3D, PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three'
+
+/** Lo que hay bajo el ratón: qué es y qué dice su letrero. */
+export interface Tocado {
+  id: string
+  pista: string
+}
 
 export interface Seleccionable {
-  id: string
   objeto: Object3D
-  /** Texto del letrero que aparece junto al ratón. */
-  pista: string
+  /** Qué es lo tocado según el punto (en coordenadas del mundo) donde pegó el rayo. */
+  describir: (punto: Vector3) => Tocado | null
 }
 
 export interface OpcionesSeleccion {
@@ -25,21 +30,21 @@ export function crearSeleccion(o: OpcionesSeleccion): void {
   const puntero = new Vector2()
   const letrero = document.getElementById('pista')
 
-  const tocado = (x: number, y: number): Seleccionable | null => {
+  const tocado = (x: number, y: number): Tocado | null => {
     const r = o.lienzo.getBoundingClientRect()
     puntero.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1)
     rayo.setFromCamera(puntero, o.camara)
     // El más cercano gana: Don Foco detrás del planeta no se lleva el clic.
-    let mejor: Seleccionable | null = null
+    let mejor: { s: Seleccionable; punto: Vector3 } | null = null
     let distancia = Infinity
     for (const s of o.objetos) {
       const golpe = rayo.intersectObject(s.objeto, true)[0]
       if (golpe && golpe.distance < distancia) {
         distancia = golpe.distance
-        mejor = s
+        mejor = { s, punto: golpe.point }
       }
     }
-    return mejor
+    return mejor ? mejor.s.describir(mejor.punto) : null
   }
 
   let abajo: { x: number; y: number; t: number } | null = null

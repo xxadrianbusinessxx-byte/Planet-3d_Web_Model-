@@ -30,7 +30,7 @@ function iniciar(): void {
       renderer.render(vista.escena, vista.camara)
     } catch (error) {
       renderer.setAnimationLoop(null)
-      mostrarAviso(`La escena se detuvo por un error: ${error instanceof Error ? error.message : String(error)}`)
+      mostrarAviso(`The scene stopped because of an error: ${error instanceof Error ? error.message : String(error)}`)
       return
     }
     estado.cuadros++
@@ -42,21 +42,21 @@ function iniciar(): void {
 
     ventanaHud.push(ahora)
     ventanaHud = ventanaHud.filter((t) => ahora - t <= 1000)
-    const lineaFps = `${ventanaHud.length} fps · ${estado.triangulos.toLocaleString('es')} triángulos · F oculta`
+    const lineaFps = `${ventanaHud.length} fps · ${estado.triangulos.toLocaleString('en')} triangles · F hides`
 
     if (!midiendo) {
       escribirHud(lineaFps)
       return
     }
     if (ahora < (estado.cargaMs ?? 0) + CALENTAMIENTO_MS) {
-      escribirHud(`${lineaFps}\nmidiendo: calentando…`)
+      escribirHud(`${lineaFps}\nmeasuring: warming up…`)
       return
     }
     inicioMedicion ??= ahora
     if (estado.medicion === null) marcas.push(ahora)
     const transcurrido = ahora - inicioMedicion
     if (transcurrido < DURACION_MEDICION_MS) {
-      escribirHud(`${lineaFps}\nmidiendo: ${Math.ceil((DURACION_MEDICION_MS - transcurrido) / 1000)} s`)
+      escribirHud(`${lineaFps}\nmeasuring: ${Math.ceil((DURACION_MEDICION_MS - transcurrido) / 1000)} s`)
     } else if (estado.medicion === null) {
       const resumen = resumirCuadros(marcas)
       if (resumen) {
@@ -70,7 +70,7 @@ function iniciar(): void {
       }
       vista.controles.autoRotate = false
     } else {
-      escribirHud(`${lineaFps}\nmedición: ${estado.medicion.fpsPromedio} fps promedio · carga ${estado.medicion.cargaMs} ms`)
+      escribirHud(`${lineaFps}\nresult: ${estado.medicion.fpsPromedio} fps average · load ${estado.medicion.cargaMs} ms`)
     }
   })
 }
