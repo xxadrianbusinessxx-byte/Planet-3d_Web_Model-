@@ -27,12 +27,12 @@ export function crearFicha(alVolver: () => void): PanelFicha {
   return {
     mostrar(ficha) {
       caja.replaceChildren()
-      caja.append(el('div', 'ficha-chispa', '☀'), el('h1', 'ficha-titulo', ficha.titulo), el('p', 'ficha-subtitulo', ficha.subtitulo))
+      caja.append(el('div', 'ficha-chispa', ficha.icono), el('h1', 'ficha-titulo', ficha.titulo), el('p', 'ficha-subtitulo', ficha.subtitulo))
       for (const p of ficha.parrafos) caja.append(el('p', 'ficha-parrafo', p))
       const tabla = el('dl', 'ficha-datos')
       for (const [etiqueta, valor] of ficha.datos) tabla.append(el('dt', '', etiqueta), el('dd', '', valor))
       caja.append(tabla, el('p', 'ficha-lema', `«${ficha.lema}»`))
-      const volver = el('button', 'ficha-volver', '← Volver al planeta  (Esc)')
+      const volver = el('button', 'ficha-volver', ficha.boton)
       volver.addEventListener('click', alVolver)
       caja.append(volver)
       caja.classList.add('visible')

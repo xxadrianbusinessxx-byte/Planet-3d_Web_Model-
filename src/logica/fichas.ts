@@ -2,6 +2,8 @@
 // inventado y cómico (D-10). src/mundo/ficha.ts las dibuja.
 
 export interface Ficha {
+  /** Un emoji arriba del título. */
+  icono: string
   titulo: string
   subtitulo: string
   parrafos: string[]
@@ -11,9 +13,12 @@ export interface Ficha {
   lema: string
   /** Lo que dice el letrero al pasar el ratón por encima. */
   pista: string
+  /** El texto del botón que cierra la ficha. */
+  boton: string
 }
 
 export const FICHA_DON_FOCO: Ficha = {
+  icono: '☀',
   titulo: 'Don Foco',
   subtitulo: 'Sistema solar de alta gama · energía ilimitada de fábrica',
   parrafos: [
@@ -35,4 +40,32 @@ export const FICHA_DON_FOCO: Ficha = {
   ],
   lema: 'No se funde, no se apaga: ilumina y nunca paga.',
   pista: 'Don Foco · clic para verlo',
+  boton: '← Volver al planeta  (Esc)',
+}
+
+export const FICHA_CHARLIES_WORLD: Ficha = {
+  icono: '🪐',
+  titulo: "Charlie's World",
+  subtitulo: 'El planeta donde todo es legal · felicidad de serie',
+  parrafos: [
+    'Bienvenido al único planeta donde la ley tiene una sola página y dice «relájate». Aquí cualquier ' +
+      'estupefaciente es legal, la gente vive feliz y el aire huele a domingo. Nadie corre, nadie ' +
+      'grita, nadie se acuerda de qué día es.',
+    'De fondo, siempre, suena Bob Marley: en las playas de bebida azul, en las calles y en el ' +
+      'elevador. Todo va a estar bien, y aquí es ley.',
+    'La economía gira alrededor de las sustancias: cultivadores de la Hoja, catadores del Hongo, ' +
+      'mineros del Diamante y sommeliers de lo que se te ocurra. Y para cuando sobra el tiempo, ' +
+      'casinos abiertos 48/7, porque aquí los días se estiran lo que haga falta.',
+  ],
+  datos: [
+    ['Población', '100 % feliz, 0 % con prisa'],
+    ['Ley', 'todo legal, todo tranqui'],
+    ['Banda sonora', 'Bob Marley en bucle'],
+    ['Casinos', 'abiertos 48/7'],
+    ['Empleo', 'cultivar, catar, minar, disfrutar'],
+    ['Continentes', 'la Hoja, el Hongo y el Diamante'],
+  ],
+  lema: "En Charlie's World no se pregunta la hora: se pregunta qué hay.",
+  pista: "Charlie's World · clic para verlo",
+  boton: 'Cerrar  (Esc)',
 }

@@ -199,3 +199,11 @@ export function crearBrilloMinerales(centro: Vec3, tamano: number): Sprite {
   brillo.scale.setScalar(tamano)
   return brillo
 }
+
+/**
+ * Un blanco invisible para el clic (D-23): una esfera de pocas caras que no se dibuja. El rayo
+ * la toca a ella y no a las 82 000 caras del planeta.
+ */
+export function crearBlancoDeClic(radio: number): Mesh {
+  return new Mesh(new SphereGeometry(radio, 24, 16), new MeshBasicMaterial({ visible: false }))
+}

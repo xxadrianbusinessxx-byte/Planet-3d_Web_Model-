@@ -29,10 +29,17 @@ export function crearSeleccion(o: OpcionesSeleccion): void {
     const r = o.lienzo.getBoundingClientRect()
     puntero.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1)
     rayo.setFromCamera(puntero, o.camara)
+    // El más cercano gana: Don Foco detrás del planeta no se lleva el clic.
+    let mejor: Seleccionable | null = null
+    let distancia = Infinity
     for (const s of o.objetos) {
-      if (rayo.intersectObject(s.objeto, true).length > 0) return s
+      const golpe = rayo.intersectObject(s.objeto, true)[0]
+      if (golpe && golpe.distance < distancia) {
+        distancia = golpe.distance
+        mejor = s
+      }
     }
-    return null
+    return mejor
   }
 
   let abajo: { x: number; y: number; t: number } | null = null

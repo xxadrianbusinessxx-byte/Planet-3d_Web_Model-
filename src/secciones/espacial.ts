@@ -1,15 +1,15 @@
 // Sección «vista espacial» (F1): arma la escena con la lógica y el mundo. Solo orquesta.
-// Desde D-22, también el viaje de la cámara al hacer clic en Don Foco (el Sol).
+// Desde D-22 y D-23, también el viaje de la cámara al hacer clic en Don Foco o en Charlie's World.
 import { DirectionalLight, Group, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { ANILLOS, bandasAnillos, crearCristales as repartirCristales, crearMapaNubes } from '../logica/adornos'
 import { puntoEnMinerales } from '../logica/continentes'
-import { crearViaje, enfocar, enViaje, esClic, type Viaje, type Vista } from '../logica/enfoque'
+import { crearViaje, enfocar, enfocarPlaneta, enViaje, esClic, type Enfoque, type Viaje, type Vista } from '../logica/enfoque'
 import { crearEstrellas as posicionesEstrellas, crearSol, cuerpoDelFoco, limitesCamara } from '../logica/espacio'
-import { FICHA_DON_FOCO } from '../logica/fichas'
+import { FICHA_CHARLIES_WORLD, FICHA_DON_FOCO, type Ficha } from '../logica/fichas'
 import { puntoDesdeCoordenadas, type Vec3 } from '../logica/hoja'
 import { crearDatosPlaneta, crearRelieve, OPCIONES_PLANETA, radioDelPunto } from '../logica/planeta'
-import { crearBrilloMinerales, crearCapaNubes, crearCristales, crearFoco } from '../mundo/decoracion'
+import { crearBlancoDeClic, crearBrilloMinerales, crearCapaNubes, crearCristales, crearFoco } from '../mundo/decoracion'
 import { crearFicha } from '../mundo/ficha'
 import { crearAnillos, crearAtmosfera, crearBebida, crearEstrellas, crearMallaPlaneta } from '../mundo/mallas'
 import { crearSeleccion } from '../mundo/seleccion'
@@ -108,21 +108,34 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
       regreso = null
     })
   })
+  const ir = (enfoque: Enfoque, ficha: Ficha) => {
+    regreso = { vista: vistaActual(), min: controles.minDistance, max: controles.maxDistance }
+    panel.mostrar(ficha)
+    viajarA(enfoque.vista, () => {
+      controles.minDistance = enfoque.distanciaMin
+      controles.maxDistance = enfoque.distanciaMax
+    })
+  }
+  // Charlie's World (D-23): el planeta se elige con un blanco invisible que lo envuelve.
+  const blancoPlaneta = crearBlancoDeClic(opciones.radio * ALTURA_NUBES)
+  escena.add(blancoPlaneta)
   crearSeleccion({
     lienzo: renderer.domElement,
     camara,
-    objetos: [{ id: 'don-foco', objeto: foco, pista: FICHA_DON_FOCO.pista }],
+    objetos: [
+      { id: 'don-foco', objeto: foco, pista: FICHA_DON_FOCO.pista },
+      { id: 'charlies-world', objeto: blancoPlaneta, pista: FICHA_CHARLIES_WORLD.pista },
+    ],
     esClic,
     activo: () => viaje === null && regreso === null,
-    alClic: () => {
-      regreso = { vista: vistaActual(), min: controles.minDistance, max: controles.maxDistance }
-      const cuerpo = cuerpoDelFoco(sol)
-      const enfoque = enfocar(cuerpo.centro, cuerpo.radio, camara.position.toArray() as Vec3)
-      panel.mostrar(FICHA_DON_FOCO)
-      viajarA(enfoque.vista, () => {
-        controles.minDistance = enfoque.distanciaMin
-        controles.maxDistance = enfoque.distanciaMax
-      })
+    alClic: (id) => {
+      const desde = camara.position.toArray() as Vec3
+      if (id === 'don-foco') {
+        const cuerpo = cuerpoDelFoco(sol)
+        ir(enfocar(cuerpo.centro, cuerpo.radio, desde), FICHA_DON_FOCO)
+      } else if (id === 'charlies-world') {
+        ir(enfocarPlaneta(limites.distanciaInicial, limites.distanciaMin, limites.distanciaMax, desde), FICHA_CHARLIES_WORLD)
+      }
     },
   })
 

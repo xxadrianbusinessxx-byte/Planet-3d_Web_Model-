@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { crearViaje, DURACION_VIAJE_S, enfocar, enViaje, esClic, suavizar, type Vista } from './enfoque'
-import { FICHA_DON_FOCO } from './fichas'
+import { crearViaje, DURACION_VIAJE_S, enfocar, enfocarPlaneta, enViaje, esClic, suavizar, type Vista } from './enfoque'
+import { FICHA_CHARLIES_WORLD, FICHA_DON_FOCO } from './fichas'
 
 describe('suavizar', () => {
   it('empieza en 0, termina en 1, pasa por la mitad y no se sale de [0, 1]', () => {
@@ -80,5 +80,29 @@ describe('FICHA_DON_FOCO', () => {
     expect(FICHA_DON_FOCO.datos.length).toBeGreaterThanOrEqual(3)
     expect(FICHA_DON_FOCO.lema.length).toBeGreaterThan(0)
     expect(FICHA_DON_FOCO.subtitulo.toLowerCase()).toContain('energía ilimitada')
+  })
+})
+
+describe('enfocarPlaneta', () => {
+  it('rechaza distancias inválidas', () => {
+    expect(() => enfocarPlaneta(0, 1, 9, [0, 0, 5])).toThrow(RangeError)
+    expect(() => enfocarPlaneta(4, 5, 2, [0, 0, 5])).toThrow(RangeError)
+  })
+
+  it('mira al centro desde la misma dirección, a la distancia pedida y dentro de los límites', () => {
+    const e = enfocarPlaneta(4.2, 1.45, 9, [0, 3, 0])
+    expect(e.vista.objetivo).toEqual([0, 0, 0])
+    expect(e.vista.posicion[1]).toBeCloseTo(4.2, 6)
+    expect(enfocarPlaneta(20, 1.45, 9, [1, 0, 0]).vista.posicion[0]).toBeCloseTo(9, 6)
+    expect(enfocarPlaneta(4, 1.45, 9, [0, 0, 0]).vista.posicion[2]).toBeCloseTo(4, 6)
+  })
+})
+
+describe('FICHA_CHARLIES_WORLD', () => {
+  it("se llama Charlie's World, tiene casinos 48/7 y su botón cierra en vez de «volver al planeta»", () => {
+    expect(FICHA_CHARLIES_WORLD.titulo).toBe("Charlie's World")
+    expect(FICHA_CHARLIES_WORLD.datos.some(([, v]) => v.includes('48/7'))).toBe(true)
+    expect(FICHA_CHARLIES_WORLD.boton.toLowerCase()).toContain('cerrar')
+    expect(FICHA_DON_FOCO.boton.toLowerCase()).toContain('volver')
   })
 })

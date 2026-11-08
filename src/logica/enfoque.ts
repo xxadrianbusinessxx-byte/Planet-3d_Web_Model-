@@ -72,3 +72,22 @@ export function enViaje(viaje: Viaje, transcurrido: number): { vista: Vista; lle
 export function esClic(movidoPx: number, duracionMs: number): boolean {
   return movidoPx < 6 && duracionMs < 450
 }
+
+/**
+ * Enfocar el planeta entero: la cámara se queda en su dirección actual, a `distancia` del
+ * centro, con los límites de zoom de siempre (D-23).
+ */
+export function enfocarPlaneta(distancia: number, distanciaMin: number, distanciaMax: number, desde: Vec3): Enfoque {
+  if (!(distancia > 0) || !(distanciaMin > 0) || distanciaMax < distanciaMin) {
+    throw new RangeError('enfocarPlaneta: distancias fuera de rango')
+  }
+  const d = Math.min(distanciaMax, Math.max(distanciaMin, distancia))
+  let largo = Math.hypot(...desde)
+  const dir: Vec3 = largo < 1e-9 ? [0, 0, 1] : [desde[0] / largo, desde[1] / largo, desde[2] / largo]
+  largo = d
+  return {
+    vista: { posicion: [dir[0] * largo, dir[1] * largo, dir[2] * largo], objetivo: [0, 0, 0] },
+    distanciaMin,
+    distanciaMax,
+  }
+}

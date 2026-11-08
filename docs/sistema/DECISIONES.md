@@ -267,3 +267,15 @@ Formato:
 - **Por qué:** lo pidió la persona como primera transición de escenarios.
 - **Revisar cuando:** se decida `transicion-zoom` (D-11, F2): bajar con el zoom a países y
   ciudades es otro camino y puede reusar el viaje de cámara de aquí.
+
+## D-23 · El planeta se llama Charlie's World y tiene su ficha
+- 2026-11-08 · persona
+- **Decisión:** el planeta inventado se llama **Charlie's World**. Al hacerle clic (D-22) la
+  cámara lo encuadra y aparece su ficha: un mundo donde **todo estupefaciente es legal**, la
+  gente vive feliz con **Bob Marley** sonando siempre, la economía gira alrededor de las
+  sustancias (cultivar la Hoja, catar el Hongo, minar el Diamante) y hay **casinos 48/7**. Tono
+  cómico de comercial, como el resto (D-10); la ficha no da instrucciones ni datos de consumo.
+  El botón dice «Cerrar» (no «Volver al planeta»).
+- **Alternativas:** ninguna planteada; el texto lo escribió el agente desde la idea de la persona.
+- **Por qué:** lo pidió la persona, como la ficha de Don Foco.
+- **Revisar cuando:** se muestre a un público para el que el tema no sea adecuado.
