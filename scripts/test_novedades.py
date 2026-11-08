@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import unittest
 
-from novedades import agrupar_archivos, avisos_de_rama, resumir_rama
+from novedades import agrupar_archivos, avisos_de_rama, es_lanzamiento, resumir_rama
 
 
 class PruebaNovedades(unittest.TestCase):
@@ -34,14 +34,27 @@ class PruebaNovedades(unittest.TestCase):
         c = {"sha": "1234567890", "autor": "Adrian", "fecha": "f", "asunto": "a", "archivos": []}
         self.assertIn("primera revisión", resumir_rama("main", [c], primera_vez=True, total=1)[0])
 
+    def test_lanzamiento(self):
+        self.assertTrue(es_lanzamiento("LANZAMIENTO: nubes nuevas"))
+        self.assertTrue(es_lanzamiento("  lanzamiento: algo"))
+        self.assertFalse(es_lanzamiento("Espacial: nubes"))
+        self.assertFalse(es_lanzamiento("Sin LANZAMIENTO: al inicio"))
+        c = {"sha": "1234567890", "autor": "Adrian", "fecha": "f", "asunto": "LANZAMIENTO: x", "archivos": []}
+        self.assertIn("🚀", resumir_rama("main", [c], primera_vez=False, total=1)[1])
+
     def test_avisos_segun_la_rama(self):
-        self.assertEqual(avisos_de_rama("main", 0, 0), [])
-        self.assertIn("git pull", avisos_de_rama("main", 2, 0)[0])
-        avisos = avisos_de_rama("colaborativa", 0, 4)
-        self.assertEqual(len(avisos), 1)
+        self.assertEqual(avisos_de_rama("main", 0, [], 0), [])
+        self.assertIn("git pull", avisos_de_rama("main", 2, [], 0)[0])
+        # Lo lanzado por Adrian se junta en colaborativa con pull de main.
+        avisos = avisos_de_rama("colaborativa", 0, ["LANZAMIENTO: pestañas"], 3)
         self.assertIn("git pull origin main", avisos[0])
-        # En main no se avisa de juntar main (ya es main).
-        self.assertEqual(avisos_de_rama("main", 0, 4), [])
+        self.assertIn("LANZAMIENTO: pestañas", avisos[1])
+        # Lo lanzado por el colaborador se junta en main con merge de colaborativa.
+        self.assertIn("git merge origin/colaborativa", avisos_de_rama("main", 0, ["LANZAMIENTO: clima"], 0)[0])
+        # Sin lanzamientos, lo demás no obliga a juntar.
+        sin = avisos_de_rama("colaborativa", 0, [], 4)
+        self.assertEqual(len(sin), 1)
+        self.assertIn("no hace falta", sin[0])
 
 
 if __name__ == "__main__":

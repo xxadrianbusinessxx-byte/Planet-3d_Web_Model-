@@ -379,9 +379,9 @@
       "riesgo": "medio",
       "quien": "persona",
       "destino": "docs/sistema/reparto.json",
-      "respuesta": null,
-      "revisado": null,
-      "estado": "abierto"
+      "respuesta": "Se adelantan a F2 todos los aspectos de los continentes (D-27).",
+      "revisado": "2026-11-08",
+      "estado": "cerrado"
     }
   ]
 }

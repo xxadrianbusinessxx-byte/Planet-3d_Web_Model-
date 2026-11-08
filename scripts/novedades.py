@@ -3,6 +3,8 @@
 QUÉ MIDE: los commits nuevos de origin/main (Adrian) y origin/colaborativa (los demás) desde
           la última revisión en esta copia, quién los hizo, qué carpetas tocaron y si tu rama
           va detrás (D-21). Así cada IA, al empezar y después de cada push, sabe qué cambió.
+          Los commits cuyo mensaje empieza con «LANZAMIENTO:» (D-27) se marcan con 🚀: son los
+          únicos que el otro debe juntar en su rama; lo demás solo se lista.
 QUÉ ESCRIBE: `git fetch origin` (solo actualiza las referencias remotas; no toca tus archivos
              ni tus ramas) y una marca local `novedades-vistas.json` dentro de la carpeta de
              git (fuera del repo, una por copia). No hace pull, merge ni push.
@@ -30,6 +32,9 @@ PRIMERA_VEZ = 3
 # En colaborativa solo cuenta lo propio: lo que vino de main ya se ve en main.
 EXCLUIR = {"colaborativa": "^origin/main"}
 SEP = "\x1f"
+# La otra rama de cada una y el comando para juntar sus lanzamientos (D-27).
+OTRA = {"main": "colaborativa", "colaborativa": "main"}
+JUNTAR = {"main": "git merge origin/colaborativa", "colaborativa": "git pull origin main"}
 
 
 # ── Lógica pura (la prueba test_novedades.py) ────────────────────────────────────────────
@@ -50,6 +55,11 @@ def agrupar_archivos(rutas: list[str]) -> str:
     return ", ".join(f"{k} ({n})" for k, n in orden)
 
 
+def es_lanzamiento(asunto: str) -> bool:
+    """Un commit «lanzado» (D-27): su mensaje empieza con LANZAMIENTO: (da igual mayúsculas)."""
+    return asunto.strip().upper().startswith("LANZAMIENTO:")
+
+
 def resumir_rama(rama: str, commits: list[dict], primera_vez: bool, total: int) -> list[str]:
     """Líneas para una rama. commits: [{sha, autor, fecha, asunto, archivos}] del más nuevo al más viejo."""
     if not commits:
@@ -61,22 +71,31 @@ def resumir_rama(rama: str, commits: list[dict], primera_vez: bool, total: int) 
         cabeza += f", se muestran {len(commits)}:" if total > len(commits) else ":"
     lineas = [cabeza]
     for c in commits:
-        lineas.append(f"    {c['sha'][:7]} {c['fecha']} · {c['autor']} · {c['asunto']}")
+        marca = "🚀 " if es_lanzamiento(c["asunto"]) else ""
+        lineas.append(f"    {marca}{c['sha'][:7]} {c['fecha']} · {c['autor']} · {c['asunto']}")
         if c.get("archivos"):
             lineas.append(f"            tocó: {agrupar_archivos(c['archivos'])}")
     return lineas
 
 
-def avisos_de_rama(actual: str | None, detras: int, main_sin_juntar: int) -> list[str]:
-    """Qué hacer con lo nuevo según la rama en que estás (D-18)."""
+def avisos_de_rama(actual: str | None, detras: int, lanzados: list[str], otros_sin_juntar: int) -> list[str]:
+    """Qué hacer con lo nuevo según tu rama (D-18, D-27). lanzados: asuntos de los LANZAMIENTO de
+    la otra rama que tu rama no tiene; otros_sin_juntar: los demás commits de la otra rama."""
     avisos = []
     if actual and detras > 0:
         avisos.append(f"  ⚠ Tu rama {actual} va {detras} commit(s) detrás de origin/{actual}: git pull")
-    if actual == "colaborativa" and main_sin_juntar > 0:
-        avisos.append(
-            f"  ⚠ main tiene {main_sin_juntar} commit(s) que colaborativa no tiene: "
-            "git pull origin main (recomendado, COLABORAR §3)"
-        )
+    if actual in OTRA:
+        otra = OTRA[actual]
+        if lanzados:
+            avisos.append(
+                f"  🚀 {QUIEN[otra]} lanzó {len(lanzados)} actualización(es) que tu rama no tiene: "
+                f"júntala(s) ahora con {JUNTAR[actual]} (COLABORAR §3)"
+            )
+            avisos += [f"     · {a}" for a in lanzados]
+        elif otros_sin_juntar > 0:
+            avisos.append(
+                f"  · origin/{otra} tiene {otros_sin_juntar} commit(s) sin lanzar: no hace falta juntarlos (D-27)"
+            )
     return avisos
 
 
@@ -158,8 +177,13 @@ def main() -> None:
 
     actual = (git("branch", "--show-current") or "").strip() or None
     detras = contar(f"HEAD..origin/{actual}") if actual and git("rev-parse", "--verify", "--quiet", f"origin/{actual}") else 0
-    main_sin_juntar = contar("HEAD..origin/main") if actual == "colaborativa" else 0
-    lineas += avisos_de_rama(actual, detras, main_sin_juntar)
+    lanzados: list[str] = []
+    otros = 0
+    if actual in OTRA and git("rev-parse", "--verify", "--quiet", f"origin/{OTRA[actual]}"):
+        pendientes = leer_commits(f"HEAD..origin/{OTRA[actual]}", 200)
+        lanzados = [c["asunto"] for c in pendientes if es_lanzamiento(c["asunto"])]
+        otros = len(pendientes) - len(lanzados)
+    lineas += avisos_de_rama(actual, detras, lanzados, otros)
     if hubo_algo:
         lineas.append(
             "  → Antes de tocar lo mismo, lee los commits y los informes nuevos (docs/historial/informes/) "

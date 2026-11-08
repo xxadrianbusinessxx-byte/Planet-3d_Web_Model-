@@ -11,13 +11,21 @@
     "Sin límite de secciones por trabajador; se suelta la que ya no se vaya a hacer.",
     "",
     "continente (D-25): en qué continente se ve la sección, como una página dentro de su",
-    "escenario: the-leaf | the-mushroom | the-diamond; null = no va en un continente."
+    "escenario: the-leaf | the-mushroom | the-diamond; null = no va en un continente.",
+    "",
+    "«colaborador» (D-27) es el nombre provisional de la otra persona: cuando se una, se cambia",
+    "por su nombre aquí y en sus secciones (pendiente invitar-colaborador)."
   ],
   "trabajadores": [
     {
       "nombre": "Adrian",
       "github": "xxadrianbusinessxx-byte",
       "ia": "Claude Code"
+    },
+    {
+      "nombre": "colaborador",
+      "github": null,
+      "ia": null
     }
   ],
   "secciones": [
@@ -56,35 +64,35 @@
       "titulo": "Clima inventado",
       "fase": "F2",
       "continente": "the-mushroom",
-      "quien": null,
-      "reservada_el": null,
-      "rama": null,
-      "estado": "libre"
+      "quien": "colaborador",
+      "reservada_el": "2026-11-08",
+      "rama": "colaborativa",
+      "estado": "reservada"
     },
     {
       "id": "zonas-de-trabajo",
       "titulo": "Zonas de trabajo de la ciudad",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-diamond",
-      "quien": null,
-      "reservada_el": null,
-      "rama": null,
-      "estado": "libre"
+      "quien": "colaborador",
+      "reservada_el": "2026-11-08",
+      "rama": "colaborativa",
+      "estado": "reservada"
     },
     {
       "id": "trabajos",
       "titulo": "Trabajos de la población",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-diamond",
-      "quien": null,
-      "reservada_el": null,
-      "rama": null,
-      "estado": "libre"
+      "quien": "colaborador",
+      "reservada_el": "2026-11-08",
+      "rama": "colaborativa",
+      "estado": "reservada"
     },
     {
       "id": "poblacion",
       "titulo": "Población: los aliens (D-13)",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-leaf",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
@@ -94,7 +102,7 @@
     {
       "id": "transporte",
       "titulo": "Transporte inventado",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-leaf",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
@@ -104,7 +112,7 @@
     {
       "id": "flora",
       "titulo": "Flora inventada",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-mushroom",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
@@ -114,17 +122,17 @@
     {
       "id": "fauna",
       "titulo": "Fauna inventada",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-mushroom",
-      "quien": null,
-      "reservada_el": null,
-      "rama": null,
-      "estado": "libre"
+      "quien": "colaborador",
+      "reservada_el": "2026-11-08",
+      "rama": "colaborativa",
+      "estado": "reservada"
     },
     {
       "id": "recursos-naturales",
       "titulo": "Recursos naturales",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-diamond",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
@@ -144,7 +152,7 @@
     {
       "id": "estilo-de-vida",
       "titulo": "Estilo de vida: cómo viven (Bob Marley, casinos 48/7…)",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-leaf",
       "quien": "Adrian",
       "reservada_el": "2026-11-08",
@@ -154,12 +162,12 @@
     {
       "id": "medio-ambiente",
       "titulo": "Medio ambiente: cómo se ve la tierra en general",
-      "fase": "F3",
+      "fase": "F2",
       "continente": "the-mushroom",
-      "quien": null,
-      "reservada_el": null,
-      "rama": null,
-      "estado": "libre"
+      "quien": "colaborador",
+      "reservada_el": "2026-11-08",
+      "rama": "colaborativa",
+      "estado": "reservada"
     }
   ]
 }

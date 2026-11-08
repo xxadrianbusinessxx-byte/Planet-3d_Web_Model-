@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-08 (páginas por aspecto dentro de cada continente, D-26)
+- **Última revisión:** 2026-11-08 (aspectos en F2, secciones del colaborador y lanzamientos, D-27)
 
 ---
 
@@ -60,7 +60,7 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 | Dentro de cada continente, pestañas (y flechas ← →) con una página por aspecto según `reparto.json`: The Leaf (Population, Transport, Lifestyle), The Mushroom (Climate, Flora, Fauna, Environment), The Diamond (Work zones, Jobs, Natural resources); cada cambio con fundido. Las 10 páginas son de prueba (`src/secciones/aspectos/`) (D-25, D-26) | `npm test` (`aspectos.test.ts`) y a mano | — |
 | HTML portátil: un solo `dist/index.html` de 0,60 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_1642_rendimiento.json` |
 | 75 fps (tope de la pantalla) y carga de 0,64 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-08_1642_rendimiento.json` |
-| Al abrir cada sesión de Claude Code (hook de `.claude/settings.json`) y después de cada push, `scripts/novedades.py` resume lo nuevo de `main` y `colaborativa` en GitHub (D-21) | `python scripts/test_novedades.py` (5 pruebas) y `python scripts/novedades.py` | — |
+| Al abrir cada sesión de Claude Code (hook de `.claude/settings.json`) y después de cada push, `scripts/novedades.py` resume lo nuevo de `main` y `colaborativa` en GitHub (D-21); marca con 🚀 los commits `LANZAMIENTO:` y solo pide juntar esos (D-27) | `python scripts/test_novedades.py` (6 pruebas) y `python scripts/novedades.py` | — |
 | Ante un error (sin WebGL, fallo en el bucle) la página muestra un aviso en vez de quedar en blanco (D-09) | revisión; no hay prueba automática del caso sin WebGL | — |
 
 ## 5. Deudas vivas

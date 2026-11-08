@@ -5,8 +5,10 @@
 `CLAUDE.md`: esto solo dice cómo se reparte, dónde se sube y cómo se junta.
 
 > **Aviso al nuevo trabajador (y a su IA): todo lo que hagas va a la rama `colaborativa`.**
-> Nunca hagas commit ni push a `main`: `main` es de Adrian. Al final del proyecto, Adrian
-> junta `colaborativa` con `main` en una sola fusión (§4).
+> Nunca hagas commit ni push a `main`: `main` es de Adrian. **Tu trabajo es entregar tus
+> secciones**: las que en `reparto.json` dicen `"quien": "colaborador"` (clima, fauna, medio
+> ambiente, trabajos y zonas de trabajo; D-27). Cuando todas las secciones estén hechas,
+> Adrian junta `colaborativa` con `main` y el proyecto queda terminado (§4).
 
 - **Repositorio:** privado en GitHub, remoto `origin` (la URL está en `ESTADO-ACTUAL.md` §2).
 - **Dos ramas, nada más (D-18):** `main` (Adrian trabaja directo ahí) y `colaborativa`
@@ -83,7 +85,7 @@ a su `fase` (`proyecto.json` → `fase_actual`).
 ## 3. El ciclo de cada tarea
 
 ```
-pull → novedades → tarea → verificar → commit → push a su rama → novedades
+pull → novedades → (juntar solo lo lanzado) → tarea → verificar → commit → push a su rama → novedades
 ```
 
 1. **Al día:** Adrian, `git switch main` y `git pull`. Cualquier otro,
@@ -92,9 +94,12 @@ pull → novedades → tarea → verificar → commit → push a su rama → nov
    (commits, autor y carpetas tocadas) y si tu rama va detrás. **La IA lo lee antes de la
    tarea** y, si lo nuevo toca lo mismo, lo dice a su persona y adapta la tarea. En Claude Code
    los dos corren solos al abrir la sesión (hook de `.claude/settings.json`).
-2. **Recomendado para `colaborativa`:** traer lo nuevo de `main` al empezar cada tarea, con
-   `git pull origin main` dentro de `colaborativa` (merge, no rebase). No toca `main` y deja
-   la fusión final pequeña; si sale un conflicto, se resuelve con la tabla de §4.
+2. **Juntar solo lo lanzado (D-27).** Cada quien trabaja en lo suyo y **no se actualiza con
+   cada commit del otro**: solo cuando el otro **lanza** una actualización. Un lanzamiento es un
+   commit cuyo mensaje empieza con `LANZAMIENTO:` (§3 bis); `novedades.py` lo marca con 🚀 y dice
+   el comando. En `colaborativa`: `git pull origin main`. En `main`: `git merge origin/colaborativa`.
+   Siempre merge, nunca rebase. Si sale un conflicto, se resuelve con la tabla de §4.
+   Los commits sin lanzar se ven en la lista, pero no hace falta juntarlos.
 3. **Respaldo:** el commit con el árbol limpio antes de empezar es el respaldo (D-04).
 4. **La tarea**, con el ritmo de `CLAUDE.md` §5. El código de una sección vive sobre todo en
    `src/secciones/` y su lógica en `src/logica/` (`docs/perfil/ORDEN.md`). Si la sección es
@@ -108,13 +113,30 @@ pull → novedades → tarea → verificar → commit → push a su rama → nov
    correo: este paso es el aviso, en las dos direcciones.
 7. Si la sección quedó terminada, `estado: "hecha"` en el reparto de su rama.
 
+## 3 bis. Lanzar una actualización (D-27)
+
+Se lanza lo que el otro **necesita** para seguir: un cambio en lo común (la navegación, el
+molde de páginas, una regla, una herramienta) o una sección terminada. Lo de todos los días no
+se lanza.
+
+1. El commit que se quiere lanzar lleva el mensaje `LANZAMIENTO: <qué cambia y por qué importa>`.
+   Si ya estaba hecho, se agrega uno vacío: `git commit --allow-empty -m "LANZAMIENTO: <…>"`.
+2. Push a su rama (con el OK de su persona, D-04).
+3. La próxima vez que el otro abra su sesión, `novedades.py` le muestra el 🚀 y el comando
+   para juntarlo; su IA se lo dice a su persona antes de seguir.
+
 ## 4. La fusión final y los conflictos
+
+**El proyecto queda terminado** cuando cada sección del reparto está `"hecha"` y Adrian hace la
+fusión final. Lo que se lanzó antes ya entró a `main` en su momento (§3 paso 2), así que la
+fusión final solo junta lo que faltaba.
 
 Al final del proyecto, Adrian junta `colaborativa` con `main` en la sesión de fusión final:
 `git switch main`, `git pull`, `git merge origin/colaborativa`, conflictos con la tabla de
 abajo, `python scripts/verificar.py` en verde, medición de cada sección, commit y push de
 `main`. Los mismos conflictos pueden salir antes, en el `git pull origin main` de §3 paso 2:
-entonces se resuelven **en `colaborativa`**, nunca en `main`.
+entonces se resuelven **en `colaborativa`**, nunca en `main`. Al juntar en `main` un
+lanzamiento de `colaborativa` (§3 paso 2), los conflictos se resuelven en `main` con la misma tabla.
 
 | Archivo | Qué se hace |
 |---|---|

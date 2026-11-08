@@ -326,3 +326,21 @@ Formato:
   navegación (chocarían en los mismos archivos).
 - **Por qué:** así se puede trabajar cada aspecto en su propia sesión sin pisar a las demás.
 - **Revisar cuando:** un aspecto necesite moverse dentro de su escena o su propia cámara.
+
+## D-27 · Cada quien entrega lo suyo; solo se junta lo que se lanza
+- 2026-11-08 · persona
+- **Decisión:** (1) Los aspectos de los continentes **pasan de F3 a F2** en `reparto.json`, para
+  trabajarlos ya. (2) **El colaborador entrega sus secciones**: clima, fauna, medio ambiente,
+  trabajos y zonas de trabajo (reservadas a «colaborador» hasta saber su nombre); Adrian, las
+  suyas (estilo de vida, población, transporte, flora, recursos naturales). (3) **No se
+  actualiza con cada commit del otro**: solo cuando uno **lanza** una actualización, con un
+  commit que empieza con `LANZAMIENTO:`. `novedades.py` lo marca con 🚀 y da el comando: en
+  `colaborativa`, `git pull origin main`; en `main`, `git merge origin/colaborativa` (esto
+  cambia D-18: lo lanzado desde `colaborativa` entra a `main` antes de la fusión final). (4) El
+  proyecto queda terminado cuando todas las secciones están hechas y se hace la fusión final.
+- **Alternativas:** etiquetas de git o avisos por chat para lanzar; que el colaborador eligiera
+  sus secciones al entrar; cerrar F2 antes de trabajar los aspectos.
+- **Por qué:** que cada quien avance en lo suyo sin perder tiempo actualizándose, y que lo
+  importante sí llegue a los dos.
+- **Revisar cuando:** se una el colaborador (poner su nombre en el reparto) o una sección
+  necesite algo de otra que no se lanzó.
