@@ -146,10 +146,10 @@
       "titulo": "Estilo de vida: cómo viven (Bob Marley, casinos 48/7…)",
       "fase": "F3",
       "continente": "the-leaf",
-      "quien": null,
-      "reservada_el": null,
-      "rama": null,
-      "estado": "libre"
+      "quien": "Adrian",
+      "reservada_el": "2026-11-08",
+      "rama": "main",
+      "estado": "reservada"
     },
     {
       "id": "medio-ambiente",
