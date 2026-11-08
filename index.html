@@ -48,6 +48,21 @@
                       cursor: pointer; font: inherit; font-weight: 600; color: var(--f-boton);
                       background: linear-gradient(90deg, var(--f-suave), var(--f-acento)); }
       .ficha-volver:hover { filter: brightness(1.08); }
+      /* Pestañas de los aspectos dentro de un continente (D-26). */
+      #pestanas { position: fixed; top: 18px; left: 50%; transform: translate(-50%, -12px);
+                  display: flex; gap: 6px; align-items: center; padding: 6px 8px; border-radius: 999px;
+                  background: color-mix(in srgb, var(--f-hasta, #111) 88%, transparent);
+                  border: 1px solid color-mix(in srgb, var(--f-acento, #fff) 45%, transparent);
+                  box-shadow: 0 4px 18px rgba(0, 0, 0, .18); z-index: 2; max-width: calc(100vw - 32px);
+                  overflow-x: auto; opacity: 0; pointer-events: none;
+                  transition: opacity .35s ease, transform .35s ease; }
+      #pestanas.visible { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+      .pestanas-titulo { padding: 0 10px 0 8px; font-weight: 700; color: var(--f-acento); white-space: nowrap; }
+      .pestana { border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; font: inherit;
+                 font-size: 14px; white-space: nowrap; color: var(--f-suave); background: transparent; }
+      .pestana:hover { background: color-mix(in srgb, var(--f-acento) 18%, transparent); }
+      .pestana.activa { color: var(--f-boton); font-weight: 600;
+                        background: linear-gradient(90deg, var(--f-suave), var(--f-acento)); }
       /* Fundido a blanco entre el planeta y un escenario (D-24). */
       #fundido { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none;
                  transition-property: opacity; transition-timing-function: ease; z-index: 1; }
@@ -59,6 +74,7 @@
     <div id="hud"></div>
     <div id="pista"></div>
     <div id="fundido"></div>
+    <nav id="pestanas" aria-label="Aspects of the continent"></nav>
     <aside id="ficha" aria-live="polite"></aside>
     <script type="module" src="/src/main.ts"></script>
   </body>

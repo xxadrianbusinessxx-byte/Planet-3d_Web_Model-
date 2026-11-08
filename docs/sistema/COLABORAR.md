@@ -97,7 +97,9 @@ pull → novedades → tarea → verificar → commit → push a su rama → nov
    la fusión final pequeña; si sale un conflicto, se resuelve con la tabla de §4.
 3. **Respaldo:** el commit con el árbol limpio antes de empezar es el respaldo (D-04).
 4. **La tarea**, con el ritmo de `CLAUDE.md` §5. El código de una sección vive sobre todo en
-   `src/secciones/` y su lógica en `src/logica/` (`docs/perfil/ORDEN.md`).
+   `src/secciones/` y su lógica en `src/logica/` (`docs/perfil/ORDEN.md`). Si la sección es
+   un aspecto de un continente (D-26), su página es `src/secciones/aspectos/<id>.ts`: se toca
+   solo ese archivo y su lógica, no la navegación común.
 5. **Verificar:** `python scripts/verificar.py` en verde. Sin verde no hay commit.
 6. **Commit y push a su rama**, cuando su persona lo pida (D-04): `git push origin main`
    (Adrian) o `git push origin colaborativa` (los demás). **Después de cada push,

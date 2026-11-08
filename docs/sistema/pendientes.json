@@ -369,6 +369,19 @@
       "respuesta": "The Leaf: estilo de vida, población y transporte. The Mushroom: clima, flora, fauna y medio ambiente. The Diamond: trabajos (y zonas de trabajo) y recursos del planeta. Ciudad y países y fronteras no van en un continente. D-25; campo continente en reparto.json.",
       "revisado": "2026-11-08",
       "estado": "cerrado"
+    },
+    {
+      "id": "fase-de-aspectos",
+      "tipo": "pregunta",
+      "fase": "F2",
+      "titulo": "¿Se adelantan a F2 los aspectos de F3 (estilo de vida, población, transporte, flora, fauna, medio ambiente, trabajos, zonas de trabajo, recursos) o se cierra F2 antes?",
+      "detalle": "COLABORAR §2: una sección se trabaja cuando el proyecto llega a su fase. Con el molde de D-26 ya se puede abrir una sesión por aspecto; hoy el proyecto está en F2 y casi todos son F3. Adelantarlos es cambiar su fase en reparto.json (decisión de la persona).",
+      "riesgo": "medio",
+      "quien": "persona",
+      "destino": "docs/sistema/reparto.json",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
     }
   ]
 }

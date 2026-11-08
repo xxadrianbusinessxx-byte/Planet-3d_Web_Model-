@@ -311,3 +311,18 @@ Formato:
   estilo de vida y población; Diamond con recursos, transporte y ciudad).
 - **Por qué:** lo decidió la persona al cerrar la pregunta `ambito-continentes`.
 - **Revisar cuando:** se construya la primera página de un continente y se vea si cabe todo.
+
+## D-26 · El molde de páginas por aspecto dentro de cada continente
+- 2026-11-08 · persona (pidió el molde); agente (la forma)
+- **Decisión:** dentro de la vista de un continente, **arriba hay pestañas** con su nombre y un
+  botón por aspecto; las **flechas ← →** también cambian de página. Cada cambio de página es
+  un **fundido a blanco** y cambia la escena fija y la ficha (con el color del continente).
+  **Cada aspecto vive en su propio archivo** `src/secciones/aspectos/<id>.ts` (el id de su
+  sección en `reparto.json`), con su ficha y lo que agrega a la escena; su lógica, en
+  `src/logica/`. Qué aspectos van en cada continente y en qué orden se **lee de
+  `reparto.json`** (no se copia, R1). Hoy las 10 páginas son de prueba: ficha sin descripción
+  y un marcador de color.
+- **Alternativas:** una sola página por continente; que cada sesión construyera su propia
+  navegación (chocarían en los mismos archivos).
+- **Por qué:** así se puede trabajar cada aspecto en su propia sesión sin pisar a las demás.
+- **Revisar cuando:** un aspecto necesite moverse dentro de su escena o su propia cámara.

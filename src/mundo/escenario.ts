@@ -1,7 +1,21 @@
 // El escenario fijo de un continente (D-24), vuelto escena de three: fondo blanco, suelo
 // blanco con una cuadrícula suave para que se lea como suelo, luz pareja y una cámara quieta.
 // Qué lleva cada uno lo dice src/logica/escenarios.ts.
-import { Color, DirectionalLight, Fog, GridHelper, HemisphereLight, Mesh, MeshLambertMaterial, PerspectiveCamera, PlaneGeometry, Scene } from 'three'
+import {
+  Color,
+  CylinderGeometry,
+  DirectionalLight,
+  Fog,
+  GridHelper,
+  Group,
+  HemisphereLight,
+  IcosahedronGeometry,
+  Mesh,
+  MeshLambertMaterial,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Scene,
+} from 'three'
 import type { Escenario } from '../logica/escenarios'
 
 export interface EscenaFija {
@@ -31,4 +45,20 @@ export function crearEscenario(e: Escenario): EscenaFija {
   camara.position.set(...e.camara.posicion)
   camara.lookAt(...e.camara.objetivo)
   return { escena, camara }
+}
+
+/**
+ * Marcador de una página de prueba (D-26): un pedestal blanco con una piedra low-poly del color
+ * del aspecto encima, para que cada página se distinga mientras no tenga su contenido.
+ */
+export function crearMarcadorDePrueba(color: number): Group {
+  const marcador = new Group()
+  const pedestal = new Mesh(new CylinderGeometry(1.6, 1.9, 0.8, 8), new MeshLambertMaterial({ color: 0xffffff, flatShading: true }))
+  pedestal.position.y = 0.4
+  const piedra = new Mesh(new IcosahedronGeometry(1.3, 0), new MeshLambertMaterial({ color, flatShading: true }))
+  piedra.position.y = 2.3
+  piedra.rotation.set(0.4, 0.6, 0.2)
+  marcador.add(pedestal, piedra)
+  marcador.position.set(-3, 0, 0) // donde mira la cámara fija (escenarios.ts)
+  return marcador
 }

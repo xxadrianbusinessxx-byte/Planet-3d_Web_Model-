@@ -11,6 +11,7 @@ capas está en `docs/normativo/ORDEN.md` §2; las decisiones de herramienta, en 
 | lógica que decide (generar geometría, ruido, alturas, elegir nivel de detalle, cálculo de cámara y escalas) | `src/logica/` |
 | código que habla con el mundo (`WebGLRenderer`, DOM, ratón y teclado, carga de glTF, reloj) | `src/mundo/` |
 | código que orquesta (arma cada sección con las otras dos; el bucle de cuadros) | `src/main.ts` y `src/secciones/` |
+| la página de un aspecto dentro de su continente (D-26): su ficha y lo que agrega a la escena | `src/secciones/aspectos/<id>.ts`, con `<id>` el de su sección en `reparto.json`; se registra en `registro.ts` |
 | pruebas de la lógica | junto al archivo: `src/logica/<nombre>.test.ts` |
 | modelos IA **optimizados** que entran a la escena | `src/modelos/*.glb` (se embeben en el HTML) |
 | modelos IA **en bruto**, tal como salen del generador | `datos/modelos-ia/` (fuera de git, D-04) |

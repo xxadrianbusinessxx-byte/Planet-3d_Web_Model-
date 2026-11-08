@@ -7,16 +7,17 @@ import { ANILLOS, bandasAnillos, crearCristales as repartirCristales, crearMapaN
 import { puntoEnMinerales } from '../logica/continentes'
 import { crearViaje, enfocar, enfocarPlaneta, enViaje, esClic, type Enfoque, type Viaje, type Vista } from '../logica/enfoque'
 import { crearEstrellas as posicionesEstrellas, crearSol, cuerpoDelFoco, limitesCamara } from '../logica/espacio'
-import { DISTANCIA_ACERCAR, DURACION_ACERCAR_S, DURACION_FUNDIDO_MS, escenarioDe } from '../logica/escenarios'
+import { DISTANCIA_ACERCAR, DURACION_ACERCAR_S, DURACION_FUNDIDO_MS } from '../logica/escenarios'
 import { FICHA_CHARLIES_WORLD, FICHA_DON_FOCO, FICHA_THE_DIAMOND, FICHA_THE_LEAF, FICHA_THE_MUSHROOM, type Ficha } from '../logica/fichas'
 import { puntoDesdeCoordenadas, type Vec3 } from '../logica/hoja'
 import { continenteEn, crearDatosPlaneta, crearRelieve, OPCIONES_PLANETA, radioDelPunto, type Continente } from '../logica/planeta'
 import { crearBlancoDeClic, crearBrilloMinerales, crearCapaNubes, crearCristales, crearFoco } from '../mundo/decoracion'
-import { crearEscenario, type EscenaFija } from '../mundo/escenario'
 import { crearFicha } from '../mundo/ficha'
 import { crearFundido } from '../mundo/fundido'
 import { crearAnillos, crearAtmosfera, crearBebida, crearEstrellas, crearMallaPlaneta } from '../mundo/mallas'
+import { mostrarAviso } from '../mundo/navegador'
 import { crearSeleccion } from '../mundo/seleccion'
+import { crearVistaContinente } from './vista-continente'
 
 /** Mapa de nubes: 512 × 256 alcanza para masas grandes y suaves (D-20). */
 const MAPA_NUBES = { ancho: 512, alto: 256 }
@@ -105,7 +106,7 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
   }
   let viaje: { recorrido: Viaje; transcurrido: number; alLlegar: () => void } | null = null
   let regreso: { vista: Vista; min: number; max: number } | null = null
-  let enEscenario: EscenaFija | null = null
+  let enContinente = false
   let ocupado = false // durante un fundido no se aceptan más órdenes
   const viajarA = (hasta: Vista, alLlegar: () => void, duracion?: number) => {
     controles.enabled = false
@@ -114,24 +115,16 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
     viaje = { recorrido: crearViaje(vistaActual(), hasta, duracion), transcurrido: 0, alLlegar }
   }
   const fundido = crearFundido(DURACION_FUNDIDO_MS)
-  const escenarios = new Map<Continente, EscenaFija>()
-  const escenarioDelContinente = (c: Continente) => {
-    let e = escenarios.get(c)
-    if (!e) {
-      e = crearEscenario(escenarioDe(c))
-      escenarios.set(c, e)
-    }
-    return e
-  }
 
   const panel = crearFicha(async () => {
-    if (!regreso || viaje || ocupado) return
+    if (!regreso || viaje || ocupado || continente.ocupada()) return
     const r = regreso
-    if (enEscenario) {
+    if (enContinente) {
       ocupado = true
       await fundido.aBlanco()
       panel.ocultar()
-      enEscenario = null
+      continente.salir()
+      enContinente = false
       ponerVista(r.vista)
       controles.minDistance = r.min
       controles.maxDistance = r.max
@@ -148,6 +141,8 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
       regreso = null
     })
   })
+  // Dentro de un continente, una página por aspecto (D-26).
+  const continente = crearVistaContinente(panel, fundido, FICHA_DE)
   const ir = (enfoque: Enfoque, ficha: Ficha) => {
     regreso = { vista: vistaActual(), min: controles.minDistance, max: controles.maxDistance }
     panel.mostrar(ficha)
@@ -165,8 +160,12 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
         controles.enabled = false // en el escenario no se gira ni se hace zoom
         ocupado = true
         await fundido.aBlanco()
-        enEscenario = escenarioDelContinente(c)
-        panel.mostrar(FICHA_DE[c])
+        try {
+          continente.entrar(c)
+          enContinente = true
+        } catch (error) {
+          mostrarAviso(error instanceof Error ? error.message : String(error))
+        }
         await fundido.desdeBlanco()
         ocupado = false
       },
@@ -211,26 +210,25 @@ export function armarVistaEspacial(renderer: WebGLRenderer): VistaEspacial {
   })
 
   window.addEventListener('resize', () => {
-    for (const c of [camara, ...[...escenarios.values()].map((e) => e.camara)]) {
-      c.aspect = window.innerWidth / window.innerHeight
-      c.updateProjectionMatrix()
-    }
+    camara.aspect = window.innerWidth / window.innerHeight
+    camara.updateProjectionMatrix()
+    continente.redimensionar()
     renderer.setSize(window.innerWidth, window.innerHeight)
   })
 
   return {
     get escena() {
-      return enEscenario ? enEscenario.escena : escena
+      return continente.escenaActiva()?.escena ?? escena
     },
     get camara() {
-      return enEscenario ? enEscenario.camara : camara
+      return continente.escenaActiva()?.camara ?? camara
     },
     controles,
     triangulos: datos.triangulos,
     actualizar(segundos) {
       planeta.rotation.y += segundos * GIRO_PLANETA
       nubes.rotation.y += segundos * GIRO_NUBES
-      if (enEscenario) return // cámara fija: nada que mover
+      if (enContinente) return // cámara fija: nada que mover
       if (viaje) {
         viaje.transcurrido += segundos
         const { vista, llego } = enViaje(viaje.recorrido, viaje.transcurrido)

@@ -29,6 +29,7 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - **metas-ciudad** (F2) — ¿Qué fps y qué tiempo de aparición se exigen al bajar a la ciudad? · persona
 - **paises-inventados** (F2) — ¿Cuántos países hay, cómo se llaman y dónde están (en la hoja, en los otros continentes)? · persona
 - **ciudad-presentacion** (F2) — ¿Cómo se ve la primera ciudad al acercarse: cuál, de qué tamaño y con qué estilo? · persona
+- **fase-de-aspectos** (F2) — ¿Se adelantan a F2 los aspectos de F3 (estilo de vida, población, transporte, flora, fauna, medio ambiente, trabajos, zonas de trabajo, recursos) o se cierra F2 antes? · persona
 - **clima-inventado** (F2) — ¿Cómo es el clima del planeta y desde qué perspectiva se ve? · persona
 
 ## Pendientes abiertos (por riesgo)
@@ -51,7 +52,7 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 - 2026-11-08_f2-ramas-main-colaborativa.md
 - 2026-11-08_f2-novedades-repo.md
+- 2026-11-08_f2-espacial-paginas-aspectos.md
 - 2026-11-08_f2-espacial-nubes-costas-mar.md
 - 2026-11-08_f2-espacial-escenarios-continentes.md
-- 2026-11-08_f2-espacial-don-foco.md
 <!-- FIN GENERADO -->
