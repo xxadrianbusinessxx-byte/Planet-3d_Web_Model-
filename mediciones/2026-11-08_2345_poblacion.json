@@ -1,0 +1,44 @@
+{
+  "fecha": "2026-11-08T23:45",
+  "tipo": "rendimiento",
+  "comando": "npm run build; el script de Playwright de la sesión de D-28 (no está en scripts/; espera triángulos entre 1 000 y 100 000): abre dist/index.html por file:// en msedge a pantalla completa, clic en The Leaf, 10 s de requestAnimationFrame en Population",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto; Population al atardecer con sombras (D-34)",
+  "valores": {
+    "peso_html_mb": 0.94
+  },
+  "detalle": {
+    "fps_pagina_poblacion": {
+      "antes_fbe38a2": [
+        75,
+        75,
+        71.7
+      ],
+      "sombra_en_cada_cuadro": [
+        50.6
+      ],
+      "sombra_15_por_segundo": [
+        73.5,
+        74.9,
+        75.0
+      ]
+    },
+    "percentil_95_ms": {
+      "sombra_en_cada_cuadro": 26.9,
+      "sombra_15_por_segundo": [
+        13.6,
+        13.4
+      ]
+    },
+    "triangulos_hud": {
+      "antes": 58639,
+      "sombra_en_cada_cuadro": 135270,
+      "sombra_15_por_segundo": "76 339 a 119 756 (el HUD suma la pasada de sombra en los cuadros en que se recalcula)"
+    },
+    "entrada_desde_clic_s": [
+      2.157,
+      7.246,
+      1.457
+    ],
+    "nota": "la entrada de 7,2 s es del instrumento: espera menos de 100 000 triángulos y en los cuadros con sombra el HUD pasa de eso. La vista espacial, tras 75 s de descanso: 71,3 fps y 0,94 s (2026-11-08_2343_rendimiento.json); antes 72,9 y 0,82 (2330)."
+  }
+}

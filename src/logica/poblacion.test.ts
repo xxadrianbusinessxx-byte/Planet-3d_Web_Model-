@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { crearAlturaArena, repartirAdornos } from './arena'
 import {
+  ADORNOS,
   ANCLAS_GRINDER,
   balanceo,
   BALANCEO,
@@ -15,6 +17,7 @@ import {
   VISTA_POBLACION,
   porroEnTurno,
   POSE_BRAZO,
+  RELIEVE,
   RONDA,
   rondaDeGrinders,
 } from './poblacion'
@@ -138,8 +141,8 @@ describe('playa', () => {
   it('los Grinders, las palmeras, la cerca, la roca y el árbol están en la arena, fuera del mar', () => {
     const piezas = [GRANDE, ...rondaDeGrinders(), ...PLAYA.palmeras, PLAYA.roca, PLAYA.arbol, ...tramosDeCerca(PLAYA.cerca.desde, PLAYA.cerca.hasta)]
     for (const g of piezas) {
-      const d = Math.hypot(g.posicion[0] - PLAYA.arena.centro[0], g.posicion[2] - PLAYA.arena.centro[2])
-      expect(d).toBeLessThan(PLAYA.arena.radio)
+      expect(Math.abs(g.posicion[0])).toBeLessThan(PLAYA.arena.ancho / 2)
+      expect(g.posicion[2]).toBeLessThan(PLAYA.arena.hastaZ)
       expect(g.posicion[2]).toBeGreaterThan(PLAYA.mar.orillaZ)
     }
   })
@@ -152,6 +155,27 @@ describe('playa', () => {
     const obstaculos = [PLAYA.roca.posicion, PLAYA.arbol.posicion, ...tramosDeCerca(PLAYA.cerca.desde, PLAYA.cerca.hasta).map((t) => t.posicion)]
     for (const g of rondaDeGrinders()) {
       for (const o of obstaculos) expect(Math.hypot(g.posicion[0] - o[0], g.posicion[2] - o[2])).toBeGreaterThan(0.8)
+    }
+  })
+})
+
+describe('atardecer y arena (D-34)', () => {
+  it('el sol está dentro del cielo, sobre el horizonte y detrás de la escena (sombras hacia la cámara)', () => {
+    const [x, y, z] = PLAYA.sol.posicion
+    expect(Math.hypot(x, y, z) + PLAYA.sol.radio).toBeLessThan(PLAYA.cielo.radio)
+    expect(y).toBeGreaterThan(0)
+    expect(z).toBeLessThan(PLAYA.mar.orillaZ)
+  })
+  it('la gente y las piezas pisan arena sobre el agua', () => {
+    const h = crearAlturaArena(RELIEVE)
+    for (const p of [GRANDE, ...rondaDeGrinders(), ...PLAYA.palmeras, PLAYA.roca, PLAYA.arbol]) {
+      expect(h(p.posicion[0], p.posicion[2])).toBeGreaterThan(RELIEVE.alturaMar)
+    }
+  })
+  it('los adornos no caen sobre la ronda ni sobre el Grinder grande', () => {
+    for (const a of repartirAdornos(ADORNOS)) {
+      expect(Math.hypot(a.x - RONDA.centro[0], a.z - RONDA.centro[2])).toBeGreaterThan(RONDA.radio)
+      expect(Math.hypot(a.x - GRANDE.posicion[0], a.z - GRANDE.posicion[2])).toBeGreaterThan(0.8)
     }
   })
 })

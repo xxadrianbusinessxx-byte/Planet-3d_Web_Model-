@@ -469,3 +469,23 @@ Formato:
   ver el cielo; los modelos de la Toolbox no tienen licencia para una web aparte (D-29).
 - **Revisar cuando:** otra página necesite su propia cámara, o haya modelos con licencia para la
   hamaca o la cerca.
+
+## D-34 · Atardecer con sombras y arena con relieve y adornos en Population (sombras en el renderizador)
+- 2026-11-08 · persona (qué: relieve, decoración, sombras, atardecer); agente (la forma)
+- **Decisión:** (1) La arena de Population deja de ser plana: un terreno con dunas suaves, la
+  bajada hacia el mar y color por zonas (manchas, arena mojada en la orilla, un sendero oscuro),
+  todo de una semilla (`src/logica/arena.ts`, `RELIEVE`, `COLORES_ARENA`). La gente y las piezas
+  se paran a la altura del terreno. (2) Adornos repartidos sin pisar a nadie (`ADORNOS`): 45
+  piedritas, 28 conchas, 6 estrellas de mar, 3 troncos y 16 matas de pasto, más las 4 matas del
+  frente; uno instanciado por tipo. (3) **Atardecer:** cielo naranja, rosa y morado; un sol bajo
+  sobre el mar con su halo y su reflejo en el agua; la página recolorea las dos luces de su propia
+  escena (la del sol, cálida). (4) **Sombras reales:** el renderizador común activa
+  `shadowMap` (`src/mundo/navegador.ts`); solo cuestan donde una luz proyecta (hoy, solo
+  Population). La sombra del sol se recalcula 15 veces por segundo y no en cada cuadro: en cada
+  cuadro bajaba la página a 50,6 fps.
+- **Alternativas:** sombras falsas (manchas oscuras bajo cada cosa) sin tocar lo común; sombra en
+  cada cuadro; mapa de 1024 px.
+- **Por qué:** lo pidió la persona («que no se vea plana, con sombras y un atardecer»); con 15
+  recálculos por segundo la página vuelve al tope de la pantalla.
+- **Revisar cuando:** otra página quiera luz propia (convendría que el molde de páginas la trajera,
+  en vez de recolorear las del escenario), o la sombra se note a saltos.

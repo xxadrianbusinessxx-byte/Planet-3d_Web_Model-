@@ -3,6 +3,7 @@
 // especie) y un grupito de 6 se pasa el porro en ronda detrás, en una playa con hamacas y una
 // palapita. Aquí está lo que se decide (dónde va cada cosa, cómo se mueven, el texto de la
 // ficha); src/mundo/poblacion.ts lo vuelve objetos de three.
+import type { OpcionesAdornos, OpcionesArena, ColoresArena } from './arena'
 import type { CamaraDePagina } from './escenarios'
 import type { Ficha } from './fichas'
 
@@ -189,12 +190,28 @@ export interface Pieza {
  * frente a la derecha, una islita al fondo y matas de pasto al frente.
  */
 export const PLAYA = {
-  arena: { centro: [0, 0, -4] as Vec3, radio: 60, color: 0xf3dfae },
-  sendero: { centro: [3, 0, -1] as Vec3, radio: 5, color: 0xcdbf9c },
+  /** El terreno de arena (D-34): un rectángulo con relieve, de `desdeZ` (bajo el mar) a `hastaZ`. */
+  arena: { ancho: 110, desdeZ: -15, hastaZ: 16, segmentosX: 140, segmentosZ: 48, color: 0xf3dfae },
   /** El mar empieza en esta z y sigue hacia atrás hasta el horizonte. */
   mar: { orillaZ: -11, fondo: 100, ancho: 220, color: 0x26c6ff, colorEspuma: 0xe8fbff },
-  /** Cielo en degradado y niebla del color del horizonte, que funde el mar con el cielo. */
-  cielo: { arriba: 0x2f7fd8, horizonte: 0xb4def7, radio: 100, nieblaDesde: 25, nieblaHasta: 100 },
+  /** Cielo de atardecer en degradado (D-34) y niebla del color del horizonte, que funde el mar con el cielo. */
+  cielo: { arriba: 0x2c2f73, medio: 0xb45d8a, horizonte: 0xff9a52, niebla: 0xf2a172, radio: 100, nieblaDesde: 25, nieblaHasta: 100 },
+  /**
+   * El sol bajo sobre el mar, detrás de la escena y a la izquierda: de ahí sale la luz cálida y
+   * las sombras largas caen hacia la cámara. El reflejo es la franja de luz sobre el agua.
+   */
+  sol: {
+    posicion: [-28, 15, -88] as Vec3,
+    radio: 5,
+    color: 0xffe6a8,
+    halo: 0xffa04a,
+    luz: { color: 0xffb877, intensidad: 2.6 },
+    /** La luz del cielo (la del escenario, recoloreada): naranja arriba, morada desde el suelo. */
+    ambiente: { cielo: 0xffc29a, suelo: 0x5a4060, intensidad: 0.85 },
+    /** Mapa de sombras: tamaño en píxeles y cuántos metros cubre a cada lado del centro. */
+    /** `vecesPorSegundo`: la sombra se recalcula así, no en cada cuadro (el balanceo es lento). */
+    sombra: { tamano: 2048, alcance: 18, centro: [0, 0, -2] as Vec3, vecesPorSegundo: 15 },
+  },
   palmeras: [
     { posicion: [-4.4, 0, -9.6], giro: 0.4, escala: 1 },
     { posicion: [-2.2, 0, -10.4], giro: 2.2, escala: 0.85 },
@@ -239,4 +256,58 @@ export function tramosDeCerca(desde: [number, number], hasta: [number, number], 
     giro,
     escala: 1,
   }))
+}
+
+/** Dónde no van dunas ni adornos: alrededor de la gente y de las piezas grandes. */
+function zonasOcupadas(): { centro: [number, number]; radio: number }[] {
+  const z = (p: Vec3, radio: number) => ({ centro: [p[0], p[2]] as [number, number], radio })
+  return [
+    z(RONDA.centro, RONDA.radio + 1),
+    z(GRANDE.posicion, 1.2),
+    z(PLAYA.arbol.posicion, 1.3),
+    z(PLAYA.roca.posicion, 4.8),
+    ...PLAYA.palmeras.map((p) => z(p.posicion, 1)),
+    ...tramosDeCerca(PLAYA.cerca.desde, PLAYA.cerca.hasta).map((t) => z(t.posicion, 0.9)),
+    { centro: PLAYA.hamaca.desde, radio: 0.6 },
+    { centro: PLAYA.hamaca.hasta, radio: 0.6 },
+    {
+      centro: [(PLAYA.hamaca.desde[0] + PLAYA.hamaca.hasta[0]) / 2, (PLAYA.hamaca.desde[1] + PLAYA.hamaca.hasta[1]) / 2],
+      radio: 1,
+    },
+    ...PLAYA.pasto.map((p) => z(p, 0.4)),
+  ]
+}
+
+/** El relieve de la arena (D-34): dunas suaves, más planas donde hay gente o cosas. */
+export const RELIEVE: OpcionesArena = {
+  semilla: 11,
+  orillaZ: PLAYA.mar.orillaZ,
+  alturaMar: 0.04,
+  subida: 0.3,
+  anchoPlaya: 4,
+  hondura: 0.4,
+  dunas: { alto: 0.55, escala: 0.13 },
+  planos: [
+    { centro: [RONDA.centro[0], RONDA.centro[2]], radio: RONDA.radio + 1.4 },
+    { centro: [GRANDE.posicion[0], GRANDE.posicion[2]], radio: 1.8 },
+  ],
+}
+
+/** Los colores de la arena: seca con manchas, mojada en la orilla y un sendero más oscuro (D-34). */
+export const COLORES_ARENA: ColoresArena = {
+  seca: 0xf3dfae,
+  manchas: 0xdcc08a,
+  mojada: 0xb8935f,
+  sendero: 0xb9ab8e,
+  zonaSendero: { centro: [3, -1], radioX: 5, radioZ: 9 },
+}
+
+/** Los adornos de la arena (D-34): cuántos de cada uno y dónde no van. */
+export const ADORNOS: OpcionesAdornos = {
+  semilla: 23,
+  area: { xMin: -14, xMax: 14, zMin: PLAYA.mar.orillaZ + 0.3, zMax: 8 },
+  cuantos: { piedra: 45, concha: 28, estrella: 6, tronco: 3, pasto: 16 },
+  evitar: zonasOcupadas(),
+  orillaZ: PLAYA.mar.orillaZ,
+  cercaDeLaOrilla: 3.5,
 }

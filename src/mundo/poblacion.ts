@@ -1,26 +1,19 @@
 // La página «Population» vuelta objetos de three (D-13, D-28, D-33): los Grinders (el cuerpo con
 // su camisa es «Alien Frank», src/modelos/alien-frank.glb, D-32), sus accesorios enganchados en
 // sus anclas, la playa (cielo, mar, palmeras, hamaca, cerca, roca, árbol: src/modelos/playa.glb),
-// el humo y el movimiento suave. Dónde va cada cosa
+// la arena con relieve y adornos, el atardecer con sus sombras (D-34), el humo y el movimiento suave. Dónde va cada cosa
 // y cómo se mueve lo decide src/logica/poblacion.ts; aquí solo se dibuja y se lee el reloj.
 import {
-  BackSide,
-  BufferAttribute,
-  CircleGeometry,
-  Color,
-  ConeGeometry,
   CylinderGeometry,
+  DirectionalLight,
   DoubleSide,
-  Fog,
   Group,
-  IcosahedronGeometry,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
   MeshPhongMaterial,
   MeshStandardMaterial,
   Object3D,
-  PlaneGeometry,
   SphereGeometry,
   Vector3,
   type Material,
@@ -32,7 +25,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { clone as clonarConEsqueleto } from 'three/addons/utils/SkeletonUtils.js'
 import urlGrinder from '../modelos/alien-frank.glb?url'
 import urlPlaya from '../modelos/playa.glb?url'
+import { crearAlturaArena } from '../logica/arena'
 import { mostrarAviso } from './navegador'
+import { conSombra, crearPlaya, type Altura } from './playa'
 import {
   ANCLAS_GRINDER,
   balanceo,
@@ -40,9 +35,9 @@ import {
   GIRO_MOLINILLO_RAD_S,
   GRANDE,
   HUMO,
-  largoDeHamaca,
   PLAYA,
   porroEnTurno,
+  RELIEVE,
   tramosDeCerca,
   type Pieza,
   POSE_BRAZO,
@@ -144,11 +139,12 @@ function cargarPiezas(): Promise<Object3D> {
 }
 
 /** Pone una copia de la pieza `nombre` del .glb de la playa donde dice `p`. */
-function ponerPieza(escena: Scene, molde: Object3D, nombre: string, p: Pieza): Object3D {
+function ponerPieza(escena: Scene, molde: Object3D, nombre: string, p: Pieza, altura: Altura): Object3D {
   // Se envuelve: el nodo del .glb trae su propia escala (la de la cuantización de meshopt).
   const pieza = new Group()
   pieza.add(molde.getObjectByName(nombre)!.clone())
-  pieza.position.set(...p.posicion)
+  pieza.position.set(p.posicion[0], altura(p.posicion[0], p.posicion[2]), p.posicion[2])
+  conSombra(pieza)
   pieza.rotation.y = p.giro
   pieza.scale.setScalar(p.escala)
   escena.add(pieza)
@@ -217,7 +213,7 @@ function crearMolinillo(c: Comun): { molinillo: Group; tapa: Mesh } {
 
 /** Las bocanadas de humo de un porro: viven en la escena para subir derecho aunque el brazo gire. */
 function crearHumo(escena: Scene): Mesh[] {
-  const geo = new IcosahedronGeometry(1, 0)
+  const geo = new SphereGeometry(1, 10, 8) // redondo: de cerca un icosaedro se ve como hexágono
   return Array.from({ length: HUMO.bocanadas }, () => {
     const m = new Mesh(geo, new MeshBasicMaterial({ color: 0xe3e3e3, transparent: true, opacity: 0, depthWrite: false }))
     escena.add(m)
@@ -225,128 +221,27 @@ function crearHumo(escena: Scene): Mesh[] {
   })
 }
 
-/** El cielo en degradado: una esfera vista por dentro, con un color por vértice y sin niebla. */
-function crearCielo(escena: Scene): void {
-  const { arriba, horizonte, radio } = PLAYA.cielo
-  const geo = new SphereGeometry(radio, 24, 12)
-  const pos = geo.attributes.position
-  const colores = new Float32Array(pos.count * 3)
-  const abajo = new Color(horizonte)
-  const alto = new Color(arriba)
-  const c = new Color()
-  for (let i = 0; i < pos.count; i++) {
-    const t = Math.max(0, pos.getY(i) / radio)
-    c.copy(abajo).lerp(alto, Math.pow(t, 0.6)).toArray(colores, i * 3)
-  }
-  geo.setAttribute('color', new BufferAttribute(colores, 3))
-  const cielo = new Mesh(geo, new MeshBasicMaterial({ vertexColors: true, side: BackSide, fog: false, depthWrite: false }))
-  cielo.renderOrder = -1
-  escena.add(cielo)
-  escena.background = abajo
-  escena.fog = new Fog(horizonte, PLAYA.cielo.nieblaDesde, PLAYA.cielo.nieblaHasta)
-}
-
-/** Unas matas de pasto: hojas finas como conos, en abanico. */
-function crearPasto(escena: Scene): void {
-  const hoja = new ConeGeometry(0.05, 0.55, 3)
-  const verde = new MeshLambertMaterial({ color: 0x7fb43a, flatShading: true })
-  for (const [x, y, z] of PLAYA.pasto) {
-    for (let k = 0; k < 7; k++) {
-      const h = new Mesh(hoja, verde)
-      const a = (k / 7) * Math.PI * 2
-      h.position.set(x + Math.cos(a) * 0.08, y + 0.25, z + Math.sin(a) * 0.08)
-      h.rotation.set(Math.sin(a) * 0.45, 0, -Math.cos(a) * 0.45)
-      h.scale.y = 0.7 + 0.5 * ((k * 37) % 7) / 7
-      escena.add(h)
-    }
-  }
-}
-
-function crearPlaya(escena: Scene): { espuma: Mesh } {
-  const { arena, sendero, mar, hamaca, islita } = PLAYA
-  crearCielo(escena)
-
-  // La arena tapa el suelo blanco del escenario; el sendero es más oscuro, como en la captura.
-  const arenaMalla = new Mesh(new CircleGeometry(arena.radio, 40), new MeshLambertMaterial({ color: arena.color }))
-  arenaMalla.rotation.x = -Math.PI / 2
-  arenaMalla.position.set(arena.centro[0], 0.02, arena.centro[2])
-  escena.add(arenaMalla)
-  const senderoMalla = new Mesh(new CircleGeometry(sendero.radio, 24), new MeshLambertMaterial({ color: sendero.color }))
-  senderoMalla.rotation.x = -Math.PI / 2
-  senderoMalla.scale.set(1, 1.8, 1)
-  senderoMalla.position.set(sendero.centro[0], 0.03, sendero.centro[2])
-  escena.add(senderoMalla)
-
-  // La bebida azul radiactiva (D-10) hasta el horizonte: brilla un poco y la niebla la funde con el cielo.
-  const agua = new Mesh(
-    new PlaneGeometry(mar.ancho, mar.fondo),
-    new MeshLambertMaterial({ color: mar.color, emissive: new Color(mar.color).multiplyScalar(0.35), transparent: true, opacity: 0.92 }),
-  )
-  agua.rotation.x = -Math.PI / 2
-  agua.position.set(0, 0.04, mar.orillaZ - mar.fondo / 2)
-  escena.add(agua)
-  const espuma = new Mesh(new PlaneGeometry(mar.ancho, 0.5), new MeshBasicMaterial({ color: mar.colorEspuma, transparent: true, opacity: 0.85 }))
-  espuma.rotation.x = -Math.PI / 2
-  espuma.position.set(0, 0.05, mar.orillaZ)
-  escena.add(espuma)
-
-  // La islita del fondo: un montículo de arena con pasto encima (su palmera llega con las piezas).
-  const isla = new Mesh(new ConeGeometry(islita.radio, islita.alto, 9), new MeshLambertMaterial({ color: arena.color, flatShading: true }))
-  isla.position.set(islita.posicion[0], islita.alto / 2 - 0.3, islita.posicion[2])
-  escena.add(isla)
-
-  // La hamaca: dos postes y la tela que cuelga en medio.
-  const madera = new MeshLambertMaterial({ color: 0x5a3a22, flatShading: true })
-  const poste = new CylinderGeometry(0.08, 0.1, 1.5, 6)
-  for (const [x, z] of [hamaca.desde, hamaca.hasta]) {
-    const p = new Mesh(poste, madera)
-    p.position.set(x, 0.75, z)
-    escena.add(p)
-  }
-  const largo = largoDeHamaca(hamaca)
-  const ancho = 0.75
-  const tela = new PlaneGeometry(largo, ancho, 10, 2)
-  tela.rotateX(-Math.PI / 2)
-  const pos = tela.attributes.position
-  for (let i = 0; i < pos.count; i++) {
-    const u = (2 * pos.getX(i)) / largo
-    const v = (2 * pos.getZ(i)) / ancho
-    pos.setY(i, -0.5 * (1 - u * u) + 0.1 * v * v) // cuelga en medio y se curva a lo ancho
-  }
-  tela.computeVertexNormals()
-  const telaMalla = new Mesh(tela, new MeshLambertMaterial({ color: hamaca.color, side: DoubleSide, flatShading: true }))
-  telaMalla.position.set((hamaca.desde[0] + hamaca.hasta[0]) / 2, 1.3, (hamaca.desde[1] + hamaca.hasta[1]) / 2)
-  telaMalla.rotation.y = -Math.atan2(hamaca.hasta[1] - hamaca.desde[1], hamaca.hasta[0] - hamaca.desde[0])
-  escena.add(telaMalla)
-
-  crearPasto(escena)
-
-  // El reloj de la página cuelga de la arena, que siempre está en pantalla.
-  arenaMalla.frustumCulled = false
-  escena.userData.mallaReloj = arenaMalla
-  return { espuma }
-}
-
 /** Las piezas de Blender: 2 palmeras, la cerca, la roca, el árbol y la palmerita de la islita. */
-function ponerPiezas(escena: Scene, molde: Object3D): void {
-  for (const p of PLAYA.palmeras) ponerPieza(escena, molde, 'palmera', p)
-  for (const t of tramosDeCerca(PLAYA.cerca.desde, PLAYA.cerca.hasta)) ponerPieza(escena, molde, 'cerca', t)
-  ponerPieza(escena, molde, 'roca', PLAYA.roca)
-  ponerPieza(escena, molde, 'arbol', PLAYA.arbol)
+function ponerPiezas(escena: Scene, molde: Object3D, altura: Altura): void {
+  for (const p of PLAYA.palmeras) ponerPieza(escena, molde, 'palmera', p, altura)
+  for (const t of tramosDeCerca(PLAYA.cerca.desde, PLAYA.cerca.hasta)) ponerPieza(escena, molde, 'cerca', t, altura)
+  ponerPieza(escena, molde, 'roca', PLAYA.roca, altura)
+  ponerPieza(escena, molde, 'arbol', PLAYA.arbol, altura)
   const { posicion, alto } = PLAYA.islita
-  ponerPieza(escena, molde, 'palmera', { posicion: [posicion[0], alto - 0.4, posicion[2]], giro: 1, escala: 0.8 })
+  ponerPieza(escena, molde, 'palmera', { posicion, giro: 1, escala: 0.8 }, () => alto - 0.4)
 }
 
 /** Arma la página: la playa, el Grinder grande, la ronda de 6 y lo que se mueve. */
 export function armarPoblacion(escena: Scene): void {
   const c = crearComun()
-  const { espuma } = crearPlaya(escena)
+  const altura = crearAlturaArena(RELIEVE)
+  const { espuma, sol } = crearPlaya(escena, altura)
   // El cuerpo viene del .glb, que se decodifica aparte: los Grinders se ponen en cuanto está
   // listo (las demás veces, al instante). Si falla, aviso en vez de una playa vacía (D-09).
   Promise.all([cargarMolde(), cargarPiezas()])
     .then(([molde, playa]) => {
-      ponerPiezas(escena, playa)
-      ponerGrinders(escena, c, molde, espuma)
+      ponerPiezas(escena, playa, altura)
+      ponerGrinders(escena, c, molde, espuma, altura, sol)
     })
     .catch((error: unknown) =>
       mostrarAviso(`The beach could not be loaded: ${error instanceof Error ? error.message : String(error)}`),
@@ -354,7 +249,7 @@ export function armarPoblacion(escena: Scene): void {
 }
 
 /** El Grinder grande, la ronda de 6, sus accesorios y lo que se mueve. */
-function ponerGrinders(escena: Scene, c: Comun, molde: Object3D, espuma: Mesh): void {
+function ponerGrinders(escena: Scene, c: Comun, molde: Object3D, espuma: Mesh, altura: Altura, sol: DirectionalLight | null): void {
   const tapas: Mesh[] = []
 
   const dibujar = (g: Grinder, i: number): GrinderDibujado => {
@@ -370,10 +265,11 @@ function ponerGrinders(escena: Scene, c: Comun, molde: Object3D, espuma: Mesh): 
       }
     }
     const raiz = new Group()
-    raiz.position.set(...g.posicion)
+    raiz.position.set(g.posicion[0], altura(g.posicion[0], g.posicion[2]), g.posicion[2])
     raiz.rotation.y = g.giro
     raiz.scale.setScalar(g.escala)
     raiz.add(cuerpo)
+    conSombra(raiz)
     escena.add(raiz)
     return { raiz, cuerpo, brazos, anclas, fase: g.fase }
   }
@@ -396,8 +292,13 @@ function ponerGrinders(escena: Scene, c: Comun, molde: Object3D, espuma: Mesh): 
   const inicio = performance.now()
   const punta = new Vector3()
   const mallaReloj = escena.userData.mallaReloj as Mesh
+  let ultimaSombra = -1
   mallaReloj.onBeforeRender = () => {
     const t = (performance.now() - inicio) / 1000
+    if (sol && t - ultimaSombra >= 1 / PLAYA.sol.sombra.vecesPorSegundo) {
+      sol.shadow.needsUpdate = true
+      ultimaSombra = t
+    }
 
     const nuevo = porroEnTurno(t)
     if (nuevo !== turno) {
