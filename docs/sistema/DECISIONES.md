@@ -414,3 +414,148 @@ Formato:
 - **Alternativas:** dejarlas libres para que el colaborador las elija al entrar.
 - **Por qué:** lo pidió la persona: son para el colaborador.
 - **Revisar cuando:** se una el colaborador (poner su nombre en el reparto).
+
+## D-32 · El cuerpo del Grinder es un modelo de Blender con esqueleto (límites de personaje)
+- 2026-11-08 · persona (límites, esqueleto, accesorios, sombreado); agente (la forma)
+- **Numeración:** D-32 a D-35 se llamaban D-31 a D-34 en los mensajes de sus commits; se
+  renumeraron al juntar la rama con `main`, que ya tenía su D-31 (el reparto).
+- **Decisión:** (1) **Límite por personaje:** ≤ 3 000 triángulos y ≤ 150 KB ya optimizado
+  (`triangulos_personaje` y `peso_personaje_kb` en `metricas.json`; responde la parte de persona de
+  `limites-modelo-ia`). (2) El cuerpo del Grinder es el `.glb` «grinder» (retirado en D-33), modelado en Blender
+  por el MCP (D-30), propio (D-13): **esqueleto** `torso`, `hombro-der` y `hombro-izq`, **sin
+  animaciones**; los brazos los sigue moviendo el código (`POSE_BRAZO`), con cada hueso de hombro
+  colgado de un pivote alineado con el cuerpo. (3) La guayabera, la gorra, el porro y el molinillo
+  **siguen por código** enganchados a las 4 anclas del modelo (D-28). (4) **Sombreado liso** con
+  colores planos. De forma, elegido por el agente: 1,99 m de alto, como el cuerpo por código, para
+  que los accesorios queden igual (no 1,8 m); la copa de la gorra sube de 0,62 a 0,8 de alto para
+  tapar la coronilla; los materiales del `.glb` se cambian en la página por Lambert lisos; el `.glb`
+  se decodifica la primera vez que se entra a la página.
+- **Alternativas:** esqueleto con clips `idle`, `fumar` y `moler` dentro del `.glb`; piezas rígidas
+  sin esqueleto; la ropa o todos los accesorios en Blender; 5 000 triángulos y 300 KB, o 1 500 y
+  80 KB; sombreado facetado.
+- **Por qué:** lo eligió la persona (las opciones recomendadas): cambia solo el cuerpo, la lógica de
+  la página queda igual y sobra margen de fps en gráficos integrados.
+- **Revisar cuando:** haga falta animar con clips, los accesorios pasen a Blender, o lleguen el
+  vehículo y el edificio (la otra mitad de `limites-modelo-ia`).
+- **Reemplazada en parte por D-33** (el modelo, la camisa y el límite de triángulos).
+
+## D-33 · El Grinder es «Alien Frank» (CC BY) con su camisa; el límite de personaje sube a 8 000 triángulos (cambia D-32 en parte)
+- 2026-11-08 · persona (el modelo, la camisa, las chanclas, el límite); agente (la forma)
+- **Decisión:** (1) El cuerpo del Grinder pasa a ser **«Alien Frank» de DavidePrestino**
+  (Sketchfab, **CC BY 4.0**), que la persona descargó; reemplaza al modelo hecho en Blender de
+  D-32 (el `.glb` «grinder» sale de src/modelos; su fuente queda en `datos/` y en git). El crédito va
+  en `datos/modelos-ia/poblacion/ORIGEN.md` **y visible en la ficha** de Population (fila
+  «3D model»). (2) **Usa su camisa** (estampado de planetas): se quita la guayabera por código.
+  (3) Las chanclas quedan **lisas, sin el logo de Havaianas** (marca registrada). (4) El límite de
+  **triángulos por personaje sube de 3 000 a 8 000** (`triangulos_personaje`); el de peso se queda
+  en 150 KB. Se mantienen de D-32 el esqueleto con los brazos movidos por código, la gorra, el
+  porro y el molinillo por código en las anclas, y el sombreado liso. De forma, elegido por el
+  agente: ojos negros brillantes en vez del iris humano (D-28); 7 907 triángulos (*Decimate*);
+  1,99 m; los brazos de pose T a colgando como reposo; `ancla-cabeza` con escala 0,6 para que la
+  gorra le quede; texturas de piel a 512 px y de camisa a 256 px en WebP para quedar en 140,5 KB.
+- **Alternativas:** seguir con el modelo de Blender de D-32; quitar la camisa y dejar la guayabera;
+  quitar las chanclas; bajarlo a 3 000 triángulos.
+- **Por qué:** lo pidió la persona («mejor usa el modelo que descargué»); la licencia lo permite
+  con crédito y la página no lo liga a ninguna película (D-13).
+- **Revisar cuando:** la ficha (que aún dice «guayabera») se actualice, o se quiera variar la
+  camisa entre Grinders (los colores de `colorDeGuayabera` hoy no se usan en el dibujo).
+
+## D-34 · La página Population imita una vista de playa a la altura de los ojos, con cámara propia
+- 2026-11-08 · persona (la vista, la cámara, qué entra); agente (la forma)
+- **Decisión:** (1) La página Population se compone **como la captura que mandó la persona**: el
+  Frank grande al frente a la izquierda, la ronda de 6 al centro, 2 palmeras con una hamaca, una
+  cerca de madera que lleva a la ronda, una roca grande a la derecha, un árbol en Y al frente a la
+  derecha, una islita al fondo, matas de pasto, cielo azul y el mar hasta el horizonte. Salen la
+  palapa y una hamaca. (2) **Una página puede traer su propia cámara fija** (campo opcional
+  `camara` de `PaginaAspecto`; `escenarioDe(continente, camaraPropia)`): Population la usa
+  (`VISTA_POBLACION`); las demás páginas no cambian. Es un cambio de lo común (`pagina.ts`,
+  `escenarios.ts`, `vista-continente.ts`) aprobado por la persona. (3) Las piezas (palmera, roca,
+  árbol, tramo de cerca) son **propias**, modeladas en Blender por el MCP (`src/modelos/playa.glb`,
+  584 triángulos, 18,5 KB). Los modelos de «MODELOS 3d» (hamaca, palmera, árbol y casino exportados
+  de Roblox Studio) **no entran**: vienen de la Toolbox de Roblox, cuya licencia solo cubre usarlos
+  dentro de Roblox; la carpeta pasó a datos/modelos-ia/roblox-toolbox-no-usar de la carpeta principal (fuera de git). El
+  casino queda fuera.
+- **Alternativas:** mantener la cámara fija (sin cielo ni horizonte); conservar la palapa y sumar;
+  usar los modelos de Roblox.
+- **Por qué:** lo pidió la persona («imitar esta vista»); la cámara fija mira hacia abajo y no deja
+  ver el cielo; los modelos de la Toolbox no tienen licencia para una web aparte (D-29).
+- **Revisar cuando:** otra página necesite su propia cámara, o haya modelos con licencia para la
+  hamaca o la cerca.
+- **Corregida en parte por D-36** (el «Centro con manos y cartas» de esa carpeta sí entra: la persona lo declaró suyo).
+
+## D-35 · Atardecer con sombras y arena con relieve y adornos en Population (sombras en el renderizador)
+- 2026-11-08 · persona (qué: relieve, decoración, sombras, atardecer); agente (la forma)
+- **Decisión:** (1) La arena de Population deja de ser plana: un terreno con dunas suaves, la
+  bajada hacia el mar y color por zonas (manchas, arena mojada en la orilla, un sendero oscuro),
+  todo de una semilla (`src/logica/arena.ts`, `RELIEVE`, `COLORES_ARENA`). La gente y las piezas
+  se paran a la altura del terreno. (2) Adornos repartidos sin pisar a nadie (`ADORNOS`): 45
+  piedritas, 28 conchas, 6 estrellas de mar, 3 troncos y 16 matas de pasto, más las 4 matas del
+  frente; uno instanciado por tipo. (3) **Atardecer:** cielo naranja, rosa y morado; un sol bajo
+  sobre el mar con su halo y su reflejo en el agua; la página recolorea las dos luces de su propia
+  escena (la del sol, cálida). (4) **Sombras reales:** el renderizador común activa
+  `shadowMap` (`src/mundo/navegador.ts`); solo cuestan donde una luz proyecta (hoy, solo
+  Population). La sombra del sol se recalcula 15 veces por segundo y no en cada cuadro: en cada
+  cuadro bajaba la página a 50,6 fps.
+- **Alternativas:** sombras falsas (manchas oscuras bajo cada cosa) sin tocar lo común; sombra en
+  cada cuadro; mapa de 1024 px.
+- **Por qué:** lo pidió la persona («que no se vea plana, con sombras y un atardecer»); con 15
+  recálculos por segundo la página vuelve al tope de la pantalla.
+- **Revisar cuando:** otra página quiera luz propia (convendría que el molde de páginas la trajera,
+  en vez de recolorear las del escenario), o la sombra se note a saltos.
+
+## D-36 · La página Lifestyle es Charlie's Casino: el centro que armó la persona, Grinders saltando y focos de antro (corrige D-34 en parte)
+- 2026-11-09 · persona (qué muestra, los modelos, los colores, el letrero); agente (la forma)
+- **Decisión:** (1) La página Lifestyle de The Leaf es el **interior de Charlie's Casino** y
+  **imita la captura que mandó la persona**: una pista redonda, dos manos gigantes a los lados y
+  cartas flotando, vista **de frente y desde arriba** con cámara propia (`VISTA_ESTILO_DE_VIDA`,
+  D-34). (2) **Los modelos son los de la persona:** «Centro con manos y cartas» de
+  `datos/modelos-ia/roblox-toolbox-no-usar/`, que la persona declaró **suyo, texturas incluidas**
+  («Todo es mío, texturas incluidas»). Esto **corrige D-34 solo para estas piezas**; el resto de esa
+  carpeta sigue fuera. El agente avisó antes que la malla de las manos y el arte de las cartas suelen
+  venir de la Toolbox o de internet. Revisado en Blender por el MCP (D-30): 8,5 m de pista, girado
+  hacia la cámara, solo textura de color. Optimizado con gltf-transform 4.5.1 (meshopt + WebP):
+  `src/modelos/casino.glb`, 1 620 triángulos, 372 KB. (3) **12 Grinders (Frank, D-33) saltan con
+  los brazos arriba**, a 0,55 de su tamaño, en anillos sin encimarse (`lugaresEnPista`).
+  (4) **«Arcoíris de antro»:** pista y fondo oscuros, 4 focos que cambian de color cada 0,9 s y
+  barren la pista con su cono de luz visible. (5) **Neón «Charlie's Casino»** arriba, donde la
+  captura tenía un símbolo blanco; parpadea como neón viejo. (6) Se quedan las cartas del modelo
+  (no los palos de hoja, hongo y diamante que se habían elegido antes de pedir sus modelos).
+  (7) El texto de la ficha lo escribió el agente y **lo aprobó la persona** (2026-11-09).
+- **Alternativas:** escena de playa con sound system; casino con tragamonedas y ruleta; recrear las
+  piezas en Blender a partir de la captura sin usar su modelo; colores rojos como la captura o
+  rasta; letrero «OPEN 48/7»; bailarines propios en vez de Frank.
+- **Por qué:** lo pidió la persona («tiene que dar esta perspectiva y animaciones de los personajes
+  saltando con luces de colores»; «Usa los modelados sacados de roblox yo los hice»).
+- **Revisar cuando:** aparezca alguna duda sobre el origen de las manos o las cartas (se cambian por
+  piezas propias sin tocar la lógica), o la página baje de 60 fps (hoy 66–69: los focos y los 12
+  cuerpos con esqueleto no dejan llegar al tope de 75).
+
+## D-37 · La página Transport es «The Bongliner», el bong volador de Adrian (límite de vehículo)
+- 2026-11-09 · persona (qué muestra, el modelo, los colores, el cielo, el humo, el vuelo, el límite, la ficha); agente (la forma)
+- **Decisión:** (1) La página Transport de The Leaf muestra **The Bongliner**: un bong de vidrio
+  con alas de avión y 4 motores, **modelado por Adrian en Roblox Studio** (todo suyo, sin piezas
+  de la Toolbox; por eso sí entra, a diferencia de los modelos de D-34). Va **sin las texturas de
+  material de Roblox**: colores lisos. (2) **Vidrio verde translúcido** con **agua azul
+  radiactiva** en el bulbo (la bebida del planeta, D-10), alas y motores **plateados**, luces roja
+  y verde en las puntas. **Vuela acostado como avión, con la boquilla de nariz** (así lo armó: las
+  alas quedan hacia atrás y los motores debajo; el bulbo con el agua es la cola). (3) **En el
+  cielo**: turquesa de día con **nubes rosas y verdes** medio transparentes (como las del planeta,
+  D-19), con su cámara propia (D-34), y **muy abajo una ciudad colorida low-poly** (bloques pastel
+  y algunas torres con punta, por código e instanciados) que la niebla funde con el cielo. (4) **Humo solo por la
+  boquilla**, en bocanadas que suben y se quedan atrás. (5) **Suave y lento**: el bong flota en el
+  cuadro (sube y baja, se ladea, cabecea) y **las nubes y la ciudad pasan** de frente hacia atrás. (6) **Límite por
+  vehículo: ≤ 8 000 triángulos y ≤ 150 KB** optimizado (`triangulos_vehiculo`, `peso_vehiculo_kb`;
+  responde la parte de vehículo de `limites-modelo-ia`). (7) El texto de la ficha lo aprobó la
+  persona. De forma, elegido por el agente: el modelo se prepara en Blender sin ventana (el
+  Blender abierto lo usaba otra sesión) con el script que queda junto al modelo en
+  `datos/modelos-ia/transporte/` (su `ORIGEN.md`); 5 223 triángulos y 58,9 KB. Las bocanadas son
+  chicas (radio ≤ 0,85 m) y las nubes de adelante pasan por debajo del avión, lejos de la cámara:
+  con bocanadas grandes saliendo de la nariz la página bajaba a 61–63 fps.
+- **Alternativas:** hamaca voladora, platillos o un autobús; una parada en la playa o una
+  carretera de arena; vidrio claro o gris como en Roblox; atardecer como Population; humo
+  también por los motores; cruzar la pantalla o volar en círculos; 5 000 o 3 000 triángulos; el
+  bong de pie (como salió de Roblox); el bulbo de nariz; un pueblito de playa o rascacielos abajo.
+- **Por qué:** lo decidió la persona; el modelo es suyo, cabe en el límite sin perder detalle y la
+  página queda en el tope de fps.
+- **Revisar cuando:** llegue otro vehículo (el límite vale para todos) o la página necesite más
+  vehículos en el cielo.

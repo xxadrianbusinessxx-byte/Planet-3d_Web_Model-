@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { crearAlturaArena, repartirAdornos } from './arena'
 import {
+  ADORNOS,
   ANCLAS_GRINDER,
   balanceo,
   BALANCEO,
@@ -11,8 +13,11 @@ import {
   HUMO,
   largoDeHamaca,
   PLAYA,
+  tramosDeCerca,
+  VISTA_POBLACION,
   porroEnTurno,
   POSE_BRAZO,
+  RELIEVE,
   RONDA,
   rondaDeGrinders,
 } from './poblacion'
@@ -128,19 +133,84 @@ describe('bocanada', () => {
 })
 
 describe('playa', () => {
-  it('cada hamaca tiene un largo razonable entre sus postes', () => {
-    for (const h of PLAYA.hamacas) {
-      const largo = largoDeHamaca(h)
-      expect(largo).toBeGreaterThan(2)
-      expect(largo).toBeLessThan(5)
-    }
+  it('la hamaca tiene un largo razonable entre sus postes', () => {
+    const largo = largoDeHamaca(PLAYA.hamaca)
+    expect(largo).toBeGreaterThan(2)
+    expect(largo).toBeLessThan(5)
   })
-  it('los Grinders están en la arena y fuera del mar', () => {
-    for (const g of [GRANDE, ...rondaDeGrinders()]) {
-      const d = Math.hypot(g.posicion[0] - PLAYA.arena.centro[0], g.posicion[2] - PLAYA.arena.centro[2])
-      expect(d).toBeLessThan(PLAYA.arena.radio)
+  it('los Grinders, las palmeras, la cerca, la roca y el árbol están en la arena, fuera del mar', () => {
+    const piezas = [GRANDE, ...rondaDeGrinders(), ...PLAYA.palmeras, PLAYA.roca, PLAYA.arbol, ...tramosDeCerca(PLAYA.cerca.desde, PLAYA.cerca.hasta)]
+    for (const g of piezas) {
+      expect(Math.abs(g.posicion[0])).toBeLessThan(PLAYA.arena.ancho / 2)
+      expect(g.posicion[2]).toBeLessThan(PLAYA.arena.hastaZ)
       expect(g.posicion[2]).toBeGreaterThan(PLAYA.mar.orillaZ)
     }
+  })
+  it('la islita está mar adentro y el cielo tapa hasta donde llega la niebla', () => {
+    expect(PLAYA.islita.posicion[2]).toBeLessThan(PLAYA.mar.orillaZ)
+    expect(PLAYA.cielo.nieblaHasta).toBeLessThanOrEqual(PLAYA.cielo.radio)
+    expect(PLAYA.mar.fondo).toBeGreaterThanOrEqual(PLAYA.cielo.nieblaHasta - Math.abs(PLAYA.mar.orillaZ))
+  })
+  it('la ronda no choca con la roca, el árbol ni la cerca', () => {
+    const obstaculos = [PLAYA.roca.posicion, PLAYA.arbol.posicion, ...tramosDeCerca(PLAYA.cerca.desde, PLAYA.cerca.hasta).map((t) => t.posicion)]
+    for (const g of rondaDeGrinders()) {
+      for (const o of obstaculos) expect(Math.hypot(g.posicion[0] - o[0], g.posicion[2] - o[2])).toBeGreaterThan(0.8)
+    }
+  })
+})
+
+describe('atardecer y arena (D-35)', () => {
+  it('el sol está dentro del cielo, sobre el horizonte y detrás de la escena (sombras hacia la cámara)', () => {
+    const [x, y, z] = PLAYA.sol.posicion
+    expect(Math.hypot(x, y, z) + PLAYA.sol.radio).toBeLessThan(PLAYA.cielo.radio)
+    expect(y).toBeGreaterThan(0)
+    expect(z).toBeLessThan(PLAYA.mar.orillaZ)
+  })
+  it('la gente y las piezas pisan arena sobre el agua', () => {
+    const h = crearAlturaArena(RELIEVE)
+    for (const p of [GRANDE, ...rondaDeGrinders(), ...PLAYA.palmeras, PLAYA.roca, PLAYA.arbol]) {
+      expect(h(p.posicion[0], p.posicion[2])).toBeGreaterThan(RELIEVE.alturaMar)
+    }
+  })
+  it('los adornos no caen sobre la ronda ni sobre el Grinder grande', () => {
+    for (const a of repartirAdornos(ADORNOS)) {
+      expect(Math.hypot(a.x - RONDA.centro[0], a.z - RONDA.centro[2])).toBeGreaterThan(RONDA.radio)
+      expect(Math.hypot(a.x - GRANDE.posicion[0], a.z - GRANDE.posicion[2])).toBeGreaterThan(0.8)
+    }
+  })
+})
+
+describe('VISTA_POBLACION', () => {
+  it('la cámara está a la altura de los ojos, delante de todo, y mira hacia el mar', () => {
+    const { posicion, objetivo } = VISTA_POBLACION.camara
+    expect(posicion[1]).toBeGreaterThan(1)
+    expect(posicion[1]).toBeLessThan(4)
+    expect(objetivo[2]).toBeLessThan(posicion[2])
+    expect(posicion[2]).toBeGreaterThan(GRANDE.posicion[2])
+  })
+  it('el centro de la ronda cae dentro del cuadro, lejos de la ficha (apertura horizontal en 16:9)', () => {
+    const { posicion, objetivo } = VISTA_POBLACION.camara
+    const mira = Math.atan2(objetivo[0] - posicion[0], posicion[2] - objetivo[2])
+    const hacia = Math.atan2(RONDA.centro[0] - posicion[0], posicion[2] - RONDA.centro[2])
+    const mitadH = Math.atan(Math.tan(((VISTA_POBLACION.apertura / 2) * Math.PI) / 180) * (16 / 9))
+    expect(Math.abs(hacia - mira)).toBeLessThan(mitadH * 0.6)
+  })
+})
+
+describe('tramosDeCerca', () => {
+  it('rechaza un tramo sin largo y no pone nada si la cerca no tiene largo', () => {
+    expect(() => tramosDeCerca([0, 0], [1, 0], 0)).toThrow(RangeError)
+    expect(tramosDeCerca([1, 1], [1, 1])).toEqual([])
+  })
+  it('cubre la cerca con tramos seguidos, girados a lo largo', () => {
+    const tramos = tramosDeCerca([0, 0], [4, 0])
+    expect(tramos).toHaveLength(3) // 4 m en tramos de 1,6
+    expect(tramos[1].posicion[0]).toBeCloseTo(1.6)
+    expect(tramos[0].giro).toBeCloseTo(0)
+    const haciaAtras = tramosDeCerca([0, 0], [0, -3.2])
+    expect(haciaAtras).toHaveLength(2)
+    expect(haciaAtras[0].giro).toBeCloseTo(Math.PI / 2) // gira el eje x hacia -z
+    expect(haciaAtras[1].posicion[2]).toBeCloseTo(-1.6)
   })
 })
 

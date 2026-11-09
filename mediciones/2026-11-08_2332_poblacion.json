@@ -1,0 +1,31 @@
+{
+  "fecha": "2026-11-08T23:32",
+  "tipo": "rendimiento",
+  "comando": "npm run build; npx gltf-transform inspect; y el script de Playwright de la sesión de D-28 (no está en scripts/; espera triángulos entre 1 000 y 100 000): abre dist/index.html por file:// en msedge a pantalla completa, clic en The Leaf, 10 s de requestAnimationFrame en Population",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto; página Population con la cámara propia (D-34)",
+  "valores": {
+    "triangulos_personaje": 7907,
+    "peso_personaje_kb": 140.5,
+    "peso_html_mb": 0.91
+  },
+  "detalle": {
+    "triangulos_pagina_poblacion": 58639,
+    "fps_pagina_poblacion": [
+      75,
+      75,
+      71.7
+    ],
+    "percentil_95_ms": [
+      13.4,
+      13.4,
+      13.5
+    ],
+    "entrada_desde_clic_s": [
+      1.586,
+      1.378,
+      2.492
+    ],
+    "piezas_playa": "src/modelos/playa.glb: 584 triángulos, 18.0 KB (palmera 354, árbol 102, roca 80, cerca 48)",
+    "nota": "75 fps es el tope de la pantalla de 74 Hz. La vista espacial, tras 75 s de descanso: 72,9 fps y 0,82 s (2026-11-08_2330_rendimiento.json)."
+  }
+}

@@ -107,14 +107,14 @@
     {
       "riesgo": "medio",
       "quien": "persona",
-      "respuesta": null,
-      "revisado": null,
+      "respuesta": "Persona (un personaje): ≤ 8 000 triángulos (era 3 000; D-33) y ≤ 150 KB optimizado (Adrian, 2026-11-08; D-32; metricas.json triangulos_personaje y peso_personaje_kb). Falta el vehículo y el edificio.",
+      "revisado": "2026-11-08",
       "estado": "abierto",
       "id": "limites-modelo-ia",
       "tipo": "pregunta",
       "fase": "F2",
       "titulo": "¿Cuánto pueden pesar y cuántos triángulos pueden tener una persona, un vehículo y un edificio IA?",
-      "detalle": "Límite de R7. Propuesta inicial: persona ≤ 3 000 triángulos y 150 KB; vehículo ≤ 5 000 y 250 KB; edificio icónico ≤ 20 000 y 1 MB.",
+      "detalle": "Límite de R7. Propuesta inicial: persona ≤ 3 000 triángulos y 150 KB; vehículo ≤ 5 000 y 250 KB; edificio icónico ≤ 20 000 y 1 MB. Respondido: persona ≤ 8 000 y 150 KB (D-32, D-33); vehículo ≤ 8 000 y 150 KB (D-37, 2026-11-09). Falta el edificio.",
       "destino": "docs/sistema/metricas.json"
     },
     {
@@ -183,6 +183,33 @@
       "titulo": "Con git, el respaldo debería poder ser un commit: respaldar.py, sesion.py y CLAUDE.md §4 solo conocen el .zip",
       "detalle": "planeta-3d decidió solo git (D-04). sesion.py sigue avisando «Sin respaldos todavía» y el arranque §5.8 pide respaldar.py; aquí se resolvió con D-04 y un término en el GLOSARIO. Propuesta: respaldos.modo = \"git\" | \"zip\" | \"ambos\".",
       "destino": "scripts/respaldar.py"
+    },
+    {
+      "id": "ficha-poblacion-camisa",
+      "tipo": "pregunta",
+      "fase": "F2",
+      "titulo": "¿Se cambia el texto de la ficha de Population, que aún dice «guayabera», ahora que llevan la camisa de planetas de Frank?",
+      "detalle": "El texto lo aprobó la persona (D-28). Ahora los Grinders llevan la camisa de planetas del modelo (D-33) y la palapa ya no está (D-34): el párrafo 1, «Dress code» y «Home is a hammock under a palapa» quedaron desfasados.",
+      "riesgo": "bajo",
+      "quien": "persona",
+      "destino": "src/logica/poblacion.ts",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
+    },
+    {
+      "id": "plantilla-gltf-transform-anclas",
+      "tipo": "plantilla",
+      "division": "perfil",
+      "fase": "F2",
+      "titulo": "Con anclas o esqueleto, optimizar con «gltf-transform meshopt», no con «optimize»",
+      "detalle": "En planeta-3d, «gltf-transform optimize» aplanó la jerarquía (flatten), juntó los materiales en una textura de paleta (palette) y puede podar los vacíos (prune): las anclas de accesorios dejaban de colgar de sus huesos. «gltf-transform meshopt» solo comprime la geometría y respeta nodos, huesos y nombres de material (98 KB → 27 KB). Además, en three un nodo que se mueve con attach sale del subárbol del modelo: buscarlo por nombre desde la raíz común. Sirve a un futuro perfil de escena 3D web (docs/perfil/ORDEN.md §4).",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "docs/perfil/ORDEN.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
     },
     {
       "id": "plantilla-medir-fps-playwright",
@@ -311,6 +338,20 @@
       "riesgo": "bajo",
       "quien": "persona",
       "destino": "docs/sistema/DECISIONES.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
+    },
+    {
+      "id": "plantilla-d2-en-worktree",
+      "tipo": "plantilla",
+      "division": "nucleo",
+      "fase": "F2",
+      "titulo": "D2 cuenta el CLAUDE.md del checkout principal al correr en un worktree de .claude/worktrees/",
+      "detalle": "2026-11-09, página Transport: en el worktree salió 10 124 tokens (falla) y en el checkout principal 8 155 (pasa); la diferencia es planeta-3d/CLAUDE.md, que claude_md_de_arriba toma como «carpeta de arriba». Lección: verificar_docs.py debería saltarse los CLAUDE.md de arriba cuando la raíz está dentro de <repo>/.claude/worktrees/.",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "scripts/verificar_docs.py",
       "respuesta": null,
       "revisado": null,
       "estado": "abierto"
