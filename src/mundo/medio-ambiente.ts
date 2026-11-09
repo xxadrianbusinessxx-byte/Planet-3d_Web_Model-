@@ -7,7 +7,6 @@ import {
   CapsuleGeometry,
   CircleGeometry,
   Color,
-  ConeGeometry,
   CylinderGeometry,
   DoubleSide,
   Fog,
@@ -28,6 +27,9 @@ import {
   COLILLAS,
   COLORES_MEDIO,
   derivaVape,
+  ESPUMAS,
+  espumaEnRio,
+  FRACCION_FILTRO,
   humoColilla,
   HUMO_COLILLA,
   LAGO,
@@ -35,6 +37,7 @@ import {
   PILDORAS,
   RIO,
 } from '../logica/medio-ambiente'
+import { ocultarCuadricula } from './fondo-pagina'
 
 function cielo(): Mesh {
   const geo = new SphereGeometry(70, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2)
@@ -70,6 +73,7 @@ export function armarMedioAmbiente(escena: Scene): void {
   escena.background = new Color(COLORES_MEDIO.cieloAbajo)
   escena.fog = new Fog(COLORES_MEDIO.niebla, 20, 55)
   escena.add(cielo())
+  ocultarCuadricula(escena)
 
   // Disco de suelo verde oscuro. Lleva el reloj.
   const suelo = new Mesh(
@@ -95,7 +99,9 @@ export function armarMedioAmbiente(escena: Scene): void {
   )
   rio.rotation.x = -Math.PI / 2
   rio.position.set(centroX, 0.04, centroZ)
-  rio.rotation.z = -anguloRio
+  // Rz y luego Rx(−90°) llevan el largo del plano (+y) a (−sen θ, 0, −cos θ): con θ = ángulo
+  // del río queda paralelo a (dx, dz). Con −ángulo salía en espejo y las botellas iban por el pasto.
+  rio.rotation.z = anguloRio
   escena.add(rio)
   // Espuma: una franja más clara encima.
   const espuma = new Mesh(
@@ -103,51 +109,82 @@ export function armarMedioAmbiente(escena: Scene): void {
     new MeshBasicMaterial({ color: COLORES_MEDIO.rioEspuma, transparent: true, opacity: 0.3 }),
   )
   espuma.rotation.x = -Math.PI / 2
-  espuma.rotation.z = -anguloRio
+  espuma.rotation.z = anguloRio
   espuma.position.set(centroX, 0.05, centroZ)
   escena.add(espuma)
 
-  // Botellas: cada una con su material propio para no tener que cambiar material en el loop.
-  const geoBotella = new CylinderGeometry(0.1, 0.1, 0.4, 6)
-  const botellas: Mesh[] = BOTELLAS.map((b) => {
-    const mat = new MeshLambertMaterial({
-      color: b.tipo === 'verde' ? COLORES_MEDIO.botellaVerde : COLORES_MEDIO.botellaAmbar,
-      transparent: true,
-      opacity: 0.85,
-      flatShading: true,
-    })
-    const m = new Mesh(geoBotella, mat)
-    m.rotation.z = Math.PI / 2 // flotando de lado
+  // Espuma que baja por el río (material compartido; solo cambian posición y escala).
+  const geoEspuma = new CircleGeometry(1, 7)
+  const matEspuma = new MeshBasicMaterial({ color: COLORES_MEDIO.rioEspuma, transparent: true, opacity: 0.85 })
+  const espumas: Mesh[] = []
+  for (let i = 0; i < ESPUMAS; i++) {
+    const m = new Mesh(geoEspuma, matEspuma)
+    m.rotation.x = -Math.PI / 2
     escena.add(m)
-    return m
+    espumas.push(m)
+  }
+
+  // Botellas tumbadas: cuerpo y cuello. Un material por color, compartido.
+  const geoBotella = new CylinderGeometry(0.22, 0.22, 0.75, 7)
+  const geoCuello = new CylinderGeometry(0.08, 0.14, 0.35, 6)
+  const matVerde = new MeshLambertMaterial({ color: COLORES_MEDIO.botellaVerde, transparent: true, opacity: 0.92, flatShading: true })
+  const matAmbar = new MeshLambertMaterial({ color: COLORES_MEDIO.botellaAmbar, transparent: true, opacity: 0.92, flatShading: true })
+  const botellas: Group[] = BOTELLAS.map((b) => {
+    const mat = b.tipo === 'verde' ? matVerde : matAmbar
+    const g = new Group()
+    const cuerpo = new Mesh(geoBotella, mat)
+    cuerpo.rotation.z = Math.PI / 2 // flotando de lado
+    g.add(cuerpo)
+    const cuello = new Mesh(geoCuello, mat)
+    cuello.rotation.z = -Math.PI / 2
+    cuello.position.x = 0.55
+    g.add(cuello)
+    escena.add(g)
+    return g
   })
 
-  // Colinas de colillas: una CylinderGeometry grande con filtro arriba y punta de ceniza.
-  const geoColilla = new CylinderGeometry(1.2, 1.5, 1, 10)
-  const geoFiltro = new CylinderGeometry(1.15, 1.2, 0.5, 10)
-  const geoCeniza = new ConeGeometry(0.9, 0.5, 8)
-  const matColilla = new MeshLambertMaterial({ color: COLORES_MEDIO.colilla, flatShading: true })
+  // Colinas de colillas: filtro naranja abajo, papel blanco, ceniza gris y brasa arriba.
+  // Ladeadas como clavadas en el suelo.
+  const geoFiltro = new CylinderGeometry(1.25, 1.25, 1, 12)
+  const geoPapel = new CylinderGeometry(1.2, 1.2, 1, 12)
+  const geoBrasa = new CylinderGeometry(1.18, 1.2, 0.18, 12)
+  const geoCeniza = new CylinderGeometry(0.95, 1.15, 0.35, 10)
+  const matPapel = new MeshLambertMaterial({ color: COLORES_MEDIO.colilla, flatShading: true })
   const matFiltro = new MeshLambertMaterial({ color: COLORES_MEDIO.colillaFiltro, flatShading: true })
   const matCeniza = new MeshLambertMaterial({ color: COLORES_MEDIO.colillaCeniza, flatShading: true })
-  type Colilla = { grupo: Group; puntaY: number; x: number; z: number }
+  const matBrasa = new MeshBasicMaterial({ color: COLORES_MEDIO.colillaBrasa })
+  type Colilla = { grupo: Group; puntaX: number; puntaY: number; puntaZ: number }
   const colillas: Colilla[] = COLILLAS.map((c) => {
     const g = new Group()
-    const altoReal = c.alto
-    const cuerpo = new Mesh(geoColilla, matColilla)
-    cuerpo.scale.set(1, altoReal, 1)
-    cuerpo.position.y = altoReal / 2
-    g.add(cuerpo)
+    const altoFiltro = c.alto * FRACCION_FILTRO
+    const altoPapel = c.alto - altoFiltro
     const filtro = new Mesh(geoFiltro, matFiltro)
-    filtro.position.y = 0.25
+    filtro.scale.y = altoFiltro
+    filtro.position.y = altoFiltro / 2
     g.add(filtro)
+    const papel = new Mesh(geoPapel, matPapel)
+    papel.scale.y = altoPapel
+    papel.position.y = altoFiltro + altoPapel / 2
+    g.add(papel)
+    const brasa = new Mesh(geoBrasa, matBrasa)
+    brasa.position.y = c.alto + 0.09
+    g.add(brasa)
     const ceniza = new Mesh(geoCeniza, matCeniza)
-    ceniza.position.y = altoReal + 0.25
+    ceniza.position.y = c.alto + 0.35
     g.add(ceniza)
-    g.position.set(c.x, 0, c.z)
+    g.position.set(c.x, -0.2, c.z) // un poco hundida
     g.rotation.y = c.giro
-    g.rotation.z = c.giro * 0.4
+    g.rotation.z = c.inclina
     escena.add(g)
-    return { grupo: g, puntaY: altoReal + 0.5, x: c.x, z: c.z }
+    // Dónde queda la punta tras ladearla (Rz y luego Ry).
+    const alto = c.alto + 0.5
+    const px = -Math.sin(c.inclina) * alto
+    return {
+      grupo: g,
+      puntaX: c.x + px * Math.cos(c.giro),
+      puntaY: Math.cos(c.inclina) * alto - 0.2,
+      puntaZ: c.z - px * Math.sin(c.giro),
+    }
   })
 
   // Humo de las colillas: una bocanada por colilla × bocanadas compartidas.
@@ -158,14 +195,14 @@ export function armarMedioAmbiente(escena: Scene): void {
       const mat = new MeshBasicMaterial({ color: COLORES_MEDIO.humoColilla, transparent: true, opacity: 0, depthWrite: false, fog: false })
       const m = new Mesh(geoHumo, mat)
       escena.add(m)
-      humosColilla.push({ malla: m, mat, x: c.x, z: c.z, puntaY: c.puntaY, i })
+      humosColilla.push({ malla: m, mat, x: c.puntaX, z: c.puntaZ, puntaY: c.puntaY, i })
     }
   }
 
   // Nubes de vapeo.
   const geoNubeVape = new IcosahedronGeometry(1, 1)
   const nubes: { malla: Mesh; x: number }[] = NUBES_VAPE.map((n) => {
-    const mat = new MeshLambertMaterial({ color: colorVape(n.sabor), transparent: true, opacity: 0.75, flatShading: true })
+    const mat = new MeshLambertMaterial({ color: colorVape(n.sabor), transparent: true, opacity: 0.6, flatShading: true, depthWrite: false })
     const m = new Mesh(geoNubeVape, mat)
     m.position.set(n.x, n.y, n.z)
     m.scale.set(n.escala * 1.5, n.escala * 0.5, n.escala)
@@ -210,8 +247,14 @@ export function armarMedioAmbiente(escena: Scene): void {
 
     botellas.forEach((m, i) => {
       const b = botellaEnRio(i, t)
-      m.position.set(b.x, 0.12, b.z)
+      m.position.set(b.x, 0.2 + 0.05 * Math.sin(t * 2.2 + i), b.z)
       m.rotation.y = b.giro + Math.sin(t * 0.5 + i) * 0.2
+      m.rotation.x = Math.sin(t * 1.7 + i * 2) * 0.25 // se mece en el agua
+    })
+    espumas.forEach((m, i) => {
+      const e = espumaEnRio(i, t)
+      m.position.set(e.x, 0.07, e.z)
+      m.scale.setScalar(e.escala)
     })
 
     humosColilla.forEach((h) => {

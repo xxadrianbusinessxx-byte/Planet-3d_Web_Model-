@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { seVeJuntoALaFicha } from './encuadre'
 import {
   BOTELLAS,
   botellaEnRio,
@@ -7,6 +8,8 @@ import {
   COLILLAS,
   COLORES_MEDIO,
   derivaVape,
+  ESPUMAS,
+  espumaEnRio,
   FICHA_MEDIO,
   HUMO_COLILLA,
   humoColilla,
@@ -106,6 +109,48 @@ describe('colillas', () => {
       expect(c.z).toBeLessThan(0)
       const d = Math.hypot(c.x - LAGO.x, c.z - LAGO.z)
       expect(d).toBeGreaterThan(LAGO.radio + 1)
+    }
+  })
+})
+
+describe('espumaEnRio', () => {
+  it('rechaza índices inválidos', () => {
+    expect(() => espumaEnRio(-1, 0)).toThrow(RangeError)
+    expect(() => espumaEnRio(ESPUMAS, 0)).toThrow(RangeError)
+  })
+  it('se queda dentro del cauce y avanza río abajo', () => {
+    const dx = RIO.hasta.x - RIO.desde.x, dz = RIO.hasta.z - RIO.desde.z
+    const largo = Math.hypot(dx, dz)
+    for (let i = 0; i < ESPUMAS; i++) {
+      for (let t = 0; t < 20; t += 0.7) {
+        const e = espumaEnRio(i, t)
+        const d = Math.abs(dx * (RIO.desde.z - e.z) - dz * (RIO.desde.x - e.x)) / largo
+        expect(d).toBeLessThanOrEqual(RIO.ancho / 2)
+        expect(e.escala).toBeGreaterThan(0)
+      }
+    }
+    const a = espumaEnRio(0, 0.5), b = espumaEnRio(0, 1.5)
+    expect(b.x).toBeGreaterThan(a.x)
+  })
+})
+
+describe('encuadre', () => {
+  it('colillas (base y humo), nubes de vapeo, lago y pastillas se ven junto a la ficha', () => {
+    for (const c of COLILLAS) {
+      expect(seVeJuntoALaFicha([c.x, 0, c.z]), `base de colilla (${c.x}, ${c.z})`).toBe(true)
+      expect(seVeJuntoALaFicha([c.x, c.alto + HUMO_COLILLA.subida * 0.6, c.z]), `humo de colilla (${c.x}, ${c.z})`).toBe(true)
+    }
+    for (const n of NUBES_VAPE) expect(seVeJuntoALaFicha([n.x, n.y, n.z]), `vape ${n.sabor} (${n.x}, ${n.z})`).toBe(true)
+    expect(seVeJuntoALaFicha([LAGO.x, 0, LAGO.z])).toBe(true)
+    for (const p of PILDORAS) expect(seVeJuntoALaFicha([p.x, 0, p.z]), `pastilla (${p.x}, ${p.z})`).toBe(true)
+  })
+  it('las colillas no caen dentro del río', () => {
+    const dx = RIO.hasta.x - RIO.desde.x, dz = RIO.hasta.z - RIO.desde.z
+    const largo = Math.hypot(dx, dz)
+    for (const c of COLILLAS) {
+      // Distancia del punto a la recta del río.
+      const d = Math.abs(dx * (RIO.desde.z - c.z) - dz * (RIO.desde.x - c.x)) / largo
+      expect(d, `colilla (${c.x}, ${c.z})`).toBeGreaterThan(RIO.ancho / 2 + 1.5)
     }
   })
 })
