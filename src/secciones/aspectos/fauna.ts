@@ -1,6 +1,13 @@
-// Página «Fauna» (sección fauna de reparto.json, en The Mushroom; D-26). Hoy es de prueba: la ficha sin
-// descripción y un marcador. Aquí se arma lo que muestra este aspecto; su lógica va en
-// src/logica/.
-import { paginaDePrueba } from './pagina'
+// Página «Fauna» (sección fauna de reparto.json, en The Mushroom; D-25, D-26). Solo
+// orquesta: el texto y lo que se decide viven en src/logica/fauna.ts; el dibujo, en
+// src/mundo/fauna.ts.
+import { FICHA_FAUNA } from '../../logica/fauna'
+import { armarFauna } from '../../mundo/fauna'
+import type { PaginaAspecto } from './pagina'
 
-export const PAGINA = paginaDePrueba('fauna', 'Fauna', '🦎', 0xa1887f)
+export const PAGINA: PaginaAspecto = {
+  id: 'fauna',
+  pestana: 'Fauna',
+  ficha: FICHA_FAUNA,
+  armar: armarFauna,
+}
