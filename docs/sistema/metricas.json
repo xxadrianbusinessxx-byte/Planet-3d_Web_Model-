@@ -73,10 +73,10 @@
     },
     {
       "id": "triangulos_personaje",
-      "titulo": "Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona)",
+      "titulo": "Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona; 3 000 → 8 000 por D-32)",
       "unidad": "triángulos",
       "peor_si": "sube",
-      "umbral": 3000,
+      "umbral": 8000,
       "tipo": "dura",
       "fase": "F2",
       "instrumento": "npx gltf-transform inspect src/modelos/<personaje>.glb: columna glPrimitives de MESHES (suma de las mallas)."

@@ -409,7 +409,7 @@ Formato:
 - 2026-11-08 · persona (límites, esqueleto, accesorios, sombreado); agente (la forma)
 - **Decisión:** (1) **Límite por personaje:** ≤ 3 000 triángulos y ≤ 150 KB ya optimizado
   (`triangulos_personaje` y `peso_personaje_kb` en `metricas.json`; responde la parte de persona de
-  `limites-modelo-ia`). (2) El cuerpo del Grinder es `src/modelos/grinder.glb`, modelado en Blender
+  `limites-modelo-ia`). (2) El cuerpo del Grinder es el `.glb` «grinder» (retirado en D-32), modelado en Blender
   por el MCP (D-30), propio (D-13): **esqueleto** `torso`, `hombro-der` y `hombro-izq`, **sin
   animaciones**; los brazos los sigue moviendo el código (`POSE_BRAZO`), con cada hueso de hombro
   colgado de un pivote alineado con el cuerpo. (3) La guayabera, la gorra, el porro y el molinillo
@@ -425,3 +425,25 @@ Formato:
   la página queda igual y sobra margen de fps en gráficos integrados.
 - **Revisar cuando:** haga falta animar con clips, los accesorios pasen a Blender, o lleguen el
   vehículo y el edificio (la otra mitad de `limites-modelo-ia`).
+- **Reemplazada en parte por D-32** (el modelo, la camisa y el límite de triángulos).
+
+## D-32 · El Grinder es «Alien Frank» (CC BY) con su camisa; el límite de personaje sube a 8 000 triángulos (cambia D-31 en parte)
+- 2026-11-08 · persona (el modelo, la camisa, las chanclas, el límite); agente (la forma)
+- **Decisión:** (1) El cuerpo del Grinder pasa a ser **«Alien Frank» de DavidePrestino**
+  (Sketchfab, **CC BY 4.0**), que la persona descargó; reemplaza al modelo hecho en Blender de
+  D-31 (el `.glb` «grinder» sale de src/modelos; su fuente queda en `datos/` y en git). El crédito va
+  en `datos/modelos-ia/poblacion/ORIGEN.md` **y visible en la ficha** de Population (fila
+  «3D model»). (2) **Usa su camisa** (estampado de planetas): se quita la guayabera por código.
+  (3) Las chanclas quedan **lisas, sin el logo de Havaianas** (marca registrada). (4) El límite de
+  **triángulos por personaje sube de 3 000 a 8 000** (`triangulos_personaje`); el de peso se queda
+  en 150 KB. Se mantienen de D-31 el esqueleto con los brazos movidos por código, la gorra, el
+  porro y el molinillo por código en las anclas, y el sombreado liso. De forma, elegido por el
+  agente: ojos negros brillantes en vez del iris humano (D-28); 7 907 triángulos (*Decimate*);
+  1,99 m; los brazos de pose T a colgando como reposo; `ancla-cabeza` con escala 0,6 para que la
+  gorra le quede; texturas de piel a 512 px y de camisa a 256 px en WebP para quedar en 140,5 KB.
+- **Alternativas:** seguir con el modelo de Blender de D-31; quitar la camisa y dejar la guayabera;
+  quitar las chanclas; bajarlo a 3 000 triángulos.
+- **Por qué:** lo pidió la persona («mejor usa el modelo que descargué»); la licencia lo permite
+  con crédito y la página no lo liga a ninguna película (D-13).
+- **Revisar cuando:** la ficha (que aún dice «guayabera») se actualice, o se quiera variar la
+  camisa entre Grinders (los colores de `colorDeGuayabera` hoy no se usan en el dibujo).

@@ -107,7 +107,7 @@
     {
       "riesgo": "medio",
       "quien": "persona",
-      "respuesta": "Persona (un personaje): ≤ 3 000 triángulos y 150 KB optimizado (Adrian, 2026-11-08; D-31; metricas.json triangulos_personaje y peso_personaje_kb). Falta el vehículo y el edificio.",
+      "respuesta": "Persona (un personaje): ≤ 8 000 triángulos (era 3 000; D-32) y ≤ 150 KB optimizado (Adrian, 2026-11-08; D-31; metricas.json triangulos_personaje y peso_personaje_kb). Falta el vehículo y el edificio.",
       "revisado": "2026-11-08",
       "estado": "abierto",
       "id": "limites-modelo-ia",

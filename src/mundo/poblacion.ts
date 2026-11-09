@@ -1,6 +1,6 @@
-// La página «Population» vuelta objetos de three (D-13, D-28): los Grinders (el cuerpo es el
-// modelo de Blender src/modelos/grinder.glb, D-29), sus accesorios enganchados en sus anclas, la
-// playa con el mar, las hamacas y la palapita, el humo y el movimiento suave. Dónde va cada cosa
+// La página «Population» vuelta objetos de three (D-13, D-28): los Grinders (el cuerpo con su
+// camisa es «Alien Frank», src/modelos/alien-frank.glb, D-32), sus accesorios enganchados en sus
+// anclas, la playa con el mar, las hamacas y la palapita, el humo y el movimiento suave. Dónde va cada cosa
 // y cómo se mueve lo decide src/logica/poblacion.ts; aquí solo se dibuja y se lee el reloj.
 import {
   CircleGeometry,
@@ -26,7 +26,7 @@ import {
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { clone as clonarConEsqueleto } from 'three/addons/utils/SkeletonUtils.js'
-import urlGrinder from '../modelos/grinder.glb?url'
+import urlGrinder from '../modelos/alien-frank.glb?url'
 import { mostrarAviso } from './navegador'
 import {
   ANCLAS_GRINDER,
@@ -49,14 +49,11 @@ import {
 function crearComun() {
   const lambert = (color: number) => new MeshLambertMaterial({ color, flatShading: true })
   return {
-    pliegue: lambert(0xffffff),
     papel: lambert(0xf6f1e4),
     brasa: new MeshBasicMaterial({ color: 0xff6a1a }),
     molinilloBase: lambert(0x3fae49),
     molinilloTapa: lambert(0xc3c9d1),
     gorras: [lambert(0x1d2a44), lambert(0xd7263d), lambert(0x2b2b2b)],
-    camisa: new CylinderGeometry(0.31, 0.32, 0.5, 8),
-    pliegueGeo: new BoxGeometry(0.025, 0.42, 0.02),
     copa: new SphereGeometry(0.37, 10, 5, 0, Math.PI * 2, 0, Math.PI / 2),
     visera: new BoxGeometry(0.36, 0.025, 0.26),
     porro: new CylinderGeometry(0.018, 0.026, 0.17, 5),
@@ -89,10 +86,10 @@ function ponerBrazo(brazo: Group, lado: 'der' | 'izq', enLaMano: EnLaMano): void
   brazo.rotation.z = lado === 'der' ? -pose.afuera : pose.afuera
 }
 
-/** El molde del cuerpo (src/modelos/grinder.glb, hecho en Blender, D-29): se carga una vez. */
+/** El molde del cuerpo (src/modelos/alien-frank.glb, revisado en Blender, D-32): se carga una vez. */
 let molde: Promise<Object3D> | null = null
 
-/** Carga el .glb (embebido en el HTML portátil, D-07) y cambia sus materiales por Lambert lisos. */
+/** Carga el .glb (embebido en el HTML portátil, D-07) y cambia sus materiales por Lambert lisos con su textura. */
 function cargarMolde(): Promise<Object3D> {
   molde ??= (async () => {
     const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(urlGrinder)
@@ -107,13 +104,13 @@ function cargarMolde(): Promise<Object3D> {
         lambert =
           m.name === 'ojo'
             ? new MeshPhongMaterial({ color: m.color, shininess: 90, specular: 0x8899aa })
-            : new MeshLambertMaterial({ color: m.color })
+            : new MeshLambertMaterial({ color: m.color, map: m.map })
         materiales.set(m.name, lambert)
       }
       o.material = lambert
     })
     for (const nombre of [...ANCLAS_GRINDER, 'hombro-der', 'hombro-izq']) {
-      if (!gltf.scene.getObjectByName(nombre)) throw new Error(`grinder.glb: falta el nodo «${nombre}»`)
+      if (!gltf.scene.getObjectByName(nombre)) throw new Error(`alien-frank.glb: falta el nodo «${nombre}»`)
     }
     return gltf.scene
   })()
@@ -121,7 +118,7 @@ function cargarMolde(): Promise<Object3D> {
 }
 
 /**
- * El cuerpo del Grinder, sin accesorios: una copia del modelo de Blender con sus 4 anclas
+ * El cuerpo del Grinder con su camisa, sin accesorios: una copia del modelo con sus 4 anclas
  * (`ANCLAS_GRINDER`, vacíos del .glb). Cada hueso de hombro cuelga de un pivote alineado con el
  * cuerpo para que `ponerBrazo` lo gire igual que antes (el brazo derecho se abre hacia -x).
  */
@@ -133,7 +130,7 @@ function crearCuerpo(molde: Object3D): Omit<GrinderDibujado, 'raiz' | 'fase'> {
   const nodo = (nombre: string): Object3D => {
     // Se busca en el cuerpo: los huesos de hombro ya pasaron a su pivote.
     const o = cuerpo.getObjectByName(nombre)
-    if (!o) throw new Error(`grinder.glb: falta el nodo «${nombre}»`)
+    if (!o) throw new Error(`alien-frank.glb: falta el nodo «${nombre}»`)
     return o
   }
   const brazo = (lado: 'der' | 'izq'): Group => {
@@ -150,19 +147,11 @@ function crearCuerpo(molde: Object3D): Omit<GrinderDibujado, 'raiz' | 'fase'> {
   return { cuerpo, brazos, anclas }
 }
 
-function crearGuayabera(c: Comun, color: number): Group {
-  const g = new Group()
-  g.add(malla(c.camisa, new MeshLambertMaterial({ color, flatShading: true })))
-  // Las alforzas de la guayabera: dos franjas a cada lado del frente.
-  for (const x of [-0.17, -0.12, 0.12, 0.17]) g.add(malla(c.pliegueGeo, c.pliegue, x, 0, 0.29))
-  return g
-}
-
 function crearGorra(c: Comun, i: number): Group {
   const g = new Group()
   const mat = c.gorras[i % c.gorras.length]
   const copa = malla(c.copa, mat)
-  copa.scale.set(1, 0.8, 1.05) // más alta que con el cuerpo por código: cubre la coronilla lisa del modelo
+  copa.scale.set(1, 0.8, 1.05) // el ancla de la cabeza del modelo la ajusta a su tamaño
   g.add(copa)
   g.add(malla(c.visera, mat, 0, 0.01, -0.42)) // la visera hacia atrás
   g.rotation.x = -0.12
@@ -281,7 +270,6 @@ function ponerGrinders(escena: Scene, c: Comun, molde: Object3D, espuma: Mesh): 
 
   const dibujar = (g: Grinder, i: number): GrinderDibujado => {
     const { cuerpo, brazos, anclas } = crearCuerpo(molde)
-    anclas['ancla-torso'].add(crearGuayabera(c, g.guayabera))
     anclas['ancla-cabeza'].add(crearGorra(c, i))
     for (const lado of ['der', 'izq'] as const) {
       const lleva = lado === 'der' ? g.manoDer : g.manoIzq

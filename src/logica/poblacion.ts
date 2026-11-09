@@ -7,7 +7,7 @@ import type { Ficha } from './fichas'
 
 type Vec3 = [number, number, number]
 
-/** El texto de la ficha (en inglés, D-24), aprobado por la persona el 2026-11-08. */
+/** El texto de la ficha (en inglés, D-24), aprobado por la persona el 2026-11-08; la fila del crédito, D-32. */
 export const FICHA_POBLACION: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' | 'parrafos' | 'datos' | 'lema'> = {
   icono: '👽',
   titulo: 'Population',
@@ -29,6 +29,8 @@ export const FICHA_POBLACION: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' | 'pa
     ['Hobby', 'grinding'],
     ['Other hobby', 'burning'],
     ['Home', 'a hammock by the sea'],
+    // Crédito que pide la licencia CC BY del modelo (D-32, datos/modelos-ia/poblacion/ORIGEN.md).
+    ['3D model', '“Alien Frank” by DavidePrestino (Sketchfab), CC BY 4.0, modified'],
   ],
   lema: "Grind it slow, burn it slower: on this beach nobody's in a hurry.",
 }

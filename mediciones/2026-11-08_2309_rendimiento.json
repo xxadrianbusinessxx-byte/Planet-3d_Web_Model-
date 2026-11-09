@@ -1,0 +1,16 @@
+{
+  "fecha": "2026-11-08T23:09",
+  "tipo": "rendimiento",
+  "comando": "npm run build && npm run medir",
+  "condiciones": "esta laptop (i3-1215U); GPU: ANGLE (Intel, Intel(R) UHD Graphics (0x000046B3) Direct3D11 vs_5_0 ps_5_0, D3D11); msedge 157.0.4341.42 con ventana a pantalla completa; lienzo 1920×1080 px (pixelRatio 1); 117410 triángulos; corriente desconocida (Windows no reporta la batería); órbita automática de 20.02 s tras 1.5 s de calentamiento",
+  "valores": {
+    "fps_espacial": 56.5,
+    "carga_espacial_s": 0.887,
+    "peso_html_mb": 0.88
+  },
+  "detalle": {
+    "cuadros": 1132,
+    "cuadro_mas_lento_ms": 53.7,
+    "percentil_95_ms": 40
+  }
+}
