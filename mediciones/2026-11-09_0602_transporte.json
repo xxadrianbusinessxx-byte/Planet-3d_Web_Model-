@@ -1,8 +1,8 @@
 {
   "fecha": "2026-11-09T06:02",
   "tipo": "rendimiento",
-  "comando": "npm run build; tamaño en disco de src/modelos/bongliner.glb y triángulos del script de Blender (preparar_bongliner.py); el script de Playwright de la sesión de D-36 (medir_transporte.mjs, en su scratchpad): dist/index.html por file:// en msedge a pantalla completa por CDP (R9), clic en The Leaf, → a Transport, 10 s de requestAnimationFrame",
-  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto con otra sesión. Bong acostado como avión (boquilla de nariz) y ciudad low-poly abajo (D-36)",
+  "comando": "npm run build; tamaño en disco de src/modelos/bongliner.glb y triángulos del script de Blender (preparar_bongliner.py); el script de Playwright de la sesión de D-37 (medir_transporte.mjs, en su scratchpad): dist/index.html por file:// en msedge a pantalla completa por CDP (R9), clic en The Leaf, → a Transport, 10 s de requestAnimationFrame",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto con otra sesión. Bong acostado como avión (boquilla de nariz) y ciudad low-poly abajo (D-37)",
   "valores": {
     "triangulos_vehiculo": 5223,
     "peso_vehiculo_kb": 58.9,

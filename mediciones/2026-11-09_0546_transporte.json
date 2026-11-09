@@ -1,7 +1,7 @@
 {
   "fecha": "2026-11-09T05:46",
   "tipo": "rendimiento",
-  "comando": "npm run build; npx gltf-transform inspect src/modelos/bongliner.glb (glPrimitives de MESHES) y su tamaño en disco; el script de Playwright de la sesión de D-36 (medir_transporte.mjs, en su scratchpad, copia de la de D-28 con la flecha →): abre dist/index.html por file:// en msedge a pantalla completa por CDP (R9), clic en The Leaf, → a Transport, 10 s de requestAnimationFrame",
+  "comando": "npm run build; npx gltf-transform inspect src/modelos/bongliner.glb (glPrimitives de MESHES) y su tamaño en disco; el script de Playwright de la sesión de D-37 (medir_transporte.mjs, en su scratchpad, copia de la de D-28 con la flecha →): abre dist/index.html por file:// en msedge a pantalla completa por CDP (R9), clic en The Leaf, → a Transport, 10 s de requestAnimationFrame",
   "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto con otra sesión",
   "valores": {
     "triangulos_vehiculo": 5143,

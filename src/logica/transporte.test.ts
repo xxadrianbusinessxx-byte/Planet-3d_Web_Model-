@@ -160,7 +160,7 @@ describe('src/modelos/bongliner.glb', () => {
   it('cada material tiene su color en la página', () => {
     for (const m of glb.materials) expect(MATERIALES_BONGLINER).toHaveProperty([m.name])
   })
-  it('cabe en el límite de un vehículo: ≤ 8 000 triángulos (D-36)', () => {
+  it('cabe en el límite de un vehículo: ≤ 8 000 triángulos (D-37)', () => {
     const triangulos = glb.meshes.flatMap((m) => m.primitives).reduce((s, p) => s + glb.accessors[p.indices].count / 3, 0)
     expect(triangulos).toBeLessThanOrEqual(8000)
     expect(BONGLINER.escala).toBe(1)

@@ -114,7 +114,7 @@
       "tipo": "pregunta",
       "fase": "F2",
       "titulo": "¿Cuánto pueden pesar y cuántos triángulos pueden tener una persona, un vehículo y un edificio IA?",
-      "detalle": "Límite de R7. Propuesta inicial: persona ≤ 3 000 triángulos y 150 KB; vehículo ≤ 5 000 y 250 KB; edificio icónico ≤ 20 000 y 1 MB. Respondido: persona ≤ 8 000 y 150 KB (D-32, D-33); vehículo ≤ 8 000 y 150 KB (D-36, 2026-11-09). Falta el edificio.",
+      "detalle": "Límite de R7. Propuesta inicial: persona ≤ 3 000 triángulos y 150 KB; vehículo ≤ 5 000 y 250 KB; edificio icónico ≤ 20 000 y 1 MB. Respondido: persona ≤ 8 000 y 150 KB (D-32, D-33); vehículo ≤ 8 000 y 150 KB (D-37, 2026-11-09). Falta el edificio.",
       "destino": "docs/sistema/metricas.json"
     },
     {

@@ -1,4 +1,4 @@
-// La página «Transport» de The Leaf (D-36): The Bongliner, un bong de vidrio con alas de avión
+// La página «Transport» de The Leaf (D-37): The Bongliner, un bong de vidrio con alas de avión
 // que vuela entre las nubes rosas y verdes de Charlie's World echando humo por la boquilla. El
 // modelo es de Adrian (Roblox Studio), preparado en Blender (src/modelos/bongliner.glb). Aquí
 // está lo que se decide (la ficha, la cámara, los colores, cómo flota, dónde van las nubes y el
@@ -53,7 +53,7 @@ export type TipoMaterial = 'mate' | 'brillo' | 'luz' | 'vidrio' | 'agua'
 
 /**
  * Cómo se pinta cada material del .glb (por su nombre): vidrio verde translúcido, agua azul
- * radiactiva (la bebida del planeta, D-10) y alas y motores plateados (D-36).
+ * radiactiva (la bebida del planeta, D-10) y alas y motores plateados (D-37).
  */
 export const MATERIALES_BONGLINER: Record<string, { color: number; tipo: TipoMaterial; opacidad?: number }> = {
   vidrio: { color: 0x4dff7a, tipo: 'vidrio', opacidad: 0.35 },
@@ -69,7 +69,7 @@ export const MATERIALES_BONGLINER: Record<string, { color: number; tipo: TipoMat
 }
 
 /**
- * Dónde vuela el bong: acostado como avión, con la boquilla de nariz (D-36), de frente hacia la
+ * Dónde vuela el bong: acostado como avión, con la boquilla de nariz (D-37), de frente hacia la
  * izquierda de la cámara.
  */
 export const BONGLINER = {
@@ -80,7 +80,7 @@ export const BONGLINER = {
   escala: 1,
 }
 
-/** El vaivén del vuelo: sube y baja, se ladea y cabecea, lento (D-36: «suave y lento»). */
+/** El vaivén del vuelo: sube y baja, se ladea y cabecea, lento (D-37: «suave y lento»). */
 export const VUELO = {
   altura: 0.35,
   periodoAlturaS: 5,
@@ -107,7 +107,7 @@ export function frenteDelBong(giro: number = BONGLINER.giro): [number, number] {
   return [Math.sin(giro), Math.cos(giro)]
 }
 
-/** El cielo: degradado turquesa de día (D-36) y la niebla del color del horizonte. */
+/** El cielo: degradado turquesa de día (D-37) y la niebla del color del horizonte. */
 export const CIELO = {
   arriba: 0x2fb8ee,
   horizonte: 0xc6f6ff,
@@ -215,7 +215,7 @@ export function bocanadaBong(t: number, i: number): { subida: number; atras: num
 }
 
 /**
- * La ciudad de abajo (D-36): bloques de colores pastel con techo plano y algunas torres con punta,
+ * La ciudad de abajo (D-37): bloques de colores pastel con techo plano y algunas torres con punta,
  * muy por debajo del bong; la niebla la funde con el cielo. Pasa al revés del frente del bong, a
  * la misma velocidad que las nubes, y cada edificio vuelve a entrar por el otro lado del cuadrado.
  */

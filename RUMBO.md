@@ -50,14 +50,14 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - `carga_ciudad_s` — Tiempo en que aparece la ciudad al bajar desde el espacio · sin umbral: preguntar la meta
 - `triangulos_personaje` — Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona; 3 000 → 8 000 por D-33) · umbral 8000 triángulos (dura)
 - `peso_personaje_kb` — Peso del modelo de personaje más pesado en src/modelos/, ya optimizado (límite de R7 para una persona) · umbral 150 KB (dura)
-- `triangulos_vehiculo` — Triángulos del vehículo más pesado (R7, D-36) · umbral 8000 triángulos (dura)
-- `peso_vehiculo_kb` — Peso del vehículo más pesado, optimizado (R7, D-36) · umbral 150 KB (dura)
+- `triangulos_vehiculo` — Triángulos del vehículo más pesado (R7, D-37) · umbral 8000 triángulos (dura)
+- `peso_vehiculo_kb` — Peso del vehículo más pesado, optimizado (R7, D-37) · umbral 150 KB (dura)
 
 ## Últimos informes
 
 - 2026-11-09_f2-transporte-bongliner.md
+- 2026-11-09_f2-estilo-de-vida-casino.md
 - 2026-11-08_f2-ramas-main-colaborativa.md
 - 2026-11-08_f2-poblacion-vista-playa.md
 - 2026-11-08_f2-poblacion-modelos-externos.md
-- 2026-11-08_f2-poblacion-grinders-playa.md
 <!-- FIN GENERADO -->

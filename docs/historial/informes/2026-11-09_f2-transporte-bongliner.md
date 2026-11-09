@@ -7,19 +7,19 @@ vuelta; el detalle está en `mediciones/2026-11-09_0602_transporte.json`.
 
 Talla: M · Fase: F2 (sección transporte, The Leaf) · Respaldo: commit `ff52130` (D-04), árbol limpio
 tras juntar `main` a la rama · Lo que muestra la página lo decidió la persona en 3 rondas de
-preguntas (D-36).
+preguntas (D-37).
 
 ## 1. Qué se hizo
 
 | Archivo | Cambio | Por qué |
 |---|---|---|
 | `src/logica/transporte.ts` (+ 25 pruebas) | la ficha aprobada, la cámara propia, los colores por material, el vaivén del vuelo, las nubes (semilla; por detrás y por debajo sin tapar el bong; pasan al revés del frente y dan la vuelta), las bocanadas de la boquilla y la **ciudad** (`CIUDAD`, `repartirEdificios`, `posicionDeEdificio`, que da la vuelta en un cuadrado); la prueba también lee `bongliner.glb` (nodos, materiales, ≤ 8 000 triángulos) | lo que se decide va en código puro |
-| `src/mundo/transporte.ts` | esconde el suelo blanco de su escenario, cielo turquesa en degradado con niebla, nubes en dos mallas instanciadas, la ciudad (suelo verde, bloques y puntas en dos mallas instanciadas con color por edificio), carga del `.glb` con sus materiales (vidrio, agua, plata, luces) y el humo; todo se mueve con `onBeforeRender` del cielo | D-36, sin tocar lo común |
+| `src/mundo/transporte.ts` | esconde el suelo blanco de su escenario, cielo turquesa en degradado con niebla, nubes en dos mallas instanciadas, la ciudad (suelo verde, bloques y puntas en dos mallas instanciadas con color por edificio), carga del `.glb` con sus materiales (vidrio, agua, plata, luces) y el humo; todo se mueve con `onBeforeRender` del cielo | D-37, sin tocar lo común |
 | `src/secciones/aspectos/transporte.ts` | deja de ser de prueba: ficha, `armarTransporte` y `camara: VISTA_TRANSPORTE` | D-26, D-34 |
 | `src/modelos/bongliner.glb` | **nuevo**: el modelo de Adrian acostado como avión en Blender, sin texturas de Roblox, con agua y `ancla-boquilla`; 5 223 triángulos, 58,9 KB | D-29, R7 |
 | `datos/modelos-ia/transporte/` (fuera de git) | el `.obj` en bruto, `preparar_bongliner.py` y `ORIGEN.md` | ORDEN §4 |
-| `metricas.json` | `triangulos_vehiculo` ≤ 8 000 y `peso_vehiculo_kb` ≤ 150 (duras) | D-36, `limites-modelo-ia` |
-| `DECISIONES.md` (D-36) · `pendientes.json` · `reparto.json` (`hecha`) · `ESTADO-ACTUAL.md` · `RUMBO.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
+| `metricas.json` | `triangulos_vehiculo` ≤ 8 000 y `peso_vehiculo_kb` ≤ 150 (duras) | D-37, `limites-modelo-ia` |
+| `DECISIONES.md` (D-37) · `pendientes.json` · `reparto.json` (`hecha`) · `ESTADO-ACTUAL.md` · `RUMBO.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
 
 ## 3. Cómo se ejecutó y se midió
 
@@ -51,7 +51,7 @@ preguntas (D-36).
 
 - Blender estaba abierto con otra sesión (casino de Lifestyle; D-30: una app conectada a la vez),
   así que el modelo se preparó **sin ventana** con un script, sin usar el MCP.
-- De forma (D-36): de frente según las luces (roja a la izquierda), 1 stud = 10 cm, el agua como
+- De forma (D-37): de frente según las luces (roja a la izquierda), 1 stud = 10 cm, el agua como
   esfera cortada, nubes como bolitas instanciadas y humo de 4 bocanadas.
 - En la sesión se borró sin querer el cambio de `transporte.ts` con un `git checkout`; se
   reescribió igual antes de verificar (los demás archivos eran nuevos y no se tocaron).
@@ -61,6 +61,9 @@ preguntas (D-36).
   de adelante pasan por debajo del avión, lejos de la cámara: vuelve al tope. La corrida de 66,5
   tiene el mismo p95 que las de 75 (unos cuadros sueltos); dos con el lienzo de 1079 px no se
   guardaron (R9).
+
+- **Número de decisión:** al juntar con `main`, Lifestyle ya tenía la D-36; la de Transport
+  pasó a **D-37** en sus archivos (COLABORAR §4). Los mensajes de los commits anteriores dicen D-36.
 
 ## 7. Lo no verificado y las preguntas que surgieron
 

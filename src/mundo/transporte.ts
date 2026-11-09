@@ -1,4 +1,4 @@
-// La página «Transport» vuelta objetos de three (D-36): el cielo turquesa con las nubes rosas y
+// La página «Transport» vuelta objetos de three (D-37): el cielo turquesa con las nubes rosas y
 // verdes y la ciudad de abajo que pasan, The Bongliner (src/modelos/bongliner.glb) flotando y su humo. Qué va dónde y
 // cómo se mueve lo decide src/logica/transporte.ts; aquí solo se dibuja y se lee el reloj.
 import {

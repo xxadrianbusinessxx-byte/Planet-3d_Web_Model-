@@ -93,7 +93,7 @@
     },
     {
       "id": "triangulos_vehiculo",
-      "titulo": "Triángulos del vehículo más pesado (R7, D-36)",
+      "titulo": "Triángulos del vehículo más pesado (R7, D-37)",
       "unidad": "triángulos",
       "peor_si": "sube",
       "umbral": 8000,
@@ -103,7 +103,7 @@
     },
     {
       "id": "peso_vehiculo_kb",
-      "titulo": "Peso del vehículo más pesado, optimizado (R7, D-36)",
+      "titulo": "Peso del vehículo más pesado, optimizado (R7, D-37)",
       "unidad": "KB",
       "peor_si": "sube",
       "umbral": 150,
