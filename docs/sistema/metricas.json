@@ -90,6 +90,26 @@
       "tipo": "dura",
       "fase": "F2",
       "instrumento": "Tamaño en disco de src/modelos/<personaje>.glb tras gltf-transform meshopt, en KB (1 KB = 1024 bytes)."
+    },
+    {
+      "id": "triangulos_vehiculo",
+      "titulo": "Triángulos del vehículo más pesado (R7, D-36)",
+      "unidad": "triángulos",
+      "peor_si": "sube",
+      "umbral": 8000,
+      "tipo": "dura",
+      "fase": "F2",
+      "instrumento": "npx gltf-transform inspect src/modelos/<vehiculo>.glb: columna glPrimitives de MESHES (suma de las mallas)."
+    },
+    {
+      "id": "peso_vehiculo_kb",
+      "titulo": "Peso del vehículo más pesado, optimizado (R7, D-36)",
+      "unidad": "KB",
+      "peor_si": "sube",
+      "umbral": 150,
+      "tipo": "dura",
+      "fase": "F2",
+      "instrumento": "Tamaño en disco de src/modelos/<vehiculo>.glb tras gltf-transform meshopt, en KB (1 KB = 1024 bytes)."
     }
   ]
 }

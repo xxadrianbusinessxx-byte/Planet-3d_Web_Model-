@@ -114,7 +114,7 @@
       "tipo": "pregunta",
       "fase": "F2",
       "titulo": "¿Cuánto pueden pesar y cuántos triángulos pueden tener una persona, un vehículo y un edificio IA?",
-      "detalle": "Límite de R7. Propuesta inicial: persona ≤ 3 000 triángulos y 150 KB; vehículo ≤ 5 000 y 250 KB; edificio icónico ≤ 20 000 y 1 MB.",
+      "detalle": "Límite de R7. Propuesta inicial: persona ≤ 3 000 triángulos y 150 KB; vehículo ≤ 5 000 y 250 KB; edificio icónico ≤ 20 000 y 1 MB. Respondido: persona ≤ 8 000 y 150 KB (D-32, D-33); vehículo ≤ 8 000 y 150 KB (D-36, 2026-11-09). Falta el edificio.",
       "destino": "docs/sistema/metricas.json"
     },
     {
@@ -338,6 +338,20 @@
       "riesgo": "bajo",
       "quien": "persona",
       "destino": "docs/sistema/DECISIONES.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
+    },
+    {
+      "id": "plantilla-d2-en-worktree",
+      "tipo": "plantilla",
+      "division": "nucleo",
+      "fase": "F2",
+      "titulo": "D2 cuenta el CLAUDE.md del checkout principal al correr en un worktree de .claude/worktrees/",
+      "detalle": "2026-11-09, página Transport: en el worktree salió 10 124 tokens (falla) y en el checkout principal 8 155 (pasa); la diferencia es planeta-3d/CLAUDE.md, que claude_md_de_arriba toma como «carpeta de arriba». Lección: verificar_docs.py debería saltarse los CLAUDE.md de arriba cuando la raíz está dentro de <repo>/.claude/worktrees/.",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "scripts/verificar_docs.py",
       "respuesta": null,
       "revisado": null,
       "estado": "abierto"

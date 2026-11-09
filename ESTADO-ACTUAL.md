@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-08 (D-28 a D-35: la población)
+- **Última revisión:** 2026-11-09 (D-36: la página Transport)
 
 ---
 
@@ -60,6 +60,7 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 | Clic en un continente (The Leaf, The Mushroom, The Diamond): la cámara se acerca, fundido a blanco y escenario fijo de prueba (suelo y fondo blancos, sin girar ni zoom) con su ficha de color propio; Esc regresa (D-24). Todo lo visible de la página está en inglés | `npm test` (`escenarios.test.ts`) y a mano | — |
 | Dentro de cada continente, pestañas (y flechas ← →) con una página por aspecto según `reparto.json`: The Leaf (Population, Transport, Lifestyle), The Mushroom (Climate, Flora, Fauna, Environment), The Diamond (Work zones, Jobs, Natural resources); cada cambio con fundido. Las páginas sin terminar son de prueba (`src/secciones/aspectos/`) (D-25, D-26) | `npm test` (`aspectos.test.ts`) y a mano | — |
 | Página Population (The Leaf): playa al atardecer, cámara propia, sombras, arena con relieve y adornos (D-34, D-35); Frank grande y una ronda de 6 | `npm test` (`poblacion`, `arena`) y a mano | `mediciones/2026-11-08_2345_poblacion.json` |
+| Página Transport (The Leaf): The Bongliner, el bong volador de Adrian (`bongliner.glb`), entre nubes rosas y verdes, con humo; cámara propia (D-36) | `npm test` (`transporte`) y a mano | `mediciones/2026-11-09_0546_transporte.json` |
 | HTML portátil: un solo `dist/index.html` de 0,74 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_2242_rendimiento.json` |
 | 75 fps (tope de la pantalla) y carga de 0,68 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-08_2242_rendimiento.json` |
 | Al abrir cada sesión de Claude Code (hook de `.claude/settings.json`) y después de cada push, `scripts/novedades.py` resume lo nuevo de `main` y `colaborativa` en GitHub (D-21); marca con 🚀 los commits `LANZAMIENTO:` y solo pide juntar esos (D-27); al final recomienda tomar las secciones sin dueño y usar modelos externos low-poly (D-29) | `python scripts/test_novedades.py` (7 pruebas) y `python scripts/novedades.py` | — |

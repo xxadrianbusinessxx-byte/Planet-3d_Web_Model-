@@ -1,0 +1,28 @@
+{
+  "fecha": "2026-11-09T05:46",
+  "tipo": "rendimiento",
+  "comando": "npm run build; npx gltf-transform inspect src/modelos/bongliner.glb (glPrimitives de MESHES) y su tamaño en disco; el script de Playwright de la sesión de D-36 (medir_transporte.mjs, en su scratchpad, copia de la de D-28 con la flecha →): abre dist/index.html por file:// en msedge a pantalla completa por CDP (R9), clic en The Leaf, → a Transport, 10 s de requestAnimationFrame",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto con otra sesión",
+  "valores": {
+    "triangulos_vehiculo": 5143,
+    "peso_vehiculo_kb": 58.2,
+    "peso_html_mb": 1.03
+  },
+  "detalle": {
+    "fps_pagina_transporte": {
+      "antes_pagina_de_prueba": [74.7],
+      "despues": [75, 75, 75]
+    },
+    "percentil_95_ms": { "antes": 13.4, "despues": [13.4, 13.4, 13.4] },
+    "triangulos_hud": { "antes": 54, "despues": 18231 },
+    "triangulos_hud_nota": "18 231 = bong 5 143 + el resto: las nubes (dos mallas instanciadas, 80 triángulos por bolita), el cielo y las bocanadas visibles",
+    "bongliner_glb_kb": { "blender": 208.0, "meshopt": 58.2 },
+    "peso_html_mb": { "antes": 0.94, "despues": 1.03 },
+    "entrada_desde_clic_s": { "antes": 5.355, "despues": [2.95, 2.924, 2.926, 2.934] },
+    "fps_espacial": {
+      "antes": 75,
+      "despues": 71.9,
+      "nota": "el después salió justo detrás de 4 corridas seguidas (un cuadro de 360 ms al arrancar; p95 13,4 ms igual que antes); la vista espacial no cambió en esta tarea. Archivos: mediciones/2026-11-09_0536_rendimiento.json y 2026-11-09_0545_rendimiento.json"
+    }
+  }
+}

@@ -501,3 +501,27 @@ Formato:
   recálculos por segundo la página vuelve al tope de la pantalla.
 - **Revisar cuando:** otra página quiera luz propia (convendría que el molde de páginas la trajera,
   en vez de recolorear las del escenario), o la sombra se note a saltos.
+
+## D-36 · La página Transport es «The Bongliner», el bong volador de Adrian (límite de vehículo)
+- 2026-11-09 · persona (qué muestra, el modelo, los colores, el cielo, el humo, el vuelo, el límite, la ficha); agente (la forma)
+- **Decisión:** (1) La página Transport de The Leaf muestra **The Bongliner**: un bong de vidrio
+  con alas de avión y 4 motores, **modelado por Adrian en Roblox Studio** (todo suyo, sin piezas
+  de la Toolbox; por eso sí entra, a diferencia de los modelos de D-34). Va **sin las texturas de
+  material de Roblox**: colores lisos. (2) **Vidrio verde translúcido** con **agua azul
+  radiactiva** en el bulbo (la bebida del planeta, D-10), alas y motores **plateados**, luces roja
+  y verde en las puntas. (3) **En el cielo**: turquesa de día con **nubes rosas y verdes** medio
+  transparentes (como las del planeta, D-19), con su cámara propia (D-34). (4) **Humo solo por la
+  boquilla**, en bocanadas que suben y se quedan atrás. (5) **Suave y lento**: el bong flota en el
+  cuadro (sube y baja, se ladea) y **las nubes pasan** de frente hacia atrás. (6) **Límite por
+  vehículo: ≤ 8 000 triángulos y ≤ 150 KB** optimizado (`triangulos_vehiculo`, `peso_vehiculo_kb`;
+  responde la parte de vehículo de `limites-modelo-ia`). (7) El texto de la ficha lo aprobó la
+  persona. De forma, elegido por el agente: el modelo se prepara en Blender sin ventana (el
+  Blender abierto lo usaba otra sesión) con el script que queda junto al modelo en
+  `datos/modelos-ia/transporte/` (su `ORIGEN.md`); 5 143 triángulos y 58,2 KB.
+- **Alternativas:** hamaca voladora, platillos o un autobús; una parada en la playa o una
+  carretera de arena; vidrio claro o gris como en Roblox; atardecer como Population; humo
+  también por los motores; cruzar la pantalla o volar en círculos; 5 000 o 3 000 triángulos.
+- **Por qué:** lo decidió la persona; el modelo es suyo, cabe en el límite sin perder detalle y la
+  página queda en el tope de fps.
+- **Revisar cuando:** llegue otro vehículo (el límite vale para todos) o la página necesite más
+  vehículos en el cielo.
