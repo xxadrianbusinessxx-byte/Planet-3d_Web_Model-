@@ -520,7 +520,7 @@ Formato:
   barren la pista con su cono de luz visible. (5) **Neón «Charlie's Casino»** arriba, donde la
   captura tenía un símbolo blanco; parpadea como neón viejo. (6) Se quedan las cartas del modelo
   (no los palos de hoja, hongo y diamante que se habían elegido antes de pedir sus modelos).
-  (7) El texto de la ficha es un **borrador del agente, pendiente del visto bueno** de la persona.
+  (7) El texto de la ficha lo escribió el agente y **lo aprobó la persona** (2026-11-09).
 - **Alternativas:** escena de playa con sound system; casino con tragamonedas y ruleta; recrear las
   piezas en Blender a partir de la captura sin usar su modelo; colores rojos como la captura o
   rasta; letrero «OPEN 48/7»; bailarines propios en vez de Frank.

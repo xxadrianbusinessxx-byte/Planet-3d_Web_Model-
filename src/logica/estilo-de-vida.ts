@@ -9,7 +9,7 @@ import type { Ficha } from './fichas'
 
 type Vec3 = [number, number, number]
 
-/** El texto de la ficha (en inglés, D-24). Borrador: falta el visto bueno de la persona. */
+/** El texto de la ficha (en inglés, D-24). Aprobado por la persona el 2026-11-09. */
 export const FICHA_ESTILO_DE_VIDA: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' | 'parrafos' | 'datos' | 'lema'> = {
   icono: '🎰',
   titulo: 'Lifestyle',

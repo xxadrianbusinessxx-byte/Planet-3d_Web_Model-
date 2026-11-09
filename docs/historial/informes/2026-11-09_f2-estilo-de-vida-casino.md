@@ -60,7 +60,7 @@ Talla: L · Fase: F2 · Respaldo: commit limpio `9d32a73` (rama `claude/aspecto-
 
 ## 7. Lo no verificado y las preguntas que surgieron
 
-- **El texto de la ficha** espera el visto bueno de la persona.
+- **El texto de la ficha** lo aprobó la persona el 2026-11-09, junto con juntar a `main`.
 - La página no llega al tope de 75 fps (p95 de 26,7 ms: algunos cuadros tardan dos refrescos). Si se
   nota, se puede bajar a 3 focos o a menos Grinders.
 - Sin probar en otra PC (pendiente `otra-pc`).
