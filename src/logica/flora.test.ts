@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { seVeJuntoALaFicha } from './encuadre'
 import {
+  APERTURA_BLOOM,
+  aperturaBloom,
   COLORES_FLORA,
   destello,
   DESTELLO_PERIODO_S,
@@ -27,6 +30,28 @@ describe('plantas del claro', () => {
       expect(Math.abs(p.z)).toBeLessThanOrEqual(12)
       expect(p.escala).toBeGreaterThan(0.5)
     }
+  })
+  it('cada planta se ve desde la cámara fija, sin quedar bajo la ficha', () => {
+    for (const p of PLANTAS) {
+      expect(seVeJuntoALaFicha([p.x, 0, p.z]), `${p.tipo} en (${p.x}, ${p.z})`).toBe(true)
+      expect(seVeJuntoALaFicha([p.x, 1.5 * p.escala, p.z]), `copa de ${p.tipo} en (${p.x}, ${p.z})`).toBe(true)
+    }
+  })
+})
+
+describe('aperturaBloom', () => {
+  it('va de cerrada a abierta y vuelve', () => {
+    const angulos: number[] = []
+    for (let t = 0; t < APERTURA_BLOOM.periodoS; t += 0.1) angulos.push(aperturaBloom(t, 0))
+    for (const a of angulos) {
+      expect(a).toBeGreaterThanOrEqual(0)
+      expect(a).toBeLessThanOrEqual(APERTURA_BLOOM.cerrada + 1e-9)
+    }
+    expect(Math.min(...angulos)).toBeLessThan(0.05)
+    expect(Math.max(...angulos)).toBeGreaterThan(APERTURA_BLOOM.cerrada - 0.05)
+  })
+  it('con tiempo inválido da un ángulo válido', () => {
+    expect(Number.isFinite(aperturaBloom(Number.NaN, 0.3))).toBe(true)
   })
 })
 

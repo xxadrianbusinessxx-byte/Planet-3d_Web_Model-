@@ -22,6 +22,7 @@ import {
   type Scene,
 } from 'three'
 import {
+  aperturaBloom,
   COLORES_FLORA,
   destello,
   esporaFlora,
@@ -32,6 +33,7 @@ import {
   respirar,
   type Planta,
 } from '../logica/flora'
+import { ocultarCuadricula } from './fondo-pagina'
 
 /** Media esfera por dentro con gradiente del horizonte al cenit. */
 function crearCielo(): Mesh {
@@ -109,6 +111,7 @@ interface Comun {
   mAmapolaFlor: MeshLambertMaterial
   mAmapolaHoja: MeshLambertMaterial
   mBloomRosa: MeshLambertMaterial
+  mEspiral: MeshLambertMaterial
   mBloomCentro: MeshLambertMaterial
   mHoja: MeshLambertMaterial
   mEspora: MeshBasicMaterial
@@ -121,13 +124,13 @@ function crearComun(): Comun {
     troncoShroom: new CylinderGeometry(0.22, 0.3, 1.6, 7),
     troncoAmapola: new CylinderGeometry(0.03, 0.04, 0.55, 4),
     cogollo: new IcosahedronGeometry(0.42, 0),
-    peloCogollo: new ConeGeometry(0.03, 0.14, 4),
+    peloCogollo: new ConeGeometry(0.05, 0.24, 4),
     cristal: new ConeGeometry(0.22, 0.9, 4),
     hojaSiete: hojaDeSieteGeo(),
     hojaRedonda: new CircleGeometry(0.18, 7),
     sombrero: new SphereGeometry(1, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2),
     lunar: new CircleGeometry(0.11, 7),
-    petalo: new PlaneGeometry(0.28, 0.4),
+    petalo: new PlaneGeometry(0.28, 0.4).translate(0, 0.2, 0), // la base en el pivote
     centroFlor: new CircleGeometry(0.1, 7),
     espora: new IcosahedronGeometry(1, 0),
     mTronco: matLambert(COLORES_FLORA.tronco),
@@ -141,7 +144,8 @@ function crearComun(): Comun {
     mTallo: matLambert(COLORES_FLORA.shroomTallo),
     mAmapolaFlor: matLambert(COLORES_FLORA.amapolaFlor),
     mAmapolaHoja: matLambert(COLORES_FLORA.amapolaHoja),
-    mBloomRosa: matLambert(COLORES_FLORA.bloomRosa),
+    mBloomRosa: new MeshLambertMaterial({ color: COLORES_FLORA.bloomRosa, flatShading: true, side: DoubleSide }),
+    mEspiral: matLambert(COLORES_FLORA.shroomEspiral),
     mBloomCentro: matLambert(COLORES_FLORA.bloomCentro),
     mHoja: matLambert(COLORES_FLORA.hoja),
     mEspora: new MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, fog: false }),
@@ -165,7 +169,7 @@ function crearBud(c: Comun): Group {
     for (let k = 0; k < 4; k++) {
       const pelo = new Mesh(c.peloCogollo, c.mPelo)
       const a = (k / 4) * Math.PI * 2
-      pelo.position.set(dx + Math.cos(a) * 0.35, dy + 0.2, dz + Math.sin(a) * 0.35)
+      pelo.position.set(dx + Math.cos(a) * 0.36, dy + 0.26, dz + Math.sin(a) * 0.36)
       pelo.rotation.z = Math.cos(a) * 0.6
       pelo.rotation.x = Math.sin(a) * 0.6
       g.add(pelo)
@@ -206,20 +210,28 @@ function crearShroom(c: Comun, variante: number): { grupo: Group; sombrero: Mesh
   g.add(sombrero)
   if (variante === 0) {
     // Lunares blancos (shroom clásico).
-    for (let k = 0; k < 5; k++) {
-      const a = (k / 5) * Math.PI * 2
+    // Sobre la superficie del sombrero (antes quedaban por debajo y no se veían).
+    for (let k = 0; k < 7; k++) {
+      const a = (k / 6) * Math.PI * 2
+      const r = k === 6 ? 0 : 0.7
+      const alto = 1.65 + 0.7 * Math.sqrt(1 - (r / 1.2) ** 2) + 0.02
       const lun = new Mesh(c.lunar, c.mLunar)
-      lun.position.set(Math.cos(a) * 0.65, 1.95, Math.sin(a) * 0.65)
-      lun.rotation.x = -Math.PI / 2
+      lun.position.set(Math.cos(a) * r, alto, Math.sin(a) * r)
+      lun.rotation.x = -Math.PI / 2 + Math.sin(a) * (r / 1.2) * 0.9
+      lun.rotation.y = -Math.cos(a) * (r / 1.2) * 0.9
+      lun.scale.setScalar(1.6)
       g.add(lun)
     }
   } else if (variante === 2) {
-    // Espiral rosa: una franja clara en espiral (3 lunares claros en rosa).
-    for (let k = 0; k < 4; k++) {
-      const a = (k / 4) * Math.PI * 2
-      const lun = new Mesh(c.lunar, c.mBloomRosa)
-      lun.position.set(Math.cos(a) * 0.5, 1.9 + k * 0.03, Math.sin(a) * 0.5)
-      lun.rotation.x = -Math.PI / 2
+    // Espiral: puntos claros que se abren desde la punta del sombrero hacia el borde.
+    for (let k = 0; k < 9; k++) {
+      const a = k * 0.95
+      const r = 0.12 + k * 0.11
+      const alto = 1.65 + 0.7 * Math.sqrt(Math.max(0, 1 - (r / 1.2) ** 2)) + 0.02
+      const lun = new Mesh(c.lunar, c.mEspiral)
+      lun.position.set(Math.cos(a) * r, alto, Math.sin(a) * r)
+      lun.rotation.x = -Math.PI / 2 + Math.sin(a) * (r / 1.2) * 0.9
+      lun.rotation.y = -Math.cos(a) * (r / 1.2) * 0.9
       g.add(lun)
     }
   }
@@ -252,28 +264,36 @@ function crearPoppy(c: Comun): { grupo: Group; copa: Group } {
   return { grupo: g, copa }
 }
 
-function crearBloom(c: Comun): Group {
+function crearBloom(c: Comun): { grupo: Group; petalos: Mesh[] } {
   const g = new Group()
-  // 6 pétalos rosas alrededor de un centro amarillo.
+  // Tallo corto y 6 pétalos rosas alrededor de un centro amarillo. Cada pétalo cuelga de
+  // un pivote en el centro: al inclinarlo hacia arriba la flor se cierra.
+  const tallo = new Mesh(c.troncoAmapola, c.mAmapolaHoja)
+  tallo.position.y = 0.27
+  g.add(tallo)
+  const petalos: Mesh[] = []
   for (let k = 0; k < 6; k++) {
+    const pivote = new Group()
+    pivote.position.y = 0.55
+    pivote.rotation.y = (k / 6) * Math.PI * 2
     const p = new Mesh(c.petalo, c.mBloomRosa)
-    const a = (k / 6) * Math.PI * 2
-    p.position.set(Math.cos(a) * 0.18, 0.12, Math.sin(a) * 0.18)
     p.rotation.x = -Math.PI / 2
-    p.rotation.z = a
-    g.add(p)
+    pivote.add(p)
+    g.add(pivote)
+    petalos.push(p)
   }
   const centro = new Mesh(c.centroFlor, c.mBloomCentro)
-  centro.position.y = 0.14
+  centro.position.y = 0.57
   centro.rotation.x = -Math.PI / 2
   g.add(centro)
-  return g
+  return { grupo: g, petalos }
 }
 
 export function armarFlora(escena: Scene): void {
   escena.background = new Color(COLORES_FLORA.cieloAbajo)
   escena.fog = new Fog(COLORES_FLORA.niebla, 20, 55)
   escena.add(crearCielo())
+  ocultarCuadricula(escena)
 
   // Disco de suelo verde que tapa el blanco del escenario fijo. Lleva el reloj.
   const suelo = new Mesh(
@@ -298,6 +318,9 @@ export function armarFlora(escena: Scene): void {
   const copas: { grupo: Group; fase: number }[] = []
   const cristales: { malla: Mesh; mat: MeshBasicMaterial; fase: number }[] = []
   const posicionesShroom: { x: number; z: number }[] = []
+  const blooms: { petalos: Mesh[]; fase: number }[] = []
+  const geoDestello = new IcosahedronGeometry(0.09, 0)
+  const destellosBud: { malla: Mesh; mat: MeshBasicMaterial; fase: number }[] = []
 
   const colocar = (grupo: Group, p: Planta) => {
     grupo.position.set(p.x, 0, p.z)
@@ -308,7 +331,17 @@ export function armarFlora(escena: Scene): void {
 
   for (const p of PLANTAS) {
     if (p.tipo === 'bud') {
-      colocar(crearBud(c), p)
+      const g = crearBud(c)
+      colocar(g, p)
+      // Destellos de resina sobre los cogollos (material propio por su opacidad).
+      for (let k = 0; k < 3; k++) {
+        const mat = new MeshBasicMaterial({ color: COLORES_FLORA.cristalBrillo, transparent: true, opacity: 0, depthWrite: false, fog: false })
+        const m = new Mesh(geoDestello, mat)
+        const a = k * 2.1
+        m.position.set(Math.cos(a) * 0.45, 1.75 + (k % 2) * 0.25, Math.sin(a) * 0.45 + 0.2)
+        g.add(m)
+        destellosBud.push({ malla: m, mat, fase: p.fase + k * 1.7 })
+      }
     } else if (p.tipo === 'crystal') {
       const g = crearCristal(c, p.variante)
       colocar(g, p)
@@ -327,7 +360,9 @@ export function armarFlora(escena: Scene): void {
       colocar(grupo, p)
       copas.push({ grupo: copa, fase: p.fase })
     } else {
-      colocar(crearBloom(c), p)
+      const { grupo, petalos } = crearBloom(c)
+      colocar(grupo, p)
+      blooms.push({ petalos, fase: p.fase })
     }
   }
 
@@ -364,6 +399,16 @@ export function armarFlora(escena: Scene): void {
     }
     for (const cr of cristales) {
       cr.mat.opacity = 0.4 + 0.6 * destello(t, cr.fase)
+    }
+    for (const b of blooms) {
+      const inclina = aperturaBloom(t, b.fase)
+      for (const p of b.petalos) p.rotation.x = -Math.PI / 2 + inclina
+    }
+    for (const d of destellosBud) {
+      // destello() da 0,3–1: debajo de 0,6 la chispa está apagada, arriba brilla y crece.
+      const v = Math.max(0, (destello(t * 1.6, d.fase) - 0.6) / 0.4)
+      d.mat.opacity = v
+      d.malla.scale.setScalar(0.3 + v)
     }
     esporas.forEach((e, i) => {
       const d = esporaFlora(i, t)

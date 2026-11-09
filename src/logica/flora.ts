@@ -40,6 +40,7 @@ export const COLORES_FLORA = {
   shroomRojo: 0xd9263d,
   shroomAzul: 0x3aa0ff,
   shroomRosa: 0xff6aa8,
+  shroomEspiral: 0xffe0ef,
   lunar: 0xffffff,
   shroomTallo: 0xf2e9c8,
   amapolaFlor: 0xd9263d,
@@ -63,33 +64,46 @@ export interface Planta {
   fase: number
 }
 
-/** Posición y tipo de cada planta del claro. */
+/**
+ * Posición y tipo de cada planta del claro. Todo va en la parte que se ve desde la cámara
+ * fija, a la izquierda de la ficha (`seVeJuntoALaFicha`, src/logica/encuadre.ts): con x > ~0
+ * queda tapado.
+ */
 export const PLANTAS: ReadonlyArray<Planta> = [
-  // Bud Trees (al fondo, pegadas al horizonte).
-  { tipo: 'bud', x: -8, z: -6, giro: 0.2, escala: 1.1, variante: 0, fase: 0.0 },
-  { tipo: 'bud', x: -3, z: -8, giro: 0.6, escala: 0.95, variante: 1, fase: 0.8 },
-  { tipo: 'bud', x: 6, z: -7, giro: -0.3, escala: 1.0, variante: 2, fase: 1.4 },
-  { tipo: 'bud', x: 10, z: -4, giro: 0.1, escala: 0.9, variante: 0, fase: 2.1 },
-  // Crystal Trees (a los lados).
-  { tipo: 'crystal', x: -10, z: 0, giro: 0.4, escala: 1.0, variante: 0, fase: 0.3 },
-  { tipo: 'crystal', x: 8, z: 1, giro: -0.5, escala: 0.85, variante: 1, fase: 1.1 },
-  { tipo: 'crystal', x: -6, z: 4, giro: 0.8, escala: 0.75, variante: 2, fase: 2.4 },
-  // Shroom Trees (medio plano, los más llamativos).
-  { tipo: 'shroom', x: -3, z: 2, giro: 0.1, escala: 1.0, variante: 0, fase: 0.5 },
-  { tipo: 'shroom', x: 2, z: 3, giro: -0.4, escala: 1.15, variante: 1, fase: 1.8 },
-  { tipo: 'shroom', x: 4, z: -1, giro: 0.2, escala: 0.9, variante: 2, fase: 0.9 },
+  // Bud Trees (al fondo).
+  { tipo: 'bud', x: -11, z: -9, giro: 0.2, escala: 1.5, variante: 0, fase: 0.0 },
+  { tipo: 'bud', x: -6.5, z: -11, giro: 0.6, escala: 1.4, variante: 1, fase: 0.8 },
+  { tipo: 'bud', x: -2, z: -10, giro: -0.3, escala: 1.5, variante: 2, fase: 1.4 },
+  // Crystal Trees (a los lados, en medio).
+  { tipo: 'crystal', x: -11.5, z: -2, giro: 0.4, escala: 1.4, variante: 0, fase: 0.3 },
+  { tipo: 'crystal', x: -1.2, z: -5, giro: -0.5, escala: 1.3, variante: 1, fase: 1.1 },
+  // Shroom Trees (medio plano, los más llamativos): rojo, azul y espiral rosa.
+  { tipo: 'shroom', x: -8, z: -1, giro: 0.1, escala: 1.15, variante: 0, fase: 0.5 },
+  { tipo: 'shroom', x: -4.5, z: -5, giro: -0.4, escala: 1.25, variante: 1, fase: 1.8 },
+  { tipo: 'shroom', x: -2, z: 0.5, giro: 0.2, escala: 1.0, variante: 2, fase: 0.9 },
   // Poppy Bushes (primer plano, mecidos por el viento).
-  { tipo: 'poppy', x: -1, z: 5, giro: 0, escala: 0.9, variante: 0, fase: 0.0 },
-  { tipo: 'poppy', x: 1.5, z: 5.5, giro: 0.3, escala: 1.0, variante: 1, fase: 1.3 },
-  { tipo: 'poppy', x: -4, z: 6, giro: -0.2, escala: 0.8, variante: 0, fase: 2.0 },
-  { tipo: 'poppy', x: 5, z: 6, giro: 0.5, escala: 0.85, variante: 1, fase: 0.7 },
+  { tipo: 'poppy', x: -7.5, z: 4, giro: 0, escala: 1.6, variante: 0, fase: 0.0 },
+  { tipo: 'poppy', x: -5, z: 3, giro: 0.3, escala: 1.7, variante: 1, fase: 1.3 },
+  { tipo: 'poppy', x: -1, z: 4.5, giro: -0.2, escala: 1.5, variante: 0, fase: 2.0 },
   // Pink Blooms (en racimo, al frente).
-  { tipo: 'bloom', x: -2, z: 7, giro: 0, escala: 0.9, variante: 0, fase: 0.0 },
-  { tipo: 'bloom', x: -1, z: 6.5, giro: 0.4, escala: 1.0, variante: 1, fase: 0.6 },
-  { tipo: 'bloom', x: 0, z: 7.2, giro: -0.3, escala: 0.85, variante: 0, fase: 1.2 },
-  { tipo: 'bloom', x: 1, z: 6.8, giro: 0.2, escala: 0.95, variante: 1, fase: 1.9 },
-  { tipo: 'bloom', x: 2.5, z: 7.1, giro: -0.1, escala: 0.9, variante: 0, fase: 2.5 },
+  { tipo: 'bloom', x: -5.6, z: 6.2, giro: 0, escala: 1.3, variante: 0, fase: 0.0 },
+  { tipo: 'bloom', x: -4.4, z: 6.8, giro: 0.4, escala: 1.4, variante: 1, fase: 0.6 },
+  { tipo: 'bloom', x: -3.2, z: 6.3, giro: -0.3, escala: 1.25, variante: 0, fase: 1.2 },
+  { tipo: 'bloom', x: -2, z: 6.9, giro: 0.2, escala: 1.35, variante: 1, fase: 1.9 },
+  { tipo: 'bloom', x: -0.9, z: 6.4, giro: -0.1, escala: 1.3, variante: 0, fase: 2.5 },
 ]
+
+/**
+ * Las Pink Blooms se abren con la lluvia (la Pink Rain del clima pasa cada ~20 s): ángulo de
+ * los pétalos, de 1,2 rad (botón cerrado) a 0 (abierta del todo, plana).
+ */
+export const APERTURA_BLOOM = { periodoS: 6, cerrada: 1.2 }
+export function aperturaBloom(t: number, fase: number): number {
+  const w = (2 * Math.PI) / APERTURA_BLOOM.periodoS
+  const ciclo = Number.isFinite(t) ? t * w + fase : fase
+  const abierta = 0.5 + 0.5 * Math.sin(ciclo) // 0 = cerrada, 1 = abierta
+  return APERTURA_BLOOM.cerrada * (1 - abierta)
+}
 
 /** Los Shroom Trees «respiran»: su sombrero palpita entre 0,92 y 1,08. */
 export const RESPIRACION = { periodoS: 4.5, amplitud: 0.08 }
@@ -139,11 +153,12 @@ export function hojaFlotante(i: number, t: number): { x: number; y: number; z: n
   const desfase = (i / HOJAS_FLOTANTES + (i * 0.17)) % 1
   const avance = ((tt / VIDA_HOJA_S + desfase) % 1 + 1) % 1
   const angulo = (i / HOJAS_FLOTANTES) * Math.PI * 2
-  const radio = 4 + 2 * Math.sin(avance * Math.PI * 2 + i)
+  const radio = 2.5 + 1.2 * Math.sin(avance * Math.PI * 2 + i)
+  // Alrededor de los Bud Trees (x ≈ −6), sin subir más de lo que deja ver la cámara fija.
   return {
-    x: Math.cos(angulo + avance * 0.4) * radio,
-    y: 2 + avance * 6,
-    z: -4 + Math.sin(angulo + avance * 0.4) * radio * 0.3,
+    x: -6 + Math.cos(angulo + avance * 0.4) * radio,
+    y: 2 + avance * 1.8,
+    z: -6 + Math.sin(angulo + avance * 0.4) * radio * 0.6,
     giro: avance * Math.PI * 2,
   }
 }
