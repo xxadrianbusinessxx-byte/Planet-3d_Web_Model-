@@ -120,7 +120,8 @@ export const MURO = {
 
 /** Los diamantes gigantes incrustados en el muro: posición, radio y color. */
 export const DIAMANTES_GIGANTES: ReadonlyArray<{ posicion: Vec3; radio: number; color: keyof typeof COLORES_RECURSOS; fase: number }> = [
-  { posicion: [-12.6, 2.0, -3.9], radio: 0.85, color: 'diamanteRosa', fase: 0 },
+  // El rosa va en el segundo banco: en el primero lo tapaba el pizarrón.
+  { posicion: [-13.6, 3.25, -4.85], radio: 0.95, color: 'diamanteRosa', fase: 0 },
   { posicion: [-4.4, 3.2, -4.85], radio: 0.95, color: 'diamanteAzul', fase: 2.1 },
   { posicion: [-0.6, 2.0, -4.0], radio: 0.75, color: 'diamanteBlanco', fase: 4.2 },
 ]
