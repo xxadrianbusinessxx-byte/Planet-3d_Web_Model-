@@ -3,11 +3,13 @@
 // especie) y un grupito de 6 se pasa el porro en ronda detrás, en una playa con hamacas y una
 // palapita. Aquí está lo que se decide (dónde va cada cosa, cómo se mueven, el texto de la
 // ficha); src/mundo/poblacion.ts lo vuelve objetos de three.
+import type { OpcionesAdornos, OpcionesArena, ColoresArena } from './arena'
+import type { CamaraDePagina } from './escenarios'
 import type { Ficha } from './fichas'
 
 type Vec3 = [number, number, number]
 
-/** El texto de la ficha (en inglés, D-24), aprobado por la persona el 2026-11-08. */
+/** El texto de la ficha (en inglés, D-24), aprobado por la persona el 2026-11-08; la fila del crédito, D-33. */
 export const FICHA_POBLACION: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' | 'parrafos' | 'datos' | 'lema'> = {
   icono: '👽',
   titulo: 'Population',
@@ -29,6 +31,8 @@ export const FICHA_POBLACION: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' | 'pa
     ['Hobby', 'grinding'],
     ['Other hobby', 'burning'],
     ['Home', 'a hammock by the sea'],
+    // Crédito que pide la licencia CC BY del modelo (D-33, datos/modelos-ia/poblacion/ORIGEN.md).
+    ['3D model', '“Alien Frank” by DavidePrestino (Sketchfab), CC BY 4.0, modified'],
   ],
   lema: "Grind it slow, burn it slower: on this beach nobody's in a hurry.",
 }
@@ -66,8 +70,17 @@ export function colorDeGuayabera(i: number): number {
   return COLORES_GUAYABERA[i % COLORES_GUAYABERA.length]
 }
 
-/** Dónde está el centro de la ronda y cuánto mide (la cámara fija mira a [-3, 0, 0]). */
-export const RONDA = { centro: [-2.6, 0, -2.2] as Vec3, radio: 2.1, cuantos: 6, escala: 1 }
+/**
+ * La cámara propia de la página (D-34): a la altura de los ojos, mirando al mar, para que se vean
+ * el cielo y el horizonte. El Grinder grande queda al frente a la izquierda y la ronda al centro.
+ */
+export const VISTA_POBLACION: CamaraDePagina = {
+  camara: { posicion: [0, 2, 9], objetivo: [-0.5, 1.4, -10] },
+  apertura: 50,
+}
+
+/** Dónde está el centro de la ronda y cuánto mide (al centro, a media distancia). */
+export const RONDA = { centro: [0.6, 0, -6.5] as Vec3, radio: 1.4, cuantos: 6, escala: 1 }
 
 /**
  * Los Grinders de la ronda, repartidos en círculo y mirando al centro. Moliendo uno sí, uno no;
@@ -97,9 +110,9 @@ export function rondaDeGrinders(cuantos: number = RONDA.cuantos, centro: Vec3 = 
 
 /** El Grinder grande que posa al frente a la izquierda, con su porro y su molinillo. */
 export const GRANDE: Grinder = {
-  posicion: [-6.4, 0, 4.2],
-  giro: 0.35, // un poco hacia la cámara
-  escala: 1.7,
+  posicion: [-2.1, 0, 5.6],
+  giro: 0.55, // hacia la cámara
+  escala: 1.1,
   guayabera: colorDeGuayabera(0),
   manoDer: 'porro',
   manoIzq: 'molinillo',
@@ -163,20 +176,138 @@ export function bocanada(t: number, i: number): { subida: number; escala: number
   }
 }
 
-/** La playa: la arena, el mar (la bebida azul, D-10) y lo que hay encima. */
+/** Dónde va una pieza de la playa (un modelo de src/modelos/playa.glb): posición, giro y escala. */
+export interface Pieza {
+  posicion: Vec3
+  giro: number
+  escala: number
+}
+
+/**
+ * La playa (D-28, D-34), compuesta como la captura que pidió la persona: arena con un sendero más
+ * oscuro, el mar (la bebida azul, D-10) hasta el horizonte, cielo azul, 2 palmeras con una hamaca,
+ * una cerca de madera que lleva hacia la ronda, una roca grande a la derecha, un árbol en Y al
+ * frente a la derecha, una islita al fondo y matas de pasto al frente.
+ */
 export const PLAYA = {
-  arena: { centro: [-4, 0, 0] as Vec3, radio: 15, color: 0xf3dfae },
-  /** El mar empieza en esta z y sigue hacia atrás hasta perderse en la niebla blanca. */
-  mar: { orillaZ: -6, fondo: 40, color: 0x26c6ff, colorEspuma: 0xe8fbff },
-  palapa: { posicion: [-10.2, 0, -2.6] as Vec3, lado: 2.6, alto: 2.4 },
-  /** Cada hamaca cuelga entre dos postes; x, z de cada poste. */
-  hamacas: [
-    { desde: [-13.6, -0.8] as [number, number], hasta: [-11.6, -4.2] as [number, number], color: 0xff5e7a },
-    { desde: [-9.4, 0.6] as [number, number], hasta: [-11.2, 2.9] as [number, number], color: 0x7dd36a },
-  ],
+  /** El terreno de arena (D-35): un rectángulo con relieve, de `desdeZ` (bajo el mar) a `hastaZ`. */
+  arena: { ancho: 110, desdeZ: -15, hastaZ: 16, segmentosX: 140, segmentosZ: 48, color: 0xf3dfae },
+  /** El mar empieza en esta z y sigue hacia atrás hasta el horizonte. */
+  mar: { orillaZ: -11, fondo: 100, ancho: 220, color: 0x26c6ff, colorEspuma: 0xe8fbff },
+  /** Cielo de atardecer en degradado (D-35) y niebla del color del horizonte, que funde el mar con el cielo. */
+  cielo: { arriba: 0x2c2f73, medio: 0xb45d8a, horizonte: 0xff9a52, niebla: 0xf2a172, radio: 100, nieblaDesde: 25, nieblaHasta: 100 },
+  /**
+   * El sol bajo sobre el mar, detrás de la escena y a la izquierda: de ahí sale la luz cálida y
+   * las sombras largas caen hacia la cámara. El reflejo es la franja de luz sobre el agua.
+   */
+  sol: {
+    posicion: [-28, 15, -88] as Vec3,
+    radio: 5,
+    color: 0xffe6a8,
+    halo: 0xffa04a,
+    luz: { color: 0xffb877, intensidad: 2.6 },
+    /** La luz del cielo (la del escenario, recoloreada): naranja arriba, morada desde el suelo. */
+    ambiente: { cielo: 0xffc29a, suelo: 0x5a4060, intensidad: 0.85 },
+    /** Mapa de sombras: tamaño en píxeles y cuántos metros cubre a cada lado del centro. */
+    /** `vecesPorSegundo`: la sombra se recalcula así, no en cada cuadro (el balanceo es lento). */
+    sombra: { tamano: 2048, alcance: 18, centro: [0, 0, -2] as Vec3, vecesPorSegundo: 15 },
+  },
+  palmeras: [
+    { posicion: [-4.4, 0, -9.6], giro: 0.4, escala: 1 },
+    { posicion: [-2.2, 0, -10.4], giro: 2.2, escala: 0.85 },
+  ] as Pieza[],
+  /** La hamaca cuelga entre dos postes; x, z de cada poste. */
+  hamaca: { desde: [-4.0, -9.0] as [number, number], hasta: [-1.5, -7.9] as [number, number], color: 0xc8553d },
+  /** La cerca va de un punto a otro (x, z) en tramos del modelo. */
+  cerca: { desde: [-3.0, -0.6] as [number, number], hasta: [-1.0, -6.0] as [number, number] },
+  roca: { posicion: [8, 0, -8.6], giro: 0.6, escala: 1.4 } as Pieza,
+  arbol: { posicion: [2.6, 0, 2.2], giro: 0.3, escala: 1 } as Pieza,
+  islita: { posicion: [-20, 0, -60] as Vec3, radio: 5, alto: 1.6 },
+  pasto: [
+    [-3.4, 0, 6.6],
+    [-2.7, 0, 7.3],
+    [-4.0, 0, 5.9],
+    [-1.2, 0, 7.0],
+  ] as Vec3[],
 }
 
 /** Largo de una hamaca entre sus dos postes. */
 export function largoDeHamaca(h: { desde: [number, number]; hasta: [number, number] }): number {
   return Math.hypot(h.hasta[0] - h.desde[0], h.hasta[1] - h.desde[1])
+}
+
+/** Largo de un tramo del modelo «cerca» (sus dos postes están a 1,6 m, sobre su eje x). */
+export const LARGO_TRAMO_CERCA = 1.6
+
+/**
+ * Los tramos de una cerca recta de `desde` a `hasta` (x, z): dónde empieza cada uno y cuánto gira
+ * para que su eje x apunte a lo largo de la cerca. El último puede sobresalir menos de un tramo.
+ */
+export function tramosDeCerca(desde: [number, number], hasta: [number, number], largoTramo: number = LARGO_TRAMO_CERCA): Pieza[] {
+  if (!(largoTramo > 0)) throw new RangeError('cerca: el largo del tramo debe ser > 0')
+  const dx = hasta[0] - desde[0]
+  const dz = hasta[1] - desde[1]
+  const largo = Math.hypot(dx, dz)
+  if (largo === 0) return []
+  const cuantos = Math.ceil(largo / largoTramo - 1e-9)
+  const giro = -Math.atan2(dz, dx)
+  return Array.from({ length: cuantos }, (_, i) => ({
+    posicion: [desde[0] + (dx / largo) * largoTramo * i, 0, desde[1] + (dz / largo) * largoTramo * i] as Vec3,
+    giro,
+    escala: 1,
+  }))
+}
+
+/** Dónde no van dunas ni adornos: alrededor de la gente y de las piezas grandes. */
+function zonasOcupadas(): { centro: [number, number]; radio: number }[] {
+  const z = (p: Vec3, radio: number) => ({ centro: [p[0], p[2]] as [number, number], radio })
+  return [
+    z(RONDA.centro, RONDA.radio + 1),
+    z(GRANDE.posicion, 1.2),
+    z(PLAYA.arbol.posicion, 1.3),
+    z(PLAYA.roca.posicion, 4.8),
+    ...PLAYA.palmeras.map((p) => z(p.posicion, 1)),
+    ...tramosDeCerca(PLAYA.cerca.desde, PLAYA.cerca.hasta).map((t) => z(t.posicion, 0.9)),
+    { centro: PLAYA.hamaca.desde, radio: 0.6 },
+    { centro: PLAYA.hamaca.hasta, radio: 0.6 },
+    {
+      centro: [(PLAYA.hamaca.desde[0] + PLAYA.hamaca.hasta[0]) / 2, (PLAYA.hamaca.desde[1] + PLAYA.hamaca.hasta[1]) / 2],
+      radio: 1,
+    },
+    ...PLAYA.pasto.map((p) => z(p, 0.4)),
+  ]
+}
+
+/** El relieve de la arena (D-35): dunas suaves, más planas donde hay gente o cosas. */
+export const RELIEVE: OpcionesArena = {
+  semilla: 11,
+  orillaZ: PLAYA.mar.orillaZ,
+  alturaMar: 0.04,
+  subida: 0.3,
+  anchoPlaya: 4,
+  hondura: 0.4,
+  dunas: { alto: 0.55, escala: 0.13 },
+  planos: [
+    { centro: [RONDA.centro[0], RONDA.centro[2]], radio: RONDA.radio + 1.4 },
+    { centro: [GRANDE.posicion[0], GRANDE.posicion[2]], radio: 1.8 },
+  ],
+}
+
+/** Los colores de la arena: seca con manchas, mojada en la orilla y un sendero más oscuro (D-35). */
+export const COLORES_ARENA: ColoresArena = {
+  seca: 0xf3dfae,
+  manchas: 0xdcc08a,
+  mojada: 0xb8935f,
+  sendero: 0xb9ab8e,
+  zonaSendero: { centro: [3, -1], radioX: 5, radioZ: 9 },
+}
+
+/** Los adornos de la arena (D-35): cuántos de cada uno y dónde no van. */
+export const ADORNOS: OpcionesAdornos = {
+  semilla: 23,
+  area: { xMin: -14, xMax: 14, zMin: PLAYA.mar.orillaZ + 0.3, zMax: 8 },
+  cuantos: { piedra: 45, concha: 28, estrella: 6, tronco: 3, pasto: 16 },
+  evitar: zonasOcupadas(),
+  orillaZ: PLAYA.mar.orillaZ,
+  cercaDeLaOrilla: 3.5,
 }

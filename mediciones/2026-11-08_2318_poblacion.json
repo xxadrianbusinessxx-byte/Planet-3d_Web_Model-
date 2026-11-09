@@ -1,0 +1,52 @@
+{
+  "fecha": "2026-11-08T23:18",
+  "tipo": "rendimiento",
+  "comando": "npm run build; npx gltf-transform inspect src/modelos/alien-frank.glb; el script de Playwright de la sesión de D-28 (no está en scripts/; espera triángulos entre 1 000 y 100 000) para la página; y npm run medir para la vista espacial, con el dist de main (9d32a73) copiado a una carpeta temporal para el «antes»",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080 (a veces 1920×1079); Blender abierto en parte de las corridas; desde las 22:59 la laptop rindió menos que a las 22:14 también con la versión de main",
+  "valores": {
+    "triangulos_personaje": 7907,
+    "peso_personaje_kb": 140.5,
+    "peso_html_mb": 0.88
+  },
+  "detalle": {
+    "modelo": "src/modelos/alien-frank.glb («Alien Frank» de DavidePrestino, CC BY 4.0, modificado; piel 512 px y camisa 256 px WebP q70, meshopt; en bruto 2,0 MB)",
+    "triangulos_pagina_poblacion_antes": 7452,
+    "triangulos_pagina_poblacion_despues": 56809,
+    "fps_pagina_poblacion": {
+      "antes": [
+        64.2,
+        71.1,
+        35.1,
+        75.0
+      ],
+      "despues": [
+        68.0,
+        74.9,
+        1.0,
+        75.0
+      ]
+    },
+    "nota_pagina": "corrida 3: la de 1 fps tuvo la ventana en segundo plano (p95 1000 ms) y la de 35 fps del antes fue ruido; las corridas 1–2 esperaban mal la entrada (contaban desde la vista espacial). La comparable es la 4: 75 y 75 (tope de la pantalla).",
+    "fps_espacial_antes": [
+      68.9,
+      71.8,
+      69.8,
+      72.3,
+      70.4,
+      69.4
+    ],
+    "fps_espacial_despues": [
+      55.9,
+      69.3,
+      68.1,
+      56.5,
+      63.5,
+      73.2
+    ],
+    "nota_espacial": "los dos valores bajo 60 del después salieron justo detrás de otra corrida, sin descanso; con 75 s de descanso antes de cada una (las dos últimas de cada lista) todas pasan de 60. La vista espacial no cambió en esta tarea; el .glb solo se decodifica al entrar a Population. No se confirmó la causa.",
+    "entrada_desde_clic_s": {
+      "antes": 1.858,
+      "despues": 2.339
+    }
+  }
+}

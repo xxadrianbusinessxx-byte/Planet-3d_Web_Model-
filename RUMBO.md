@@ -30,6 +30,7 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - **limites-modelo-ia** (F2) — ¿Cuánto pueden pesar y cuántos triángulos pueden tener una persona, un vehículo y un edificio IA? · persona
 - **paises-inventados** (F2) — ¿Cuántos países hay, cómo se llaman y dónde están (en la hoja, en los otros continentes)? · persona
 - **ciudad-presentacion** (F2) — ¿Cómo se ve la primera ciudad al acercarse: cuál, de qué tamaño y con qué estilo? · persona
+- **ficha-poblacion-camisa** (F2) — ¿Se cambia el texto de la ficha de Population, que aún dice «guayabera», ahora que llevan la camisa de planetas de Frank? · persona
 - **clima-inventado** (F2) — ¿Cómo es el clima del planeta y desde qué perspectiva se ve? · persona
 
 ## Pendientes abiertos (por riesgo)
@@ -40,19 +41,21 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - **licencia-modelos-ia** [bajo] — Anotar origen y licencia de cada modelo IA · agente
 - **plantilla-git-crear-proyecto** [bajo] — crear_proyecto.py con "git": true debe permitir .git y .gitignore en la raíz y sembrar un .gitignore · agente
 - **plantilla-respaldo-git** [bajo] — Con git, el respaldo debería poder ser un commit: respaldar.py, sesion.py y CLAUDE.md §4 solo conocen el .zip · agente
+- **plantilla-gltf-transform-anclas** [bajo] — Con anclas o esqueleto, optimizar con «gltf-transform meshopt», no con «optimize» · agente
 - **plantilla-medir-fps-playwright** [bajo] — Medir fps con Playwright: la pantalla completa se pide por CDP y se comprueba el tamaño del lienzo · agente
-- **plantilla-entrada-otras-ia** [bajo] — La plantilla debería traer un AGENTS.md de apunte a CLAUDE.md · agente
 
 ## Métricas de esta fase
 
 - `fps_ciudad` — Cuadros por segundo con la cámara en una ciudad · sin umbral: preguntar la meta
 - `carga_ciudad_s` — Tiempo en que aparece la ciudad al bajar desde el espacio · sin umbral: preguntar la meta
+- `triangulos_personaje` — Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona; 3 000 → 8 000 por D-33) · umbral 8000 triángulos (dura)
+- `peso_personaje_kb` — Peso del modelo de personaje más pesado en src/modelos/, ya optimizado (límite de R7 para una persona) · umbral 150 KB (dura)
 
 ## Últimos informes
 
 - 2026-11-08_f2-ramas-main-colaborativa.md
+- 2026-11-08_f2-poblacion-vista-playa.md
 - 2026-11-08_f2-poblacion-modelos-externos.md
 - 2026-11-08_f2-poblacion-grinders-playa.md
-- 2026-11-08_f2-poblacion-blender-mcp.md
-- 2026-11-08_f2-novedades-repo.md
+- 2026-11-08_f2-poblacion-grinder-blender.md
 <!-- FIN GENERADO -->

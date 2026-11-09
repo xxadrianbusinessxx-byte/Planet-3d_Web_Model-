@@ -37,12 +37,10 @@ export function crearVistaContinente(panel: PanelFicha, fundido: Fundido, fichaD
     const clave = `${c}/${id ?? '-'}`
     let e = escenas.get(clave)
     if (!e) {
-      e = crearEscenario(escenarioDe(c))
-      if (id) {
-        const p = PAGINAS[id]
-        if (!p) throw new Error(`the page for "${id}" is missing from src/secciones/aspectos/registro.ts`)
-        p.armar(e.escena)
-      }
+      const p = id ? PAGINAS[id] : null
+      if (id && !p) throw new Error(`the page for "${id}" is missing from src/secciones/aspectos/registro.ts`)
+      e = crearEscenario(escenarioDe(c, p?.camara))
+      p?.armar(e.escena)
       escenas.set(clave, e)
     }
     return e

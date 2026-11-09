@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-08 (Grinders D-28; modelos externos D-29; Blender con MCP D-30)
+- **Última revisión:** 2026-11-08 (D-28 a D-35: la población)
 
 ---
 
@@ -30,7 +30,7 @@ compartidos), 24 GB de RAM; libre: C: 41 GB, E: 505 GB.
   final (`docs/sistema/COLABORAR.md`, D-18); otras IA entran por `AGENTS.md`.
 - **npm (instalado y probado, `package.json`):** three 0.187.0, vite 8.3.6, vite-plugin-singlefile
   2.3.4, typescript 7.0.2, vitest 5.1.0, playwright 1.65.0 (usa el Edge 157 del sistema; no
-  descarga navegadores). `@gltf-transform/cli` aún no (se instala al llegar el primer modelo, D-29).
+  descarga navegadores), `@gltf-transform/cli` 4.5.1 (optimiza los modelos, `docs/perfil/ORDEN.md` §4).
 - **Pantalla:** 1920×1080 a 74 Hz: es el tope de fps medible.
 - **Blender:** 5.2.3 LTS (winget) con el addon «MCP for Blender» 1.8 activado y su servidor
   `blender-mcp` 2.0.0 (`uv tool`) registrado en `~/.claude.json`; se usa con Blender abierto (D-30).
@@ -59,9 +59,9 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 | Clic en Don Foco (el Sol) o en el planeta (Charlie's World): letrero al pasar el ratón, la cámara viaja en 1,6 s, ficha con descripción y ficha técnica; Esc o el botón regresan a la vista de antes; gana el objeto más cercano (D-22, D-23) | `npm test` (`enfoque.test.ts`) y a mano | — |
 | Clic en un continente (The Leaf, The Mushroom, The Diamond): la cámara se acerca, fundido a blanco y escenario fijo de prueba (suelo y fondo blancos, sin girar ni zoom) con su ficha de color propio; Esc regresa (D-24). Todo lo visible de la página está en inglés | `npm test` (`escenarios.test.ts`) y a mano | — |
 | Dentro de cada continente, pestañas (y flechas ← →) con una página por aspecto según `reparto.json`: The Leaf (Population, Transport, Lifestyle), The Mushroom (Climate, Flora, Fauna, Environment), The Diamond (Work zones, Jobs, Natural resources); cada cambio con fundido. Las páginas sin terminar son de prueba (`src/secciones/aspectos/`) (D-25, D-26) | `npm test` (`aspectos.test.ts`) y a mano | — |
-| Página Population de The Leaf: los Grinders (D-28) en una playa con mar, palapita y 2 hamacas; uno grande posa al frente con porro y molinillo y una ronda de 6 se pasa el porro; se mecen, sale humo y giran los molinillos. Grinder low-poly por código con anclas para accesorios, borrador hasta su modelo externo (D-29); 7 452 triángulos | `npm test` (`poblacion.test.ts`) y a mano | `mediciones/2026-11-08_1716_poblacion.json` (74,5 fps, tope) |
-| HTML portátil: un solo `dist/index.html` de 0,60 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_1642_rendimiento.json` |
-| 75 fps (tope de la pantalla) y carga de 0,64 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-08_1642_rendimiento.json` |
+| Página Population (The Leaf): playa al atardecer, cámara propia, sombras, arena con relieve y adornos (D-34, D-35); Frank grande y una ronda de 6 | `npm test` (`poblacion`, `arena`) y a mano | `mediciones/2026-11-08_2345_poblacion.json` |
+| HTML portátil: un solo `dist/index.html` de 0,74 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-08_2242_rendimiento.json` |
+| 75 fps (tope de la pantalla) y carga de 0,68 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-08_2242_rendimiento.json` |
 | Al abrir cada sesión de Claude Code (hook de `.claude/settings.json`) y después de cada push, `scripts/novedades.py` resume lo nuevo de `main` y `colaborativa` en GitHub (D-21); marca con 🚀 los commits `LANZAMIENTO:` y solo pide juntar esos (D-27); al final recomienda tomar las secciones sin dueño y usar modelos externos low-poly (D-29) | `python scripts/test_novedades.py` (7 pruebas) y `python scripts/novedades.py` | — |
 | Ante un error (sin WebGL, fallo en el bucle) la página muestra un aviso en vez de quedar en blanco (D-09) | revisión; no hay prueba automática del caso sin WebGL | — |
 

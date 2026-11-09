@@ -1,0 +1,41 @@
+{
+  "fecha": "2026-11-08T22:44",
+  "tipo": "rendimiento",
+  "comando": "npm run build; npx gltf-transform inspect src/modelos/grinder.glb; y el script de Playwright de la sesión de D-28 (no está en scripts/): abre dist/index.html por file:// en msedge a pantalla completa por CDP, hace clic en The Leaf, espera la página Population y cuenta 10 s de requestAnimationFrame",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080 px (pixelRatio 1, en una corrida 1920×1079); página Population de The Leaf; Blender 5.2 abierto en la misma laptop (dos ventanas), por eso la versión anterior también bajó de 74,5 a 66–70 fps; se alternaron antes (dist de main, commit 9d32a73) y después, dos veces cada una",
+  "valores": {
+    "triangulos_personaje": 2716,
+    "peso_personaje_kb": 26.3,
+    "peso_html_mb": 0.74
+  },
+  "detalle": {
+    "modelo": "src/modelos/grinder.glb (meshopt; en bruto 95,7 KB)",
+    "fps_pagina_poblacion_antes": [
+      70.0,
+      66.4
+    ],
+    "fps_pagina_poblacion_despues": [
+      64.5,
+      67.6
+    ],
+    "percentil_95_ms_antes": [
+      26.6,
+      26.7
+    ],
+    "percentil_95_ms_despues": [
+      26.8,
+      26.7
+    ],
+    "triangulos_pagina_poblacion_antes": 7452,
+    "triangulos_pagina_poblacion_despues": 21032,
+    "entrada_desde_clic_s_antes": [
+      1.825,
+      1.854
+    ],
+    "entrada_desde_clic_s_despues": [
+      2.093,
+      2.321
+    ],
+    "nota": "la diferencia de fps entre antes y después cabe en el ruido de la misma sesión; las cuatro corridas pasan de 60. La entrada tarda ~0,3–0,5 s más la primera vez: se decodifica el .glb al entrar a la página."
+  }
+}

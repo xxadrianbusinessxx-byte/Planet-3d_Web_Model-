@@ -1,6 +1,6 @@
 // Lo que habla con el navegador: renderer WebGL, avisos, HUD y el estado que leen los
 // scripts de prueba y medición (scripts/probar_html.mjs, scripts/medir_rendimiento.mjs).
-import { WebGLRenderer } from 'three'
+import { PCFShadowMap, WebGLRenderer } from 'three'
 import type { ResumenCuadros } from '../logica/espacio'
 
 export interface EstadoPagina {
@@ -54,6 +54,9 @@ export function crearRenderizador(): WebGLRenderer {
   // Primera palanca de rendimiento en gráficos integrados (docs/perfil/ORDEN.md §3).
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
   renderer.setSize(window.innerWidth, window.innerHeight)
+  // Sombras (D-35): solo cuestan donde una luz las proyecta (hoy, el atardecer de Population).
+  renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = PCFShadowMap
   document.body.appendChild(renderer.domElement)
   estado.gpu = nombreGpu(renderer)
   return renderer
