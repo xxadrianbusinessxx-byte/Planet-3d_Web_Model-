@@ -26,6 +26,15 @@ describe('escenarios', () => {
     }
   })
 
+  it('una página puede traer su propia cámara y lo demás queda igual (D-33)', () => {
+    const propia = { camara: { posicion: [1, 2, 3], objetivo: [0, 1, 0] } as const, apertura: 55 }
+    const e = escenarioDe('hoja', { camara: { posicion: [1, 2, 3], objetivo: [0, 1, 0] }, apertura: 55 })
+    expect(e.camara).toEqual(propia.camara)
+    expect(e.apertura).toBe(55)
+    expect(e.ladoSuelo).toBe(escenarioDe('hoja').ladoSuelo)
+    expect(escenarioDe('hoja').camara.posicion).toEqual([0, 7, 16])
+  })
+
   it('el acercamiento no entra al planeta y los tiempos son razonables', () => {
     const limites = limitesCamara(OPCIONES_PLANETA.radio, OPCIONES_PLANETA.relieve)
     expect(DISTANCIA_ACERCAR).toBeGreaterThanOrEqual(limites.distanciaMin)

@@ -3,6 +3,7 @@
 // carpeta y solo toca ese archivo (y su lógica en src/logica/). En qué continente va lo dice
 // docs/sistema/reparto.json.
 import type { Scene } from 'three'
+import type { CamaraDePagina } from '../../logica/escenarios'
 import type { Ficha } from '../../logica/fichas'
 import { crearMarcadorDePrueba } from '../../mundo/escenario'
 
@@ -17,6 +18,8 @@ export interface PaginaAspecto {
   ficha: TextoDeAspecto
   /** Agrega a la escena fija (suelo y fondo blancos) lo que muestra este aspecto. */
   armar: (escena: Scene) => void
+  /** Opcional (D-33): su propia cámara fija, si la del continente no le sirve. */
+  camara?: CamaraDePagina
 }
 
 /** Una página de prueba: ficha sin descripción y un marcador de color sobre el suelo. */

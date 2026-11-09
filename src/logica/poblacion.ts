@@ -3,6 +3,7 @@
 // especie) y un grupito de 6 se pasa el porro en ronda detrás, en una playa con hamacas y una
 // palapita. Aquí está lo que se decide (dónde va cada cosa, cómo se mueven, el texto de la
 // ficha); src/mundo/poblacion.ts lo vuelve objetos de three.
+import type { CamaraDePagina } from './escenarios'
 import type { Ficha } from './fichas'
 
 type Vec3 = [number, number, number]
@@ -68,8 +69,17 @@ export function colorDeGuayabera(i: number): number {
   return COLORES_GUAYABERA[i % COLORES_GUAYABERA.length]
 }
 
-/** Dónde está el centro de la ronda y cuánto mide (la cámara fija mira a [-3, 0, 0]). */
-export const RONDA = { centro: [-2.6, 0, -2.2] as Vec3, radio: 2.1, cuantos: 6, escala: 1 }
+/**
+ * La cámara propia de la página (D-33): a la altura de los ojos, mirando al mar, para que se vean
+ * el cielo y el horizonte. El Grinder grande queda al frente a la izquierda y la ronda al centro.
+ */
+export const VISTA_POBLACION: CamaraDePagina = {
+  camara: { posicion: [0, 2, 9], objetivo: [-0.5, 1.4, -10] },
+  apertura: 50,
+}
+
+/** Dónde está el centro de la ronda y cuánto mide (al centro, a media distancia). */
+export const RONDA = { centro: [0.6, 0, -6.5] as Vec3, radio: 1.4, cuantos: 6, escala: 1 }
 
 /**
  * Los Grinders de la ronda, repartidos en círculo y mirando al centro. Moliendo uno sí, uno no;
@@ -99,9 +109,9 @@ export function rondaDeGrinders(cuantos: number = RONDA.cuantos, centro: Vec3 = 
 
 /** El Grinder grande que posa al frente a la izquierda, con su porro y su molinillo. */
 export const GRANDE: Grinder = {
-  posicion: [-6.4, 0, 4.2],
-  giro: 0.35, // un poco hacia la cámara
-  escala: 1.7,
+  posicion: [-2.1, 0, 5.6],
+  giro: 0.55, // hacia la cámara
+  escala: 1.1,
   guayabera: colorDeGuayabera(0),
   manoDer: 'porro',
   manoIzq: 'molinillo',
@@ -165,20 +175,68 @@ export function bocanada(t: number, i: number): { subida: number; escala: number
   }
 }
 
-/** La playa: la arena, el mar (la bebida azul, D-10) y lo que hay encima. */
+/** Dónde va una pieza de la playa (un modelo de src/modelos/playa.glb): posición, giro y escala. */
+export interface Pieza {
+  posicion: Vec3
+  giro: number
+  escala: number
+}
+
+/**
+ * La playa (D-28, D-33), compuesta como la captura que pidió la persona: arena con un sendero más
+ * oscuro, el mar (la bebida azul, D-10) hasta el horizonte, cielo azul, 2 palmeras con una hamaca,
+ * una cerca de madera que lleva hacia la ronda, una roca grande a la derecha, un árbol en Y al
+ * frente a la derecha, una islita al fondo y matas de pasto al frente.
+ */
 export const PLAYA = {
-  arena: { centro: [-4, 0, 0] as Vec3, radio: 15, color: 0xf3dfae },
-  /** El mar empieza en esta z y sigue hacia atrás hasta perderse en la niebla blanca. */
-  mar: { orillaZ: -6, fondo: 40, color: 0x26c6ff, colorEspuma: 0xe8fbff },
-  palapa: { posicion: [-10.2, 0, -2.6] as Vec3, lado: 2.6, alto: 2.4 },
-  /** Cada hamaca cuelga entre dos postes; x, z de cada poste. */
-  hamacas: [
-    { desde: [-13.6, -0.8] as [number, number], hasta: [-11.6, -4.2] as [number, number], color: 0xff5e7a },
-    { desde: [-9.4, 0.6] as [number, number], hasta: [-11.2, 2.9] as [number, number], color: 0x7dd36a },
-  ],
+  arena: { centro: [0, 0, -4] as Vec3, radio: 60, color: 0xf3dfae },
+  sendero: { centro: [3, 0, -1] as Vec3, radio: 5, color: 0xcdbf9c },
+  /** El mar empieza en esta z y sigue hacia atrás hasta el horizonte. */
+  mar: { orillaZ: -11, fondo: 100, ancho: 220, color: 0x26c6ff, colorEspuma: 0xe8fbff },
+  /** Cielo en degradado y niebla del color del horizonte, que funde el mar con el cielo. */
+  cielo: { arriba: 0x2f7fd8, horizonte: 0xb4def7, radio: 100, nieblaDesde: 25, nieblaHasta: 100 },
+  palmeras: [
+    { posicion: [-4.4, 0, -9.6], giro: 0.4, escala: 1 },
+    { posicion: [-2.2, 0, -10.4], giro: 2.2, escala: 0.85 },
+  ] as Pieza[],
+  /** La hamaca cuelga entre dos postes; x, z de cada poste. */
+  hamaca: { desde: [-4.0, -9.0] as [number, number], hasta: [-1.5, -7.9] as [number, number], color: 0xc8553d },
+  /** La cerca va de un punto a otro (x, z) en tramos del modelo. */
+  cerca: { desde: [-3.0, -0.6] as [number, number], hasta: [-1.0, -6.0] as [number, number] },
+  roca: { posicion: [8, 0, -8.6], giro: 0.6, escala: 1.4 } as Pieza,
+  arbol: { posicion: [2.6, 0, 2.2], giro: 0.3, escala: 1 } as Pieza,
+  islita: { posicion: [-20, 0, -60] as Vec3, radio: 5, alto: 1.6 },
+  pasto: [
+    [-3.4, 0, 6.6],
+    [-2.7, 0, 7.3],
+    [-4.0, 0, 5.9],
+    [-1.2, 0, 7.0],
+  ] as Vec3[],
 }
 
 /** Largo de una hamaca entre sus dos postes. */
 export function largoDeHamaca(h: { desde: [number, number]; hasta: [number, number] }): number {
   return Math.hypot(h.hasta[0] - h.desde[0], h.hasta[1] - h.desde[1])
+}
+
+/** Largo de un tramo del modelo «cerca» (sus dos postes están a 1,6 m, sobre su eje x). */
+export const LARGO_TRAMO_CERCA = 1.6
+
+/**
+ * Los tramos de una cerca recta de `desde` a `hasta` (x, z): dónde empieza cada uno y cuánto gira
+ * para que su eje x apunte a lo largo de la cerca. El último puede sobresalir menos de un tramo.
+ */
+export function tramosDeCerca(desde: [number, number], hasta: [number, number], largoTramo: number = LARGO_TRAMO_CERCA): Pieza[] {
+  if (!(largoTramo > 0)) throw new RangeError('cerca: el largo del tramo debe ser > 0')
+  const dx = hasta[0] - desde[0]
+  const dz = hasta[1] - desde[1]
+  const largo = Math.hypot(dx, dz)
+  if (largo === 0) return []
+  const cuantos = Math.ceil(largo / largoTramo - 1e-9)
+  const giro = -Math.atan2(dz, dx)
+  return Array.from({ length: cuantos }, (_, i) => ({
+    posicion: [desde[0] + (dx / largo) * largoTramo * i, 0, desde[1] + (dz / largo) * largoTramo * i] as Vec3,
+    giro,
+    escala: 1,
+  }))
 }

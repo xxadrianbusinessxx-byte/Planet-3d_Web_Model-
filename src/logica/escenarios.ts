@@ -26,11 +26,14 @@ export interface Escenario {
 
 const VISTA_FIJA: Vista = { posicion: [0, 7, 16], objetivo: [-3, 0, 0] }
 
+/** La cámara propia de una página que la necesita (D-33); las demás usan la fija del continente. */
+export type CamaraDePagina = Pick<Escenario, 'camara' | 'apertura'>
+
 /**
  * El escenario de cada continente. Hoy los tres son iguales (de prueba): lo que cambie entre
  * ellos es la pregunta `ambito-continentes`. La cámara mira un poco a la izquierda para dejar
  * sitio a la ficha, que va a la derecha.
  */
-export function escenarioDe(continente: Continente): Escenario {
-  return { continente, colorFondo: 0xffffff, colorSuelo: 0xf2f2f2, ladoSuelo: 60, camara: VISTA_FIJA, apertura: 40 }
+export function escenarioDe(continente: Continente, camaraPropia?: CamaraDePagina): Escenario {
+  return { continente, colorFondo: 0xffffff, colorSuelo: 0xf2f2f2, ladoSuelo: 60, camara: VISTA_FIJA, apertura: 40, ...camaraPropia }
 }

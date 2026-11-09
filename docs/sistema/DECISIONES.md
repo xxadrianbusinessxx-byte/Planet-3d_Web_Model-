@@ -447,3 +447,25 @@ Formato:
   con crédito y la página no lo liga a ninguna película (D-13).
 - **Revisar cuando:** la ficha (que aún dice «guayabera») se actualice, o se quiera variar la
   camisa entre Grinders (los colores de `colorDeGuayabera` hoy no se usan en el dibujo).
+
+## D-33 · La página Population imita una vista de playa a la altura de los ojos, con cámara propia
+- 2026-11-08 · persona (la vista, la cámara, qué entra); agente (la forma)
+- **Decisión:** (1) La página Population se compone **como la captura que mandó la persona**: el
+  Frank grande al frente a la izquierda, la ronda de 6 al centro, 2 palmeras con una hamaca, una
+  cerca de madera que lleva a la ronda, una roca grande a la derecha, un árbol en Y al frente a la
+  derecha, una islita al fondo, matas de pasto, cielo azul y el mar hasta el horizonte. Salen la
+  palapa y una hamaca. (2) **Una página puede traer su propia cámara fija** (campo opcional
+  `camara` de `PaginaAspecto`; `escenarioDe(continente, camaraPropia)`): Population la usa
+  (`VISTA_POBLACION`); las demás páginas no cambian. Es un cambio de lo común (`pagina.ts`,
+  `escenarios.ts`, `vista-continente.ts`) aprobado por la persona. (3) Las piezas (palmera, roca,
+  árbol, tramo de cerca) son **propias**, modeladas en Blender por el MCP (`src/modelos/playa.glb`,
+  584 triángulos, 18,5 KB). Los modelos de «MODELOS 3d» (hamaca, palmera, árbol y casino exportados
+  de Roblox Studio) **no entran**: vienen de la Toolbox de Roblox, cuya licencia solo cubre usarlos
+  dentro de Roblox; la carpeta pasó a datos/modelos-ia/roblox-toolbox-no-usar de la carpeta principal (fuera de git). El
+  casino queda fuera.
+- **Alternativas:** mantener la cámara fija (sin cielo ni horizonte); conservar la palapa y sumar;
+  usar los modelos de Roblox.
+- **Por qué:** lo pidió la persona («imitar esta vista»); la cámara fija mira hacia abajo y no deja
+  ver el cielo; los modelos de la Toolbox no tienen licencia para una web aparte (D-29).
+- **Revisar cuando:** otra página necesite su propia cámara, o haya modelos con licencia para la
+  hamaca o la cerca.

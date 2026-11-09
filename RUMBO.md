@@ -30,6 +30,7 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - **limites-modelo-ia** (F2) — ¿Cuánto pueden pesar y cuántos triángulos pueden tener una persona, un vehículo y un edificio IA? · persona
 - **paises-inventados** (F2) — ¿Cuántos países hay, cómo se llaman y dónde están (en la hoja, en los otros continentes)? · persona
 - **ciudad-presentacion** (F2) — ¿Cómo se ve la primera ciudad al acercarse: cuál, de qué tamaño y con qué estilo? · persona
+- **ficha-poblacion-camisa** (F2) — ¿Se cambia el texto de la ficha de Population, que aún dice «guayabera», ahora que llevan la camisa de planetas de Frank? · persona
 - **clima-inventado** (F2) — ¿Cómo es el clima del planeta y desde qué perspectiva se ve? · persona
 
 ## Pendientes abiertos (por riesgo)
@@ -53,8 +54,8 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 ## Últimos informes
 
 - 2026-11-08_f2-ramas-main-colaborativa.md
+- 2026-11-08_f2-poblacion-vista-playa.md
 - 2026-11-08_f2-poblacion-modelos-externos.md
 - 2026-11-08_f2-poblacion-grinders-playa.md
 - 2026-11-08_f2-poblacion-grinder-blender.md
-- 2026-11-08_f2-poblacion-blender-mcp.md
 <!-- FIN GENERADO -->
