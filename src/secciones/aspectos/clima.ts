@@ -1,6 +1,13 @@
-// Página «Clima» (sección clima de reparto.json, en The Mushroom; D-26). Hoy es de prueba: la ficha sin
-// descripción y un marcador. Aquí se arma lo que muestra este aspecto; su lógica va en
-// src/logica/.
-import { paginaDePrueba } from './pagina'
+// Página «Climate» (sección clima de reparto.json, en The Mushroom; D-25, D-26). Solo
+// orquesta: el texto y lo que se decide viven en src/logica/clima.ts; el dibujo, en
+// src/mundo/clima.ts.
+import { FICHA_CLIMA } from '../../logica/clima'
+import { armarClima } from '../../mundo/clima'
+import type { PaginaAspecto } from './pagina'
 
-export const PAGINA = paginaDePrueba('clima', 'Climate', '🌦', 0x90caf9)
+export const PAGINA: PaginaAspecto = {
+  id: 'clima',
+  pestana: 'Climate',
+  ficha: FICHA_CLIMA,
+  armar: armarClima,
+}
