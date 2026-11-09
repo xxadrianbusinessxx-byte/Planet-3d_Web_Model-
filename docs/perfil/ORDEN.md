@@ -96,12 +96,16 @@ nunca sin OK (R6).
    `ANCLAS_GRINDER` de `src/logica/poblacion.ts`); **animaciones** como acciones con nombre
    (`idle`, `fumar`, `moler`…) o traídas de Mixamo; exportar glTF binario (`.glb`) con
    animaciones.
-4. **Optimizar** con `@gltf-transform/cli` (se instala con npm al llegar el primer modelo):
-   `simplify` si sobran triángulos, luego
+4. **Optimizar** con `@gltf-transform/cli` (instalado en `package.json`; se usa con `npx`):
+   `simplify` si sobran triángulos. Si el modelo trae **anclas o esqueleto**, solo
+   `npx gltf-transform meshopt <bruto>.glb src/modelos/<nombre>.glb`: `optimize` aplana la
+   jerarquía, junta los materiales en una paleta y poda los vacíos, y las anclas se pierden.
+   Para objetos sueltos sin anclas,
    `optimize --compress meshopt --texture-compress webp --texture-size 512`. (Draco pesa menos
    pero decodifica más lento; KTX2 necesita la herramienta `ktx` instalada.)
-5. **Medir** su peso y triángulos contra su límite (pregunta `limites-modelo-ia`) y copiarlo a
-   `src/modelos/`. Se carga con `GLTFLoader` + `MeshoptDecoder`; las animaciones, con
+5. **Medir** su peso y triángulos contra su límite (`triangulos_personaje` y
+   `peso_personaje_kb` en `metricas.json`; vehículo y edificio, pregunta `limites-modelo-ia`)
+   y copiarlo a `src/modelos/`. Se carga con `GLTFLoader` + `MeshoptDecoder`; las animaciones, con
    `AnimationMixer`. Va **dentro** del HTML portátil (D-07): cada MB de modelo suma al peso.
 6. Medir la página con el modelo (fps y triángulos) como cualquier cambio (§P1).
 

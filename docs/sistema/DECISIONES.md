@@ -404,3 +404,24 @@ Formato:
 - **Por qué:** lo pidió la persona para que todo se vea mejor sin modelar a mano.
 - **Revisar cuando:** la otra persona quiera usarlo (cada quien lo instala en su PC) o el addon
   pida algo de pago.
+
+## D-31 · El cuerpo del Grinder es un modelo de Blender con esqueleto (límites de personaje)
+- 2026-11-08 · persona (límites, esqueleto, accesorios, sombreado); agente (la forma)
+- **Decisión:** (1) **Límite por personaje:** ≤ 3 000 triángulos y ≤ 150 KB ya optimizado
+  (`triangulos_personaje` y `peso_personaje_kb` en `metricas.json`; responde la parte de persona de
+  `limites-modelo-ia`). (2) El cuerpo del Grinder es `src/modelos/grinder.glb`, modelado en Blender
+  por el MCP (D-30), propio (D-13): **esqueleto** `torso`, `hombro-der` y `hombro-izq`, **sin
+  animaciones**; los brazos los sigue moviendo el código (`POSE_BRAZO`), con cada hueso de hombro
+  colgado de un pivote alineado con el cuerpo. (3) La guayabera, la gorra, el porro y el molinillo
+  **siguen por código** enganchados a las 4 anclas del modelo (D-28). (4) **Sombreado liso** con
+  colores planos. De forma, elegido por el agente: 1,99 m de alto, como el cuerpo por código, para
+  que los accesorios queden igual (no 1,8 m); la copa de la gorra sube de 0,62 a 0,8 de alto para
+  tapar la coronilla; los materiales del `.glb` se cambian en la página por Lambert lisos; el `.glb`
+  se decodifica la primera vez que se entra a la página.
+- **Alternativas:** esqueleto con clips `idle`, `fumar` y `moler` dentro del `.glb`; piezas rígidas
+  sin esqueleto; la ropa o todos los accesorios en Blender; 5 000 triángulos y 300 KB, o 1 500 y
+  80 KB; sombreado facetado.
+- **Por qué:** lo eligió la persona (las opciones recomendadas): cambia solo el cuerpo, la lógica de
+  la página queda igual y sobra margen de fps en gráficos integrados.
+- **Revisar cuando:** haga falta animar con clips, los accesorios pasen a Blender, o lleguen el
+  vehículo y el edificio (la otra mitad de `limites-modelo-ia`).

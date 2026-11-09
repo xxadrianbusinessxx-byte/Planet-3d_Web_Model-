@@ -40,19 +40,21 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - **licencia-modelos-ia** [bajo] — Anotar origen y licencia de cada modelo IA · agente
 - **plantilla-git-crear-proyecto** [bajo] — crear_proyecto.py con "git": true debe permitir .git y .gitignore en la raíz y sembrar un .gitignore · agente
 - **plantilla-respaldo-git** [bajo] — Con git, el respaldo debería poder ser un commit: respaldar.py, sesion.py y CLAUDE.md §4 solo conocen el .zip · agente
+- **plantilla-gltf-transform-anclas** [bajo] — Con anclas o esqueleto, optimizar con «gltf-transform meshopt», no con «optimize» · agente
 - **plantilla-medir-fps-playwright** [bajo] — Medir fps con Playwright: la pantalla completa se pide por CDP y se comprueba el tamaño del lienzo · agente
-- **plantilla-entrada-otras-ia** [bajo] — La plantilla debería traer un AGENTS.md de apunte a CLAUDE.md · agente
 
 ## Métricas de esta fase
 
 - `fps_ciudad` — Cuadros por segundo con la cámara en una ciudad · sin umbral: preguntar la meta
 - `carga_ciudad_s` — Tiempo en que aparece la ciudad al bajar desde el espacio · sin umbral: preguntar la meta
+- `triangulos_personaje` — Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona) · umbral 3000 triángulos (dura)
+- `peso_personaje_kb` — Peso del modelo de personaje más pesado en src/modelos/, ya optimizado (límite de R7 para una persona) · umbral 150 KB (dura)
 
 ## Últimos informes
 
 - 2026-11-08_f2-ramas-main-colaborativa.md
 - 2026-11-08_f2-poblacion-modelos-externos.md
 - 2026-11-08_f2-poblacion-grinders-playa.md
+- 2026-11-08_f2-poblacion-grinder-blender.md
 - 2026-11-08_f2-poblacion-blender-mcp.md
-- 2026-11-08_f2-novedades-repo.md
 <!-- FIN GENERADO -->

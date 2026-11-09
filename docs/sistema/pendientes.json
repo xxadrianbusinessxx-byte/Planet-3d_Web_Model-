@@ -107,8 +107,8 @@
     {
       "riesgo": "medio",
       "quien": "persona",
-      "respuesta": null,
-      "revisado": null,
+      "respuesta": "Persona (un personaje): ≤ 3 000 triángulos y 150 KB optimizado (Adrian, 2026-11-08; D-31; metricas.json triangulos_personaje y peso_personaje_kb). Falta el vehículo y el edificio.",
+      "revisado": "2026-11-08",
       "estado": "abierto",
       "id": "limites-modelo-ia",
       "tipo": "pregunta",
@@ -183,6 +183,20 @@
       "titulo": "Con git, el respaldo debería poder ser un commit: respaldar.py, sesion.py y CLAUDE.md §4 solo conocen el .zip",
       "detalle": "planeta-3d decidió solo git (D-04). sesion.py sigue avisando «Sin respaldos todavía» y el arranque §5.8 pide respaldar.py; aquí se resolvió con D-04 y un término en el GLOSARIO. Propuesta: respaldos.modo = \"git\" | \"zip\" | \"ambos\".",
       "destino": "scripts/respaldar.py"
+    },
+    {
+      "id": "plantilla-gltf-transform-anclas",
+      "tipo": "plantilla",
+      "division": "perfil",
+      "fase": "F2",
+      "titulo": "Con anclas o esqueleto, optimizar con «gltf-transform meshopt», no con «optimize»",
+      "detalle": "En planeta-3d, «gltf-transform optimize» aplanó la jerarquía (flatten), juntó los materiales en una textura de paleta (palette) y puede podar los vacíos (prune): las anclas de accesorios dejaban de colgar de sus huesos. «gltf-transform meshopt» solo comprime la geometría y respeta nodos, huesos y nombres de material (98 KB → 27 KB). Además, en three un nodo que se mueve con attach sale del subárbol del modelo: buscarlo por nombre desde la raíz común. Sirve a un futuro perfil de escena 3D web (docs/perfil/ORDEN.md §4).",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "docs/perfil/ORDEN.md",
+      "respuesta": null,
+      "revisado": null,
+      "estado": "abierto"
     },
     {
       "id": "plantilla-medir-fps-playwright",

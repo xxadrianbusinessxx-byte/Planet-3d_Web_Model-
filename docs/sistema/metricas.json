@@ -70,6 +70,26 @@
       "tipo": "dura",
       "fase": "F3",
       "instrumento": "Nivel 4 (docs/perfil/PRUEBAS.md): modo ?medir del HTML portátil, recorrido automático de 20 s con tráfico y personas, promedio de cuadros por segundo; esta laptop (i3-1215U, Intel UHD), navegador con ventana a pantalla completa, conectada a la corriente."
+    },
+    {
+      "id": "triangulos_personaje",
+      "titulo": "Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona)",
+      "unidad": "triángulos",
+      "peor_si": "sube",
+      "umbral": 3000,
+      "tipo": "dura",
+      "fase": "F2",
+      "instrumento": "npx gltf-transform inspect src/modelos/<personaje>.glb: columna glPrimitives de MESHES (suma de las mallas)."
+    },
+    {
+      "id": "peso_personaje_kb",
+      "titulo": "Peso del modelo de personaje más pesado en src/modelos/, ya optimizado (límite de R7 para una persona)",
+      "unidad": "KB",
+      "peor_si": "sube",
+      "umbral": 150,
+      "tipo": "dura",
+      "fase": "F2",
+      "instrumento": "Tamaño en disco de src/modelos/<personaje>.glb tras gltf-transform meshopt, en KB (1 KB = 1024 bytes)."
     }
   ]
 }
