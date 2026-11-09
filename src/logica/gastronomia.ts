@@ -75,6 +75,8 @@ export const COLORES_GASTRONOMIA = {
   brownie: 0x4a2a17,
   bandeja: 0xc3c9d1,
   hojita: 0x55c23a,
+  /** La hoja de humo: verde claro, que contraste con las palmas y el mar. */
+  humoHoja: 0xc4ff8a,
   smoothie: 0x7dff6a,
   vidrio: 0xd8f6ff,
   licuadoraBase: 0xff5c8a,
@@ -110,12 +112,13 @@ export const PUESTO = {
    * Alto del toldo en su borde de atrás y en el de adelante (cae hacia la cámara). Alto y con poco
    * voladizo: la cámara fija mira desde arriba y un toldo bajo le tapa la cara al chef.
    */
-  toldoAtras: 3.7,
+  toldoAtras: 3.5,
   toldoAdelante: 3.25,
   /** El toldo sobresale esto por delante del mostrador. */
   voladizo: 0.35,
   franjas: 9,
-  letrero: { alto: 0.95, ancho: 5, sobreElToldo: 0.55 },
+  /** El letrero va pegado al toldo: más arriba lo tapa la barra de pestañas. */
+  letrero: { alto: 0.95, ancho: 5, sobreElToldo: 0.12 },
 }
 
 /** Dónde va cada cosa (x, y, z). La y de lo que va sobre el mostrador es su alto. */
@@ -131,7 +134,8 @@ export const LUGARES = {
   chimenea: [-7.3, 0, -1.5] as Vec3,
   palmeras: [
     [-12.5, 0, -4.5],
-    [-10.5, 0, -6.2],
+    [-15, 0, -8.5], // lejos de la hoja de humo, que es verde
+
     [1.8, 0, -6.5],
   ] as Vec3[],
   banquitos: [
@@ -142,7 +146,7 @@ export const LUGARES = {
 }
 
 /** Escala de lo que de tamaño real se vería chico desde la cámara fija. */
-export const ESCALAS = { chef: 1.15, licuadora: 1.45, brownies: 1.25 }
+export const ESCALAS = { chef: 1.15, licuadora: 1.45, brownies: 1.25, bolsa: 1.35 }
 
 /** Alto de la boca de la chimenea (sale por encima del toldo). */
 export const ALTO_CHIMENEA = 4.2
@@ -155,7 +159,8 @@ export const SOPORTE_PIZZA = { alto: 1.25, radio: 0.95, inclinacion: 0.95 }
 export function puntosClave(): { nombre: string; punto: Vec3 }[] {
   const [cx, , cz] = PUESTO.centro
   const mitad = PUESTO.ancho / 2
-  const altoLetrero = PUESTO.toldoAtras + PUESTO.letrero.sobreElToldo + PUESTO.letrero.alto / 2
+  // El borde de arriba del letrero, que es lo primero que tapa la barra de pestañas.
+  const altoLetrero = PUESTO.toldoAtras + PUESTO.letrero.sobreElToldo + PUESTO.letrero.alto + 0.07
   const conAlto = (p: Vec3, y: number): Vec3 => [p[0], y, p[2]]
   return [
     { nombre: 'puesto izquierda', punto: [cx - mitad, 0, cz + PUESTO.fondo / 2] },
@@ -166,7 +171,7 @@ export function puntosClave(): { nombre: string; punto: Vec3 }[] {
     { nombre: 'pizza', punto: conAlto(LUGARES.pizza, SOPORTE_PIZZA.alto + SOPORTE_PIZZA.radio) },
     { nombre: 'pizza derecha', punto: [LUGARES.pizza[0] + SOPORTE_PIZZA.radio, SOPORTE_PIZZA.alto, LUGARES.pizza[2]] },
     { nombre: 'brownies', punto: conAlto(LUGARES.brownies, 0.9) },
-    { nombre: 'bolsa', punto: conAlto(LUGARES.bolsa, REBOTE.altura + 0.8) },
+    { nombre: 'bolsa', punto: conAlto(LUGARES.bolsa, REBOTE.altura + 0.9 * ESCALAS.bolsa) },
     { nombre: 'pizarrón', punto: conAlto(LUGARES.pizarron, PIZARRON.altoCentro + PIZARRON.alto / 2) },
     { nombre: 'licuadora', punto: conAlto(LUGARES.licuadora, PUESTO.altoMostrador + 1.2 * ESCALAS.licuadora) },
     { nombre: 'tacos', punto: conAlto(LUGARES.tacos, PUESTO.altoMostrador + VAPOR.subida) },
@@ -315,7 +320,7 @@ export const HUMO_COCINA = {
   quedarseS: 2.2,
   deshacerS: 1.2,
   /** Tamaño y opacidad de cada bocanada dentro de la hoja (chicas, para que se lean las 7 puntas). */
-  escalaHoja: 0.17,
+  escalaHoja: 0.2,
   opacidadHoja: 0.9,
 }
 
@@ -331,18 +336,22 @@ export const HOJA_HUMO = { base: [-9.0, 3.6, 0.5] as Vec3, radio: 1.8 }
 /** El largo relativo de cada folíolo, del de la izquierda (horizontal) al de la derecha. */
 export const FOLIOLOS = [0.5, 0.74, 0.92, 1, 0.92, 0.74, 0.5] as const
 
+/** Desde qué fracción del folíolo empiezan las bocanadas: más cerca de la base se amontonan. */
+export const DESDE_FRACCION = 0.35
+
 /**
  * Dónde va la bocanada `i` dentro de la hoja, relativo a su base, en unidades del radio:
- * `POR_FOLIOLO` por folíolo, repartidas hasta la punta; los folíolos en abanico de −90° a +90°.
+ * `POR_FOLIOLO` por folíolo, de `DESDE_FRACCION` hasta la punta; los folíolos en abanico de −90°
+ * a +90°. `fraccion` (0–1) dice qué tan cerca de la punta está.
  */
-export function puntoDeHoja(i: number): { x: number; y: number } {
+export function puntoDeHoja(i: number): { x: number; y: number; fraccion: number } {
   const total = FOLIOLOS.length * POR_FOLIOLO
   if (!Number.isInteger(i) || i < 0 || i >= total) throw new RangeError('hoja: índice fuera de rango')
   const foliolo = Math.floor(i / POR_FOLIOLO)
-  const fraccion = ((i % POR_FOLIOLO) + 1) / POR_FOLIOLO
+  const fraccion = DESDE_FRACCION + ((1 - DESDE_FRACCION) * (i % POR_FOLIOLO)) / (POR_FOLIOLO - 1)
   const angulo = (-90 + foliolo * 30) * (Math.PI / 180)
   const largo = FOLIOLOS[foliolo] * fraccion
-  return { x: Math.sin(angulo) * largo, y: Math.cos(angulo) * largo }
+  return { x: Math.sin(angulo) * largo, y: Math.cos(angulo) * largo, fraccion }
 }
 
 /** Qué tan formada está la hoja en el segundo `t` (0 = columna, 1 = hoja). */
@@ -381,7 +390,8 @@ export function humoCocina(t: number, i: number): { posicion: Vec3; escala: numb
   const mezcla = (x: number, y: number) => x + (y - x) * w
   return {
     posicion: [mezcla(columna[0], hoja[0]), mezcla(columna[1], hoja[1]), mezcla(columna[2], hoja[2])],
-    escala: mezcla(escalaColumna, h.escalaHoja),
+    // Más finas hacia la punta de cada folíolo, para que se lean las 7 puntas.
+    escala: mezcla(escalaColumna, h.escalaHoja * (0.65 + 0.5 * Math.sin(Math.PI * p.fraccion))),
     opacidad: mezcla(opacidadColumna, h.opacidadHoja),
     verde: w,
   }

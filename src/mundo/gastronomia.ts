@@ -461,6 +461,9 @@ function crearBolsa(escena: Scene): Group {
   const [x, , z] = LUGARES.bolsa
   const bolsa = new Group()
   bolsa.position.set(x, 0, z)
+  const escala = new Group()
+  escala.scale.setScalar(ESCALAS.bolsa)
+  bolsa.add(escala)
   const cuerpo = new Group() // el que se aplasta, con la base en y = 0
   cuerpo.add(malla(new BoxGeometry(0.62, 0.8, 0.26), lambert(C.bolsa), 0, 0.4, 0))
   cuerpo.add(malla(new BoxGeometry(0.66, 0.08, 0.12), lambert(0xd96a0a), 0, 0.82, 0))
@@ -478,7 +481,7 @@ function crearBolsa(escena: Scene): Group {
     ctx.fillText('chips', 128, 160, 230)
   })
   cuerpo.add(malla(new PlaneGeometry(0.5, 0.5), new MeshBasicMaterial({ map: etiqueta, transparent: true }), 0, 0.42, 0.135))
-  bolsa.add(cuerpo)
+  escala.add(cuerpo)
   escena.add(bolsa)
   // Unas papitas tiradas en la arena.
   const papa = new IcosahedronGeometry(0.09, 0)
@@ -564,7 +567,7 @@ function armar(escena: Scene): void {
   // El humo de la cocina: bolitas más sencillas (son muchas) que se tiñen de verde al formar la hoja.
   const bolitaHumo = new SphereGeometry(1, 7, 5)
   const blancoHumo = new Color(C.humo)
-  const verdeHoja = new Color(C.hojita)
+  const verdeHoja = new Color(C.humoHoja)
   const humo: Mesh[] = Array.from({ length: HUMO_COCINA.bocanadas }, () => {
     const m = new Mesh(bolitaHumo, new MeshBasicMaterial({ color: C.humo, transparent: true, opacity: 0, depthWrite: false }))
     escena.add(m)
