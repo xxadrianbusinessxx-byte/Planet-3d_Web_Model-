@@ -481,6 +481,7 @@ Formato:
   ver el cielo; los modelos de la Toolbox no tienen licencia para una web aparte (D-29).
 - **Revisar cuando:** otra página necesite su propia cámara, o haya modelos con licencia para la
   hamaca o la cerca.
+- **Corregida en parte por D-36** (el «Centro con manos y cartas» de esa carpeta sí entra: la persona lo declaró suyo).
 
 ## D-35 · Atardecer con sombras y arena con relieve y adornos en Population (sombras en el renderizador)
 - 2026-11-08 · persona (qué: relieve, decoración, sombras, atardecer); agente (la forma)
@@ -501,3 +502,30 @@ Formato:
   recálculos por segundo la página vuelve al tope de la pantalla.
 - **Revisar cuando:** otra página quiera luz propia (convendría que el molde de páginas la trajera,
   en vez de recolorear las del escenario), o la sombra se note a saltos.
+
+## D-36 · La página Lifestyle es Charlie's Casino: el centro que armó la persona, Grinders saltando y focos de antro (corrige D-34 en parte)
+- 2026-11-09 · persona (qué muestra, los modelos, los colores, el letrero); agente (la forma)
+- **Decisión:** (1) La página Lifestyle de The Leaf es el **interior de Charlie's Casino** y
+  **imita la captura que mandó la persona**: una pista redonda, dos manos gigantes a los lados y
+  cartas flotando, vista **de frente y desde arriba** con cámara propia (`VISTA_ESTILO_DE_VIDA`,
+  D-34). (2) **Los modelos son los de la persona:** «Centro con manos y cartas» de
+  `datos/modelos-ia/roblox-toolbox-no-usar/`, que la persona declaró **suyo, texturas incluidas**
+  («Todo es mío, texturas incluidas»). Esto **corrige D-34 solo para estas piezas**; el resto de esa
+  carpeta sigue fuera. El agente avisó antes que la malla de las manos y el arte de las cartas suelen
+  venir de la Toolbox o de internet. Revisado en Blender por el MCP (D-30): 8,5 m de pista, girado
+  hacia la cámara, solo textura de color. Optimizado con gltf-transform 4.5.1 (meshopt + WebP):
+  `src/modelos/casino.glb`, 1 620 triángulos, 372 KB. (3) **12 Grinders (Frank, D-33) saltan con
+  los brazos arriba**, a 0,55 de su tamaño, en anillos sin encimarse (`lugaresEnPista`).
+  (4) **«Arcoíris de antro»:** pista y fondo oscuros, 4 focos que cambian de color cada 0,9 s y
+  barren la pista con su cono de luz visible. (5) **Neón «Charlie's Casino»** arriba, donde la
+  captura tenía un símbolo blanco; parpadea como neón viejo. (6) Se quedan las cartas del modelo
+  (no los palos de hoja, hongo y diamante que se habían elegido antes de pedir sus modelos).
+  (7) El texto de la ficha es un **borrador del agente, pendiente del visto bueno** de la persona.
+- **Alternativas:** escena de playa con sound system; casino con tragamonedas y ruleta; recrear las
+  piezas en Blender a partir de la captura sin usar su modelo; colores rojos como la captura o
+  rasta; letrero «OPEN 48/7»; bailarines propios en vez de Frank.
+- **Por qué:** lo pidió la persona («tiene que dar esta perspectiva y animaciones de los personajes
+  saltando con luces de colores»; «Usa los modelados sacados de roblox yo los hice»).
+- **Revisar cuando:** aparezca alguna duda sobre el origen de las manos o las cartas (se cambian por
+  piezas propias sin tocar la lógica), o la página baje de 60 fps (hoy 66–69: los focos y los 12
+  cuerpos con esqueleto no dejan llegar al tope de 75).

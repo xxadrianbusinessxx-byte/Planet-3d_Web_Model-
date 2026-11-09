@@ -1,4 +1,4 @@
-// La página «Lifestyle» (D-34) vuelta escena de three: el antro oscuro, el centro del casino
+// La página «Lifestyle» (D-36) vuelta escena de three: el antro oscuro, los Grinders que saltan, el centro del casino
 // (src/modelos/casino.glb: pista, manos gigantes y cartas, el modelo que armó la persona), los
 // focos de colores con su cono de luz visible, el neón «Charlie's Casino» y lo que se mueve. Lo
 // que se decide está en src/logica/estilo-de-vida.ts.
@@ -10,11 +10,14 @@ import {
   DoubleSide,
   Fog,
   GridHelper,
+  Group,
   HemisphereLight,
   Light,
+  type Material,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
+  MeshPhongMaterial,
   type MeshStandardMaterial,
   Object3D,
   PlaneGeometry,
@@ -25,12 +28,24 @@ import {
 } from 'three'
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { clone as clonarConEsqueleto } from 'three/addons/utils/SkeletonUtils.js'
+import urlFrank from '../modelos/alien-frank.glb?url'
 import urlCasino from '../modelos/casino.glb?url'
-import { blancoDeFoco, CARTAS, CASINO, colorDeFoco, FOCOS, NEON, neonEncendido } from '../logica/estilo-de-vida'
+import {
+  blancoDeFoco,
+  brazosBailando,
+  CARTAS,
+  CASINO,
+  colorDeFoco,
+  FOCOS,
+  GRINDERS_PISTA,
+  type LugarEnPista,
+  lugaresEnPista,
+  NEON,
+  neonEncendido,
+  salto,
+} from '../logica/estilo-de-vida'
 import { mostrarAviso } from './navegador'
-
-/** Las piezas que el dibujo necesita del .glb. */
-const PIEZAS = ['pista', 'manos', 'cartas'] as const
 
 /** Apaga casi del todo el escenario común (fondo y suelo blancos, luz pareja) de esta escena. */
 function oscurecer(escena: Scene): void {
@@ -42,25 +57,80 @@ function oscurecer(escena: Scene): void {
   }
 }
 
-/** Carga el centro del casino; cada material pasa a Lambert (más barato) con su misma textura. */
-async function cargarCasino(): Promise<Object3D> {
-  const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(urlCasino)
-  const cambiados = new Map<string, MeshLambertMaterial>()
+/**
+ * Carga un .glb (embebido en el HTML portátil, D-07), cambia cada material por el que diga
+ * `cambiar` (una copia por nombre) y comprueba que traiga los nodos que el dibujo necesita.
+ */
+async function cargarGlb(url: string, archivo: string, nodos: readonly string[], cambiar: (m: MeshStandardMaterial) => Material): Promise<Object3D> {
+  const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(url)
+  const cambiados = new Map<string, Material>()
+  const cambio = (m: MeshStandardMaterial): Material => {
+    let n = cambiados.get(m.name)
+    if (!n) {
+      n = cambiar(m)
+      cambiados.set(m.name, n)
+    }
+    return n
+  }
   gltf.scene.traverse((o) => {
-    if (!(o instanceof Mesh)) return
-    const lista = Array.isArray(o.material) ? o.material : [o.material]
-    const nuevos = lista.map((m: MeshStandardMaterial) => {
-      let n = cambiados.get(m.name)
-      if (!n) {
-        n = new MeshLambertMaterial({ map: m.map, color: m.color, side: DoubleSide })
-        cambiados.set(m.name, n)
-      }
-      return n
-    })
-    o.material = Array.isArray(o.material) ? nuevos : nuevos[0]
+    if (o instanceof Mesh) o.material = Array.isArray(o.material) ? o.material.map(cambio) : cambio(o.material)
   })
-  for (const p of PIEZAS) if (!gltf.scene.getObjectByName(p)) throw new Error(`casino.glb: falta el nodo «${p}»`)
+  for (const n of nodos) if (!gltf.scene.getObjectByName(n)) throw new Error(`${archivo}: falta el nodo «${n}»`)
   return gltf.scene
+}
+
+/** El centro del casino (pista, manos y cartas), en Lambert (más barato) con sus texturas. */
+function cargarCasino(): Promise<Object3D> {
+  return cargarGlb(urlCasino, 'casino.glb', ['pista', 'manos', 'cartas'], (m) => new MeshLambertMaterial({ map: m.map, color: m.color, side: DoubleSide }))
+}
+
+/**
+ * El cuerpo de Frank, el Grinder de Population (src/modelos/alien-frank.glb, D-33): los mismos
+ * materiales que allá (Lambert y ojos brillantes). Cada página carga su copia.
+ */
+function cargarFrank(): Promise<Object3D> {
+  return cargarGlb(urlFrank, 'alien-frank.glb', ['hombro-der', 'hombro-izq'], (m) =>
+    m.name === 'ojo'
+      ? new MeshPhongMaterial({ color: m.color, shininess: 90, specular: 0x8899aa })
+      : new MeshLambertMaterial({ color: m.color, map: m.map }),
+  ).then((escena) => {
+    // Con los brazos en alto se sale de su caja de reposo: que no se recorte.
+    escena.traverse((o) => (o.frustumCulled = false))
+    return escena
+  })
+}
+
+interface Bailarin {
+  raiz: Object3D
+  brazos: { der: Object3D; izq: Object3D }
+  fase: number
+}
+
+/**
+ * Un Frank que baila: una copia con esqueleto donde cada hueso de hombro cuelga de un pivote
+ * alineado con el cuerpo, para abrir los brazos hacia afuera girando en z (el derecho hacia -x),
+ * como en Population.
+ */
+function crearBailarin(molde: Object3D, lugar: LugarEnPista): Bailarin {
+  const cuerpo = new Group()
+  cuerpo.add(clonarConEsqueleto(molde))
+  cuerpo.updateMatrixWorld(true)
+  const brazo = (lado: 'der' | 'izq'): Object3D => {
+    const hueso = cuerpo.getObjectByName(`hombro-${lado}`)
+    if (!hueso) throw new Error(`alien-frank.glb: falta el nodo «hombro-${lado}»`)
+    const hombro = new Group()
+    hueso.getWorldPosition(hombro.position) // el cuerpo aún está en el origen
+    cuerpo.add(hombro)
+    hombro.updateMatrixWorld()
+    hombro.attach(hueso)
+    return hombro
+  }
+  const brazos = { der: brazo('der'), izq: brazo('izq') }
+  const c = CASINO.posicion
+  cuerpo.position.set(c[0] + lugar.x, CASINO.alturaPista, c[2] + lugar.z)
+  cuerpo.rotation.y = (lugar.fase - 0.5) * 0.7 // casi de frente a la cámara, cada uno un poco distinto
+  cuerpo.scale.setScalar(GRINDERS_PISTA.escala)
+  return { raiz: cuerpo, brazos, fase: lugar.fase }
 }
 
 /** El letrero de neón: el texto dibujado con resplandor en un lienzo, sobre un plano. */
@@ -143,6 +213,18 @@ export function armarEstiloDeVida(escena: Scene): void {
     })
     .catch((e: unknown) => mostrarAviso(`Lifestyle: could not load the casino (${e instanceof Error ? e.message : String(e)})`))
 
+  // Los Grinders que saltan en la pista (D-36), con los brazos arriba.
+  const bailarines: Bailarin[] = []
+  cargarFrank()
+    .then((molde) => {
+      for (const lugar of lugaresEnPista(GRINDERS_PISTA.cuantos)) {
+        const b = crearBailarin(molde, lugar)
+        escena.add(b.raiz)
+        bailarines.push(b)
+      }
+    })
+    .catch((e: unknown) => mostrarAviso(`Lifestyle: could not load the Grinders (${e instanceof Error ? e.message : String(e)})`))
+
   const { neon, luz: luzNeon } = crearNeon()
   escena.add(neon, luzNeon)
   const focos = Array.from({ length: FOCOS.cuantos }, (_, i) => crearFoco(escena, i, centro))
@@ -166,6 +248,13 @@ export function armarEstiloDeVida(escena: Scene): void {
     const prendido = neonEncendido(t)
     ;(neon.material as MeshBasicMaterial).opacity = prendido ? 1 : 0.18
     luzNeon.intensity = prendido ? 30 : 3
+
+    for (const b of bailarines) {
+      b.raiz.position.y = CASINO.alturaPista + salto(t, b.fase)
+      const brazos = brazosBailando(t, b.fase)
+      b.brazos.der.rotation.z = -brazos.der
+      b.brazos.izq.rotation.z = brazos.izq
+    }
 
     if (cartas) {
       // En unidades del .glb: el vaivén se divide entre la escala para que sea en metros.

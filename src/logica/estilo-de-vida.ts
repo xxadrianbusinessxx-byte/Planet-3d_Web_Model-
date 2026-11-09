@@ -1,9 +1,10 @@
-// La página «Lifestyle» de The Leaf (sección estilo-de-vida, D-34): Charlie's Casino, abierto
+// La página «Lifestyle» de The Leaf (sección estilo-de-vida, D-36): Charlie's Casino, abierto
 // 48/7. Una pista redonda con dos manos gigantes que reparten cartas por el aire (el modelo que
 // armó la persona, src/modelos/casino.glb), focos de antro de todos los colores que barren la
 // pista, un neón «Charlie's Casino» que parpadea y Grinders que saltan en la pista. Aquí está lo
 // que se decide (dónde va cada cosa, cómo cambian las luces, cómo saltan, el texto de la ficha);
 // src/mundo/estilo-de-vida.ts lo vuelve objetos de three.
+import type { CamaraDePagina } from './escenarios'
 import type { Ficha } from './fichas'
 
 type Vec3 = [number, number, number]
@@ -34,23 +35,18 @@ export const FICHA_ESTILO_DE_VIDA: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' 
   lema: "Bet low, jump high: at Charlie's Casino everybody leaves happy. Eventually.",
 }
 
-/**
- * Dónde va el centro del casino (la pista) y cómo se ve. La cámara fija del continente mira a
- * [-3, 0, 0] desde [0, 7, 16]; la pista va algo detrás de ese punto para que las cartas de arriba
- * quepan en la pantalla, como en la captura de la persona.
- */
+/** Escala del .glb del casino (su pista mide 8,5 m de lado a lado). */
+const ESCALA_CASINO = 0.8
+
+/** Dónde va el centro del casino (la pista) y cómo se ve. */
 export const CASINO = {
   /** Centro de la cara de arriba de la pista en el .glb (que la trae en el origen). */
-  posicion: [-3, 0, -1] as Vec3,
-  /**
-   * Escala del .glb (la pista mide 8,5 m): la cámara fija mira hacia abajo y su borde de arriba
-   * corta lo alto, así que el conjunto se achica para que quepan las manos y las cartas.
-   */
-  escala: 0.7,
+  posicion: [0, 0, 0] as Vec3,
+  escala: ESCALA_CASINO,
   /** Alto de la pista sobre el suelo: el .glb la trae con la cara de arriba en y = 0. */
   alturaPista: 0.2,
-  /** Radio útil de la pista ya escalada. */
-  radioPista: 4.25 * 0.7,
+  /** Radio de la pista ya escalada. */
+  radioPista: 4.25 * ESCALA_CASINO,
   colorFondo: 0x07040d,
   colorSuelo: 0x120b1c,
   /** Cuánto se apagan las luces blancas del escenario común para que manden los focos. */
@@ -58,19 +54,26 @@ export const CASINO = {
 }
 
 /**
- * El neón «Charlie's Casino» (en la captura había un símbolo blanco arriba). Con la cámara fija,
- * arriba al centro queda detrás de las pestañas: va colgado a la izquierda, girado hacia la
- * cámara (`giro`, rad sobre el eje vertical).
+ * La cámara propia de la página (D-34), como la captura de la persona: de frente y desde arriba,
+ * con la pista abajo, las manos a los lados y el neón arriba. Mira a la derecha de la pista para
+ * que la ficha, que va a la derecha, no la tape.
  */
+export const VISTA_ESTILO_DE_VIDA: CamaraDePagina = {
+  camara: { posicion: [2.4, 7.6, 13.5], objetivo: [2.4, 2.4, 0] },
+  apertura: 40,
+}
+
+/** El neón «Charlie's Casino», arriba y detrás de la pista (donde la captura tenía un símbolo blanco). */
 export const NEON = {
   texto: "Charlie's Casino",
-  posicion: [-10.5, 3.4, -5] as Vec3,
-  giro: 0.45,
-  ancho: 6,
+  posicion: [0, 5.5, -4] as Vec3,
+  /** Giro sobre el eje vertical (rad); 0 = de frente a la cámara. */
+  giro: 0,
+  ancho: 6.5,
   color: '#ff4fd8',
 }
 
-/** Paleta de antro: los focos van pasando por estos tonos (D-34: «arcoíris de antro»). */
+/** Paleta de antro: los focos van pasando por estos tonos (D-36: «arcoíris de antro»). */
 export const COLORES_ANTRO = [0xff2bd6, 0x2b9bff, 0x31ff7a, 0xffe42b, 0xa23bff, 0xff5a2b] as const
 
 /**
@@ -81,7 +84,7 @@ export const COLORES_ANTRO = [0xff2bd6, 0x2b9bff, 0x31ff7a, 0xffe42b, 0xa23bff, 
 export const FOCOS = {
   cuantos: 4,
   altura: 8,
-  anillo: [3, 2] as [number, number],
+  anillo: [3.5, 2.5] as [number, number],
   potencia: 260,
   apertura: 0.3,
   cambioS: 0.9,
@@ -139,24 +142,57 @@ export function salto(t: number, fase: number): number {
 }
 
 /**
- * Dónde se para cada Grinder en la pista: anillos alrededor del centro, sin salirse del borde
- * (deja `margen` metros). Devuelve [x, z] relativos al centro y la fase de su salto.
+ * Los Grinders de la pista (D-36): cuántos, de qué tamaño (el modelo de Frank mide 1,99 m), qué
+ * tanto se separan entre sí y del borde (m), y cómo bailan los brazos: arriba (rad desde el
+ * reposo, hacia afuera) y cuánto los agitan al ritmo del salto.
  */
-export function lugaresEnPista(cuantos: number, radio: number = CASINO.radioPista, margen = 0.9): { x: number; z: number; fase: number }[] {
+export const GRINDERS_PISTA = { cuantos: 12, escala: 0.55, separacion: 1.1, margen: 0.5, brazosArriba: 2.5, agitar: 0.35 }
+
+export interface LugarEnPista {
+  x: number
+  z: number
+  /** Desfase de su salto, en vueltas (0 a 1). */
+  fase: number
+}
+
+/**
+ * Dónde se para cada Grinder en la pista: uno al centro y anillos cada `separacion` metros,
+ * cada anillo con los que quepan sin encimarse, sin salirse del borde (deja `margen`).
+ * Devuelve [x, z] relativos al centro. Si no caben todos, lanza un error.
+ */
+export function lugaresEnPista(
+  cuantos: number,
+  radio: number = CASINO.radioPista,
+  margen: number = GRINDERS_PISTA.margen,
+  separacion: number = GRINDERS_PISTA.separacion,
+): LugarEnPista[] {
   if (!Number.isInteger(cuantos) || cuantos < 1) throw new RangeError('pista: cuantos debe ser un entero ≥ 1')
+  if (!(separacion > 0)) throw new RangeError('pista: la separación debe ser > 0')
   if (!(radio > margen)) throw new RangeError('pista: el radio debe ser mayor que el margen')
   const util = radio - margen
-  const lista: { x: number; z: number; fase: number }[] = [{ x: 0, z: 0, fase: 0 }]
-  // Anillos de 5, 7, 9… hasta completar; cada anillo más afuera.
-  let anillo = 1
-  while (lista.length < cuantos) {
-    const enAnillo = Math.min(3 + anillo * 2 + 2, cuantos - lista.length)
-    const r = util * Math.min(1, anillo / 2)
+  const lista: LugarEnPista[] = [{ x: 0, z: 0, fase: 0 }]
+  for (let anillo = 1; lista.length < cuantos; anillo++) {
+    const r = anillo * separacion
+    if (r > util + 1e-9) throw new RangeError(`pista: no caben ${cuantos} Grinders`)
+    // En un anillo de radio r caben los que dejan una cuerda ≥ separación entre vecinos.
+    const caben = Math.floor(Math.PI / Math.asin(Math.min(1, separacion / (2 * r))) + 1e-9) // sin perder uno por redondeo
+    const enAnillo = Math.min(caben, cuantos - lista.length)
     for (let k = 0; k < enAnillo; k++) {
       const a = (k / enAnillo) * Math.PI * 2 + anillo * 0.4
       lista.push({ x: r * Math.cos(a), z: r * Math.sin(a), fase: modulo(lista.length * 0.37, 1) })
     }
-    anillo++
   }
   return lista
+}
+
+/**
+ * Los brazos de un Grinder que salta: arriba y agitándose al ritmo de su salto. Devuelve cuánto
+ * se abre cada brazo hacia afuera desde el reposo (rad); el derecho y el izquierdo van a contratiempo.
+ */
+export function brazosBailando(t: number, fase: number): { der: number; izq: number } {
+  const a = (t * SALTO.porSegundo + fase) * Math.PI * 2
+  return {
+    der: GRINDERS_PISTA.brazosArriba + GRINDERS_PISTA.agitar * Math.sin(a),
+    izq: GRINDERS_PISTA.brazosArriba + GRINDERS_PISTA.agitar * Math.sin(a + Math.PI),
+  }
 }

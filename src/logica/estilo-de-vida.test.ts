@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import {
   blancoDeFoco,
+  brazosBailando,
   CASINO,
   COLORES_ANTRO,
   colorDeFoco,
   FICHA_ESTILO_DE_VIDA,
   FOCOS,
+  GRINDERS_PISTA,
   lugaresEnPista,
   neonEncendido,
   salto,
@@ -81,25 +83,44 @@ describe('salto', () => {
 })
 
 describe('lugaresEnPista', () => {
-  it('rechaza cantidades y radios inválidos', () => {
+  it('rechaza cantidades, radios y separaciones inválidos', () => {
     expect(() => lugaresEnPista(0)).toThrow(RangeError)
     expect(() => lugaresEnPista(2.5)).toThrow(RangeError)
     expect(() => lugaresEnPista(3, 0.5, 0.9)).toThrow(RangeError)
+    expect(() => lugaresEnPista(3, 3, 0.5, 0)).toThrow(RangeError)
   })
   it('con uno, va al centro', () => {
     expect(lugaresEnPista(1)).toEqual([{ x: 0, z: 0, fase: 0 }])
   })
+  it('si no caben, lo dice en vez de encimarlos', () => {
+    expect(() => lugaresEnPista(200)).toThrow(/no caben/)
+  })
   it('da justo los pedidos, dentro de la pista y sin encimarse', () => {
-    for (const n of [2, 8, 12, 20]) {
+    const { margen, separacion } = GRINDERS_PISTA
+    for (const n of [2, 7, GRINDERS_PISTA.cuantos, 19]) {
       const l = lugaresEnPista(n)
       expect(l).toHaveLength(n)
       for (const p of l) {
-        expect(Math.hypot(p.x, p.z)).toBeLessThanOrEqual(CASINO.radioPista - 0.9 + 1e-9)
+        expect(Math.hypot(p.x, p.z)).toBeLessThanOrEqual(CASINO.radioPista - margen + 1e-9)
         expect(p.fase).toBeGreaterThanOrEqual(0)
         expect(p.fase).toBeLessThan(1)
       }
       for (let i = 0; i < l.length; i++)
-        for (let j = i + 1; j < l.length; j++) expect(Math.hypot(l[i].x - l[j].x, l[i].z - l[j].z)).toBeGreaterThan(0.8)
+        for (let j = i + 1; j < l.length; j++)
+          expect(Math.hypot(l[i].x - l[j].x, l[i].z - l[j].z)).toBeGreaterThanOrEqual(separacion - 1e-9)
+    }
+  })
+})
+
+describe('brazosBailando', () => {
+  it('los brazos van arriba y a contratiempo, dentro de su agitar', () => {
+    for (let t = 0; t < 5; t += 0.07) {
+      const b = brazosBailando(t, 0.2)
+      for (const v of [b.der, b.izq]) {
+        expect(v).toBeGreaterThanOrEqual(GRINDERS_PISTA.brazosArriba - GRINDERS_PISTA.agitar - 1e-9)
+        expect(v).toBeLessThanOrEqual(GRINDERS_PISTA.brazosArriba + GRINDERS_PISTA.agitar + 1e-9)
+      }
+      expect(b.der - GRINDERS_PISTA.brazosArriba).toBeCloseTo(-(b.izq - GRINDERS_PISTA.brazosArriba))
     }
   })
 })

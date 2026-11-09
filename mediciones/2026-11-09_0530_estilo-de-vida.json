@@ -1,0 +1,19 @@
+{
+  "fecha": "2026-11-09T05:30",
+  "tipo": "rendimiento",
+  "comando": "npm run build; node medir_lifestyle.mjs dist/index.html (script de esta sesión, no está en scripts/): msedge a pantalla completa por CDP (R9), clic en el planeta, en The Leaf y en la pestaña Lifestyle, 3 s de espera y 10 s de requestAnimationFrame; triángulos de window.__planeta.triangulos",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157; lienzo 1920×1080; Blender abierto; página Lifestyle con 12 Frank, 4 focos, neón y casino.glb (D-36)",
+  "valores": {
+    "peso_html_mb": 1.42
+  },
+  "detalle": {
+    "fps_pagina_estilo_de_vida": [67.7, 66.6, 66.3, 68.7],
+    "percentil_95_ms": [26.7, 26.7, 26.7, 26.6],
+    "cuadro_mas_lento_ms": [40.2, 40.1, 40.1, 40.1],
+    "triangulos_pagina_estilo_de_vida": 96668,
+    "casino_glb": "src/modelos/casino.glb: 1 620 triángulos (manos 1 204, cartas 224, pista 192), 372 KB",
+    "antes": "página de prueba (marcador); HTML 0,61 MB; vista espacial 71,7 fps (2026-11-08_2354_rendimiento.json)",
+    "vista_espacial_despues": "69,8 fps, 0,90 s (2026-11-09_0528_rendimiento.json)",
+    "nota": "Una de las 6 corridas falló por el clic en The Leaf (la cámara aún viajaba); se repitió. Por debajo del tope de 75: la página gasta GPU (4 focos + 12 cuerpos con esqueleto)."
+  }
+}

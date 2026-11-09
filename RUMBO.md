@@ -53,9 +53,9 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 ## Últimos informes
 
+- 2026-11-09_f2-estilo-de-vida-casino.md
 - 2026-11-08_f2-ramas-main-colaborativa.md
 - 2026-11-08_f2-poblacion-vista-playa.md
 - 2026-11-08_f2-poblacion-modelos-externos.md
 - 2026-11-08_f2-poblacion-grinders-playa.md
-- 2026-11-08_f2-poblacion-grinder-blender.md
 <!-- FIN GENERADO -->
