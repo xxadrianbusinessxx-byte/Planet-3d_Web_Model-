@@ -58,11 +58,14 @@ import {
   gemaEnCinta,
   GEMAS_CINTA,
   golpe,
+  LETRERITO,
   LETRERO,
   LETRERO_POS,
   LUCES,
   MINERO,
   MONTON_FICHAS,
+  MONTON_FRENTE,
+  piezaDelMonton,
   MURO,
   PEPITAS,
   PIZARRON,
@@ -311,14 +314,18 @@ function crearMinero(escena: Scene): Minero {
   const cabeza = new Group()
   cabeza.position.set(0, 1.75, 0)
   cabeza.add(malla(new SphereGeometry(0.36, 10, 8), piel, 0, 0.3, 0))
-  const ojo = new SphereGeometry(0.1, 6, 5)
-  const pupila = new SphereGeometry(0.045, 5, 3)
+  // Ojos grandes y saltones (blancos sin sombra, para que se lean desde la cámara alta).
+  const ojo = new SphereGeometry(0.14, 8, 6)
+  const pupila = new SphereGeometry(0.06, 6, 4)
   for (const lado of [-1, 1]) {
-    cabeza.add(malla(ojo, lambert(0xffffff), lado * 0.13, 0.36, 0.3))
-    cabeza.add(malla(pupila, lambert(0x1a1a1a), lado * 0.13, 0.36, 0.4))
+    cabeza.add(malla(ojo, new MeshBasicMaterial({ color: 0xffffff }), lado * 0.15, 0.36, 0.3))
+    cabeza.add(malla(pupila, new MeshBasicMaterial({ color: 0x111111 }), lado * 0.15, 0.36, 0.44))
   }
-  cabeza.add(malla(new SphereGeometry(0.1, 6, 5), lambert(0xc98a8a), 0, 0.24, 0.37))
-  cabeza.add(malla(new BoxGeometry(0.32, 0.07, 0.07), lambert(0x3b2a1e), 0, 0.14, 0.33))
+  cabeza.add(malla(new SphereGeometry(0.12, 6, 5), lambert(0xd98a8a), 0, 0.22, 0.38))
+  // Bigotón de minero.
+  const bigote = malla(new BoxGeometry(0.42, 0.09, 0.08), lambert(0x3b2a1e), 0, 0.12, 0.33)
+  bigote.rotation.x = -0.2
+  cabeza.add(bigote)
   // El casco amarillo con su ala y la linterna, que echa un cono de luz hacia la roca.
   cabeza.add(malla(new SphereGeometry(0.4, 10, 5, 0, Math.PI * 2, 0, Math.PI / 2), lambert(C.casco), 0, 0.42, 0))
   cabeza.add(malla(new CylinderGeometry(0.48, 0.48, 0.05, 10), lambert(C.casco), 0, 0.43, 0.04))
@@ -554,6 +561,51 @@ function crearMontonDeFichas(escena: Scene, geo: BufferGeometry, cara: CanvasTex
   }
 }
 
+/** El montón de tesoro del frente con su letrerito; devuelve su destello. */
+function crearMontonFrente(escena: Scene, octa: BufferGeometry, geoFicha: BufferGeometry, cara: CanvasTexture, destelloTex: CanvasTexture): Sprite {
+  const pepita = new DodecahedronGeometry(0.2, 0)
+  const oro = gema(C.oro, 0.35)
+  const coloresGema = [C.diamanteRosa, C.turquesa, C.zafiro, C.amatista, C.veta]
+  for (let i = 0; i < MONTON_FRENTE.piezas; i++) {
+    const p = piezaDelMonton(i)
+    let m: Mesh
+    if (p.tipo === 'pepita') m = malla(pepita, oro, ...p.posicion)
+    else if (p.tipo === 'gema') {
+      m = malla(octa, gema(coloresGema[i % coloresGema.length], 0.4), ...p.posicion)
+      m.scale.setScalar(1.6)
+    } else m = malla(geoFicha, materialesFicha(C[COLORES_FICHAS[i % COLORES_FICHAS.length]], cara), ...p.posicion)
+    m.rotation.set(p.giro * 0.3, p.giro, p.tipo === 'ficha' ? 0.5 : p.giro * 0.2)
+    escena.add(m)
+  }
+  // El letrerito clavado al lado.
+  const [x, , z] = LETRERITO.posicion
+  const madera = lambert(C.madera)
+  escena.add(malla(new BoxGeometry(0.08, LETRERITO.alto, 0.08), madera, x, LETRERITO.alto / 2, z))
+  const textura = texturaDeCanvas(512, 200, (ctx) => {
+    ctx.fillStyle = '#fff6dc'
+    ctx.fillRect(0, 0, 512, 200)
+    ctx.strokeStyle = hex(C.maderaOscura)
+    ctx.lineWidth = 10
+    ctx.strokeRect(5, 5, 502, 190)
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillStyle = hex(C.carrito)
+    ctx.font = `bold 72px ${FUENTE}`
+    ctx.fillText(LETRERITO.texto, 256, 78, 480)
+    ctx.fillStyle = '#333333'
+    ctx.font = `italic 44px "Segoe UI", sans-serif`
+    ctx.fillText(LETRERITO.nota, 256, 152, 480)
+  })
+  const tabla = malla(new PlaneGeometry(1.4, 0.55), new MeshBasicMaterial({ map: textura }), x, LETRERITO.alto, z + 0.05)
+  tabla.rotation.set(-0.35, -0.15, 0.06)
+  escena.add(tabla)
+  const s = new Sprite(new SpriteMaterial({ map: destelloTex, transparent: true, depthWrite: false, depthTest: false }))
+  s.position.set(MONTON_FRENTE.centro[0] + 0.2, MONTON_FRENTE.alto + 0.35, MONTON_FRENTE.centro[2])
+  s.renderOrder = 5
+  escena.add(s)
+  return s
+}
+
 // ---------------------------------------------------------------- todo junto
 
 export function armarRecursosNaturales(escena: Scene): void {
@@ -588,6 +640,7 @@ function armar(escena: Scene): void {
   const cara = texturaFicha()
   const geoFicha = new CylinderGeometry(FICHAS.radio, FICHAS.radio, 0.075, 12)
   crearMontonDeFichas(escena, geoFicha, cara)
+  const destelloFrente = crearMontonFrente(escena, octa, geoFicha, cara, destelloTex)
 
   // Lo que sale de la roca en cada golpe.
   const geoChispa = new TetrahedronGeometry(0.07, 0)
@@ -681,6 +734,9 @@ function armar(escena: Scene): void {
       s.material.opacity = b
       s.material.rotation = t * 0.8
     })
+    const bf = destello(t, 1.6)
+    destelloFrente.scale.setScalar(0.05 + 1.8 * bf)
+    destelloFrente.material.opacity = bf
     flotantes.forEach((m, i) => {
       const f = flotante(t, i)
       m.position.set(...f.posicion)

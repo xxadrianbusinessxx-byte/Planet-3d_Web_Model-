@@ -35,6 +35,9 @@ import {
   RECURSOS,
   RIELES,
   CINTA,
+  LETRERITO,
+  MONTON_FRENTE,
+  piezaDelMonton,
 } from './recursos-naturales'
 
 describe('ciclo', () => {
@@ -244,6 +247,30 @@ describe('brillo de los diamantes', () => {
     expect(DIAMANTES_GIGANTES.map((d) => d.color)).toEqual(['diamanteRosa', 'diamanteAzul', 'diamanteBlanco'])
     const frente = MURO.bancos[0].frenteZ
     for (const d of DIAMANTES_GIGANTES) expect(d.posicion[2]).toBeLessThan(frente)
+  })
+})
+
+describe('el montón del frente', () => {
+  it('rechaza índices inválidos', () => {
+    expect(() => piezaDelMonton(-1)).toThrow(RangeError)
+    expect(() => piezaDelMonton(MONTON_FRENTE.piezas)).toThrow(RangeError)
+  })
+  it('es un cono: las primeras piezas arriba al centro y todas dentro de su radio y sobre el suelo', () => {
+    const [cx, , cz] = MONTON_FRENTE.centro
+    let antes = Infinity
+    for (let i = 0; i < MONTON_FRENTE.piezas; i++) {
+      const p = piezaDelMonton(i)
+      expect(Math.hypot(p.posicion[0] - cx, p.posicion[2] - cz)).toBeLessThanOrEqual(MONTON_FRENTE.radio + 1e-9)
+      expect(p.posicion[1]).toBeGreaterThan(0)
+      expect(p.posicion[1]).toBeLessThanOrEqual(antes)
+      expect(seVeJuntoALaFicha(p.posicion), `pieza ${i}`).toBe(true)
+      antes = p.posicion[1]
+    }
+    const tipos = new Set(Array.from({ length: MONTON_FRENTE.piezas }, (_, i) => piezaDelMonton(i).tipo))
+    expect(tipos).toEqual(new Set(['pepita', 'gema', 'ficha']))
+  })
+  it('el letrerito está en inglés', () => {
+    expect(`${LETRERITO.texto} ${LETRERITO.nota}`).not.toMatch(/[ñáéíóú¿¡]/i)
   })
 })
 

@@ -184,6 +184,33 @@ export const MONTON_FICHAS = {
   ] as ReadonlyArray<{ dx: number; dz: number; alto: number; color: keyof typeof COLORES_RECURSOS }>,
 }
 
+/**
+ * El montón del frente: pepitas, gemas y fichas apiladas en cono cerca de la cámara (el tercio de
+ * abajo de la vista quedaba vacío), con un letrerito de «muestras gratis».
+ */
+export const MONTON_FRENTE = { centro: [-6.6, 0, 5.4] as Vec3, piezas: 21, radio: 1.15, alto: 0.95 }
+export const LETRERITO = { texto: 'FREE SAMPLES', nota: '(just kidding)', posicion: [-4.7, 0, 5.7] as Vec3, alto: 1.1 }
+
+/** De qué es cada pieza del montón, por turnos. */
+export const TIPOS_PIEZA = ['pepita', 'gema', 'ficha'] as const
+
+/**
+ * La pieza `i` del montón del frente: en espiral (ángulo de oro), las primeras arriba y al centro y
+ * las últimas abajo y afuera, así queda un cono.
+ */
+export function piezaDelMonton(i: number): { posicion: Vec3; tipo: (typeof TIPOS_PIEZA)[number]; giro: number } {
+  revisarIndice(i, MONTON_FRENTE.piezas, 'pieza')
+  const { centro, piezas, radio, alto } = MONTON_FRENTE
+  const f = (i + 0.5) / piezas
+  const r = radio * Math.sqrt(f)
+  const a = i * 2.39996
+  return {
+    posicion: [centro[0] + Math.cos(a) * r, 0.1 + alto * (1 - Math.sqrt(f)), centro[2] + Math.sin(a) * r * 0.8],
+    tipo: TIPOS_PIEZA[i % TIPOS_PIEZA.length],
+    giro: a,
+  }
+}
+
 /** El color de cada ficha que vuela (se reparte por índice). */
 export const COLORES_FICHAS: ReadonlyArray<keyof typeof COLORES_RECURSOS> = ['fichaRoja', 'fichaAzul', 'fichaVerde', 'fichaNegra']
 
@@ -446,6 +473,8 @@ export function puntosClave(): { nombre: string; punto: Vec3 }[] {
     { nombre: 'pizarrón arriba', punto: [px, PIZARRON.altoCentro + PIZARRON.alto / 2, pz] },
     { nombre: 'pizarrón abajo', punto: [px - 1.2, 0, pz + 0.4] },
     { nombre: 'montón de fichas', punto: MONTON_FICHAS.centro },
+    { nombre: 'montón del frente izquierda', punto: [MONTON_FRENTE.centro[0] - MONTON_FRENTE.radio, 0, MONTON_FRENTE.centro[2] + MONTON_FRENTE.radio * 0.8] },
+    { nombre: 'letrerito', punto: [LETRERITO.posicion[0] + 0.6, LETRERITO.alto + 0.3, LETRERITO.posicion[2]] },
     ...FLOTANTES.map((f, k) => ({ nombre: `flotante ${k}`, punto: [f.base[0], f.base[1] + FLOTAR.amplitud + 0.3, f.base[2]] as Vec3 })),
   ]
 }
