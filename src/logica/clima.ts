@@ -107,14 +107,14 @@ export function gota(i: number, t: number, velocidad: number = 1): { x: number; 
   return { x, y: ZONA_LLUVIA.alto * (1 - avance), z }
 }
 
-/** Los charcos fijos del suelo (D-25). */
+/** Los charcos fijos del suelo (D-25), todos a la izquierda de la ficha (src/logica/encuadre.ts). */
 export const CHARCOS: ReadonlyArray<{ x: number; z: number; radio: number }> = [
   { x: -2.5, z: 0.5, radio: 1.6 },
-  { x: 3.2, z: -1.8, radio: 1.3 },
+  { x: -9.5, z: -1.5, radio: 1.3 },
   { x: -6.5, z: -3.4, radio: 1.5 },
-  { x: 0.4, z: 2.6, radio: 1.1 },
-  { x: -4.2, z: 4.2, radio: 1.2 },
-  { x: 4.6, z: 3.0, radio: 1.4 },
+  { x: -1.2, z: 3.4, radio: 1.1 },
+  { x: -4.6, z: 4.4, radio: 1.2 },
+  { x: -8.2, z: 3.2, radio: 1.4 },
 ] as const
 
 /** Cuánto dura una onda en un charco. */

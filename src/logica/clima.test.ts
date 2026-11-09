@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { seVeJuntoALaFicha } from './encuadre'
 import {
   ALTO_NEBLINA,
   CHARCOS,
@@ -158,6 +159,13 @@ describe('neblina', () => {
 })
 
 describe('charcos y ficha', () => {
+  it('cada charco se ve entero desde la cámara fija, sin quedar bajo la ficha', () => {
+    for (const c of CHARCOS) {
+      for (const [dx, dz] of [[0, 0], [c.radio, 0], [-c.radio, 0], [0, c.radio], [0, -c.radio]]) {
+        expect(seVeJuntoALaFicha([c.x + dx, 0, c.z + dz]), `charco (${c.x}, ${c.z})`).toBe(true)
+      }
+    }
+  })
   it('cada charco tiene un radio razonable', () => {
     for (const c of CHARCOS) {
       expect(c.radio).toBeGreaterThan(0.5)
