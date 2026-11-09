@@ -42,6 +42,7 @@ Los scripts propios del proyecto van debajo, con su fila.
 | Script | Riesgo | Qué hace |
 |---|---|---|
 | `novedades.py` | ESCRIBE (solo `git fetch` y una marca local en la carpeta de git) | Qué subió cada quien a `origin/main` y `origin/colaborativa` desde la última revisión en esta copia, y si tu rama va detrás (D-21); al final recomienda las secciones sin dueño y los modelos externos (D-29). No hace pull, merge ni push. `--sin-fetch`, `--no-marcar`. Lo corre el hook SessionStart. |
+| `convertir_obj_roblox.mjs` | ESCRIBE (solo el `.glb` de salida) | Convierte un `.obj` + `.mtl` exportado de Roblox Studio a un `.glb` en bruto, con un primitivo por material (Kd lineal × textura), recentrado y escalado (por defecto 0,05 por stud). No toca el `.obj`. Después se optimiza con `gltf-transform optimize` (`docs/perfil/ORDEN.md` §4). |
 | `test_novedades.py` | LEE | Prueba la lógica pura de `novedades.py`, sin git ni red. |
 
 ## Carpetas

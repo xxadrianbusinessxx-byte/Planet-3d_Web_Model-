@@ -1,0 +1,20 @@
+{
+  "fecha": "2026-11-09T10:05",
+  "tipo": "rendimiento",
+  "comando": "npm run build && npm run probar; npx gltf-transform optimize (ver docs/historial/informes/2026-11-09_f2-diamond-zonas-y-trabajos.md); y un script de Playwright de la sesión (medir_paginas.mjs, en su scratchpad): msedge con ventana a pantalla completa por CDP (R9), la página sola montada con crearEscenario + su PAGINA.armar sobre el servidor de desarrollo (no por clics dentro del HTML portátil), 10 s de requestAnimationFrame tras 4 s de calentamiento",
+  "condiciones": "OJO: esta laptop NO es la del arranque (i3-1215U, Intel UHD, 74 Hz): la GPU que reportó el navegador es Intel Iris Xe (0x0000A7A0), pantalla 1536×864 a pixelRatio 1,25 y ~144 Hz. msedge; lienzo 1536×864 = pantalla completa (R9). Con servidor de desarrollo (vite), no con dist/index.html. Otra sesión de Claude Code abierta en la misma PC",
+  "valores": {
+    "peso_html_mb": 4.79
+  },
+  "detalle": {
+    "fps_pagina_zonas_de_trabajo": 144.2,
+    "fps_pagina_trabajos": 144.2,
+    "percentil_95_ms": { "zonas_de_trabajo": 7.1, "trabajos": 7.1 },
+    "cuadro_mas_lento_ms": { "zonas_de_trabajo": 7.3, "trabajos": 7.4 },
+    "triangulos_en_pantalla": { "zonas_de_trabajo": 169055, "trabajos": 13616 },
+    "llamadas_de_dibujo": { "zonas_de_trabajo": 50, "trabajos": 32 },
+    "modelos_kb": { "zonas-casino.glb": 2042, "trabajos-sala.glb": 430 },
+    "peso_html_mb_antes": 1.51,
+    "nota": "144 fps es el tope de la pantalla de esta PC (p95 de 7,1 ms = un cuadro de 144 Hz): no dice cuánta GPU sobra (deuda de ESTADO-ACTUAL §5). Sin medir en la i3-1215U: allí el casino (169 000 triángulos) es la página más pesada del proyecto y hay que repetir esta medición. La carga no se midió (el instrumento de la sesión no la separa de la espera del modelo)."
+  }
+}
