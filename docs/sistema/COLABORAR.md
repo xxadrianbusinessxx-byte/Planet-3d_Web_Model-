@@ -6,8 +6,8 @@
 
 > **Aviso al nuevo trabajador (y a su IA): todo lo que hagas va a la rama `colaborativa`.**
 > Nunca hagas commit ni push a `main`: `main` es de Adrian. **Tu trabajo es entregar tus
-> secciones**: las que en `reparto.json` dicen `"quien": "colaborador"` (clima, fauna, medio
-> ambiente, trabajos y zonas de trabajo; D-27). Cuando todas las secciones estén hechas,
+> secciones**: las que en `reparto.json` dicen `"quien": "colaborador"` (clima, fauna, flora,
+> medio ambiente, recursos naturales, trabajos y zonas de trabajo; D-27, D-31). Cuando todas las secciones estén hechas,
 > Adrian junta `colaborativa` con `main` y el proyecto queda terminado (§4).
 >
 > **Lo que la IA del colaborador le recomienda al empezar** (lo imprime `novedades.py`):
