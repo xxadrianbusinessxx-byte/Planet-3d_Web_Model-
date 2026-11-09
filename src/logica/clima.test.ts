@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import {
+  ALTO_NEBLINA,
   CHARCOS,
+  GLITTER,
+  glitter,
+  NEBLINA,
+  TOTAL_GLITTER,
   COLORES_CLIMA,
   derivaNube,
   DURACION_CICLO_S,
@@ -51,7 +56,7 @@ describe('gota', () => {
         const g = gota(i, t)
         expect(g.y).toBeGreaterThanOrEqual(0)
         expect(g.y).toBeLessThanOrEqual(ZONA_LLUVIA.alto)
-        expect(Math.abs(g.x)).toBeLessThanOrEqual(ZONA_LLUVIA.ancho / 2)
+        expect(Math.abs(g.x - ZONA_LLUVIA.centroX)).toBeLessThanOrEqual(ZONA_LLUVIA.ancho / 2)
       }
     }
   })
@@ -106,8 +111,49 @@ describe('nubes', () => {
       }
     }
   })
-  it('están todas por encima del suelo', () => {
-    for (const n of NUBES) expect(n.y).toBeGreaterThan(5)
+  it('están todas por encima de la lluvia y por debajo de la cámara fija (y = 7)', () => {
+    for (const n of NUBES) {
+      expect(n.y).toBeGreaterThan(4)
+      expect(n.y).toBeLessThan(7)
+    }
+  })
+})
+
+describe('glitter', () => {
+  it('rechaza índices fuera de rango', () => {
+    expect(() => glitter(-1, 0)).toThrow(RangeError)
+    expect(() => glitter(TOTAL_GLITTER, 0)).toThrow(RangeError)
+    expect(() => glitter(0.5, 0)).toThrow(RangeError)
+  })
+  it('cada destello queda dentro de su charco y no se mueve', () => {
+    for (let i = 0; i < TOTAL_GLITTER; i++) {
+      const c = CHARCOS[Math.floor(i / GLITTER.porCharco)]
+      const a = glitter(i, 0), b = glitter(i, 2.7)
+      expect(Math.hypot(a.x - c.x, a.z - c.z)).toBeLessThanOrEqual(c.radio)
+      expect(a.x).toBeCloseTo(b.x)
+      expect(a.z).toBeCloseTo(b.z)
+    }
+  })
+  it('parpadea: brillo entre 0 y 1, encendido y apagado en un ciclo', () => {
+    const brillos: number[] = []
+    for (let t = 0; t < GLITTER.periodoS; t += 0.05) brillos.push(glitter(0, t).brillo)
+    for (const b of brillos) {
+      expect(b).toBeGreaterThanOrEqual(0)
+      expect(b).toBeLessThanOrEqual(1)
+    }
+    expect(Math.max(...brillos)).toBeGreaterThan(0.5)
+    expect(Math.min(...brillos)).toBe(0)
+  })
+  it('con tiempo inválido no falla', () => {
+    expect(Number.isFinite(glitter(1, Number.NaN).brillo)).toBe(true)
+  })
+})
+
+describe('neblina', () => {
+  it('va a ras del suelo y cada banco es ancho', () => {
+    expect(ALTO_NEBLINA).toBeGreaterThan(0)
+    expect(ALTO_NEBLINA).toBeLessThan(1)
+    for (const n of NEBLINA) expect(n.ancho).toBeGreaterThan(3)
   })
 })
 

@@ -24,12 +24,17 @@ import {
   derivaNube,
   espora,
   faseEn,
+  glitter,
   gota,
+  ALTO_NEBLINA,
+  NEBLINA,
   NUBES,
   onda,
   TOTAL_ESPORAS,
+  TOTAL_GLITTER,
   TOTAL_GOTAS,
 } from '../logica/clima'
+import { ocultarCuadricula } from './fondo-pagina'
 
 /** Media esfera por dentro, con un gradiente rosa→morado del horizonte al cenit. */
 function crearCielo(): Mesh {
@@ -56,6 +61,7 @@ export function armarClima(escena: Scene): void {
   escena.background = new Color(COLORES_CLIMA.cieloAbajo)
   escena.fog = new Fog(COLORES_CLIMA.niebla, 18, 55)
   escena.add(crearCielo())
+  ocultarCuadricula(escena)
 
   // Disco de suelo que tapa el blanco del escenario fijo. Lleva el reloj de la página.
   const suelo = new Mesh(
@@ -78,7 +84,8 @@ export function armarClima(escena: Scene): void {
 
   // Nubes: icosferas aplanadas con material compartido.
   const geoNube = new IcosahedronGeometry(1, 1)
-  const matNube = new MeshLambertMaterial({ color: COLORES_CLIMA.nube, transparent: true, opacity: 0.85, flatShading: true })
+  // Sin niebla: la niebla es del mismo rosa que el horizonte y las borraba.
+  const matNube = new MeshLambertMaterial({ color: COLORES_CLIMA.nube, transparent: true, opacity: 0.92, flatShading: true, fog: false })
   const nubes: Mesh[] = NUBES.map((n) => {
     const m = new Mesh(geoNube, matNube)
     m.position.set(n.x, n.y, n.z)
@@ -88,8 +95,9 @@ export function armarClima(escena: Scene): void {
   })
 
   // Lluvia: cada gota es un cono flaco. Geometría y material compartidos.
-  const geoGota = new CylinderGeometry(0.004, 0.025, 0.38, 4)
-  const matGota = new MeshBasicMaterial({ color: COLORES_CLIMA.gota, transparent: true, opacity: 0.85 })
+  // Lo bastante gruesa y larga para leerse a 15–25 m de la cámara fija.
+  const geoGota = new CylinderGeometry(0.01, 0.045, 0.6, 4)
+  const matGota = new MeshBasicMaterial({ color: COLORES_CLIMA.gota, transparent: true, opacity: 0.9, fog: false })
   const gotas: Mesh[] = []
   for (let i = 0; i < TOTAL_GOTAS; i++) {
     const m = new Mesh(geoGota, matGota)
@@ -120,6 +128,30 @@ export function armarClima(escena: Scene): void {
       ondas.push({ malla, mat })
     }
     return { ondas, radio: c.radio }
+  })
+
+  // Glitter de los charcos: octaedros blancos que parpadean (material propio por opacidad).
+  const geoGlitter = new IcosahedronGeometry(0.09, 0)
+  const brillos: { malla: Mesh; mat: MeshBasicMaterial }[] = []
+  for (let i = 0; i < TOTAL_GLITTER; i++) {
+    const mat = new MeshBasicMaterial({ color: COLORES_CLIMA.glitter, transparent: true, opacity: 0, depthWrite: false, fog: false })
+    const malla = new Mesh(geoGlitter, mat)
+    const g = glitter(i, 0)
+    malla.position.set(g.x, 0.12, g.z)
+    escena.add(malla)
+    brillos.push({ malla, mat })
+  }
+
+  // Neblina rosa baja: discos planos y translúcidos a ras del suelo, compartidos.
+  const geoNeblina = new CircleGeometry(1, 18)
+  const matNeblina = new MeshBasicMaterial({ color: COLORES_CLIMA.nieblaBaja, transparent: true, opacity: 0.14, depthWrite: false, side: DoubleSide })
+  const neblinas: Mesh[] = NEBLINA.map((n) => {
+    const m = new Mesh(geoNeblina, matNeblina)
+    m.rotation.x = -Math.PI / 2
+    m.position.set(n.x, ALTO_NEBLINA, n.z)
+    m.scale.set(n.ancho, n.ancho * 0.45, 1)
+    escena.add(m)
+    return m
   })
 
   // Esporas: cada una con su propio material (opacidad independiente), creado al inicio.
@@ -159,6 +191,15 @@ export function armarClima(escena: Scene): void {
 
     nubes.forEach((n, i) => {
       n.position.x = NUBES[i].x + derivaNube(i, t)
+    })
+    neblinas.forEach((n, i) => {
+      n.position.x = NEBLINA[i].x + derivaNube(i + 3, t * 2)
+    })
+    brillos.forEach((b, i) => {
+      const g = glitter(i, t)
+      b.mat.opacity = g.brillo
+      b.malla.scale.setScalar(0.4 + g.brillo)
+      b.malla.rotation.y = t * 3
     })
 
     const intensidad = fase.nombre === 'spores' && fase.esporas > 0 ? 1 : 0

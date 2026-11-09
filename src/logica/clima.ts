@@ -35,9 +35,11 @@ export const COLORES_CLIMA = {
   sueloBorde: 0x331033,
   gota: 0xff58b8,
   charco: 0xff8ad1,
-  nube: 0xffb6d9,
+  nube: 0xf06aae,
   niebla: 0xff9ec7,
-  espora: 0xffe1f3,
+  nieblaBaja: 0xffc2e0,
+  espora: 0xfff2a8,
+  glitter: 0xffffff,
 } as const
 
 /** Ciclo del clima: tres fases en bucle. `segundos` = cuánto dura cada una. */
@@ -75,13 +77,21 @@ export function faseEn(t: number): { nombre: NombreFase; gotas: number; velocida
   return { nombre: 'drizzle', gotas: 0, velocidad: 1, esporas: 0 }
 }
 
-/** Alto, ancho y profundidad de la zona de lluvia (en metros de escena). */
-export const ZONA_LLUVIA = { alto: 20, ancho: 60, fondo: 44, centroZ: -4 }
+/**
+ * Alto, ancho y profundidad de la zona de lluvia (en metros de escena). La cámara fija mira
+ * hacia abajo (posición [0,7,16], objetivo [-3,0,0]): la lluvia se concentra en lo que ve, a
+ * la izquierda de la ficha, y no más alta que las nubes bajas.
+ */
+export const ZONA_LLUVIA = { alto: 6.5, ancho: 30, fondo: 22, centroX: -4, centroZ: -2 }
 
 /** Un número determinista en [0, 1) por índice: evita Math.random (logica es pura). */
 function rnd(i: number, k: number): number {
-  const s = (i * 9301 + k * 49297 + 7919) >>> 0
-  return (s % 100000) / 100000
+  // Hash entero (estilo «lowbias32»): el lineal de antes ponía las gotas en fila diagonal.
+  let h = (Math.imul(i + 1, 0x9e3779b1) ^ Math.imul(k + 1, 0x85ebca77)) >>> 0
+  h = Math.imul(h ^ (h >>> 16), 0x7feb352d) >>> 0
+  h = Math.imul(h ^ (h >>> 15), 0x846ca68b) >>> 0
+  h = (h ^ (h >>> 16)) >>> 0
+  return h / 4294967296
 }
 
 /**
@@ -90,7 +100,7 @@ function rnd(i: number, k: number): number {
  */
 export function gota(i: number, t: number, velocidad: number = 1): { x: number; y: number; z: number } {
   if (!Number.isInteger(i) || i < 0) throw new RangeError('gota: i debe ser entero ≥ 0')
-  const x = rnd(i, 1) * ZONA_LLUVIA.ancho - ZONA_LLUVIA.ancho / 2
+  const x = rnd(i, 1) * ZONA_LLUVIA.ancho - ZONA_LLUVIA.ancho / 2 + ZONA_LLUVIA.centroX
   const z = rnd(i, 2) * ZONA_LLUVIA.fondo - ZONA_LLUVIA.fondo / 2 + ZONA_LLUVIA.centroZ
   const tt = Number.isFinite(t) && t > 0 ? t : 0
   const avance = ((tt * velocidad * 0.55 + rnd(i, 3)) % 1 + 1) % 1
@@ -119,8 +129,8 @@ export function onda(i: number, t: number): { radio: number; opacidad: number } 
   return { radio: 0.06 + RADIO_ONDA_MAX * avance, opacidad: Math.max(0, 0.75 * (1 - avance)) }
 }
 
-/** Alto máximo al que llega una espora. */
-export const ALTO_ESPORA = 13
+/** Alto máximo al que llega una espora (más arriba ya no se ve desde la cámara fija). */
+export const ALTO_ESPORA = 7
 /** Cuánto dura un ciclo de espora. */
 export const VIDA_ESPORA_S = 4.2
 
@@ -128,8 +138,8 @@ export const VIDA_ESPORA_S = 4.2
 export function espora(i: number, t: number, intensidad: number): { x: number; y: number; z: number; opacidad: number; escala: number } {
   if (!Number.isInteger(i) || i < 0) throw new RangeError('espora: i debe ser entero ≥ 0')
   const tt = Number.isFinite(t) && t > 0 ? t : 0
-  const x = rnd(i, 11) * 40 - 20
-  const z = rnd(i, 12) * 28 - 10
+  const x = rnd(i, 11) * 26 - 17
+  const z = rnd(i, 12) * 18 - 9
   const avance = ((tt / VIDA_ESPORA_S + rnd(i, 13)) % 1 + 1) % 1
   const curva = Math.sin(avance * Math.PI)
   return {
@@ -137,18 +147,52 @@ export function espora(i: number, t: number, intensidad: number): { x: number; y
     y: avance * ALTO_ESPORA,
     z,
     opacidad: Math.max(0, Math.min(1, intensidad)) * curva,
-    escala: 0.08 + 0.1 * curva,
+    escala: 0.05 + 0.08 * curva,
   }
 }
 
-/** Las nubes rosas que derivan por el cielo. */
+/**
+ * Las nubes rosas que derivan por el cielo. Van bajas: desde la cámara fija el borde de
+ * arriba del cuadro queda unos 3° por debajo del horizonte, así que una nube alta no se ve.
+ * Cuelgan del borde de arriba como un techo de lluvia.
+ */
 export const NUBES: ReadonlyArray<{ x: number; y: number; z: number; escala: number }> = [
-  { x: -12, y: 11, z: -12, escala: 3.2 },
-  { x: 8, y: 13, z: -14, escala: 4.0 },
-  { x: -4, y: 15, z: -16, escala: 3.6 },
-  { x: 14, y: 10, z: -8, escala: 2.8 },
-  { x: -14, y: 12, z: 4, escala: 3.0 },
+  { x: -14, y: 5.0, z: -6, escala: 3.4 },
+  { x: -6, y: 5.6, z: -10, escala: 4.0 },
+  { x: 2, y: 5.2, z: -12, escala: 3.6 },
+  { x: -20, y: 5.4, z: -14, escala: 3.8 },
+  { x: -10, y: 4.8, z: -2, escala: 2.8 },
 ]
+
+/** Destellos de glitter sobre los charcos: cuántos por charco y cada cuánto parpadean. */
+export const GLITTER = { porCharco: 4, periodoS: 1.3 } as const
+export const TOTAL_GLITTER = CHARCOS.length * GLITTER.porCharco
+
+/**
+ * El destello `i` en `t`: un punto fijo dentro de su charco que se enciende y se apaga.
+ * `brillo` en [0, 1] (0 = apagado).
+ */
+export function glitter(i: number, t: number): { x: number; z: number; brillo: number } {
+  if (!Number.isInteger(i) || i < 0 || i >= TOTAL_GLITTER) throw new RangeError('glitter: fuera de rango')
+  const c = CHARCOS[Math.floor(i / GLITTER.porCharco)]
+  const a = rnd(i, 21) * Math.PI * 2
+  const r = Math.sqrt(rnd(i, 22)) * c.radio * 0.85
+  const tt = Number.isFinite(t) && t > 0 ? t : 0
+  const avance = ((tt / GLITTER.periodoS + rnd(i, 23)) % 1 + 1) % 1
+  // Encendido solo el primer tercio del ciclo: parpadeo corto.
+  const brillo = avance < 1 / 3 ? Math.sin(avance * 3 * Math.PI) : 0
+  return { x: c.x + Math.cos(a) * r, z: c.z + Math.sin(a) * r, brillo }
+}
+
+/** La neblina rosa baja: bancos planos y anchos que derivan despacio a ras del suelo. */
+export const NEBLINA: ReadonlyArray<{ x: number; z: number; ancho: number }> = [
+  { x: -8, z: -4, ancho: 9 },
+  { x: -1, z: 1, ancho: 7 },
+  { x: -12, z: 3, ancho: 8 },
+  { x: 3, z: -7, ancho: 10 },
+]
+/** Alto de la neblina sobre el suelo. */
+export const ALTO_NEBLINA = 0.35
 
 /** Cuánto se desplaza una nube en el segundo `t` (deriva lenta en x). */
 export function derivaNube(i: number, t: number): number {
