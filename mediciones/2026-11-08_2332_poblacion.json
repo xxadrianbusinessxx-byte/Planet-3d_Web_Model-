@@ -2,7 +2,7 @@
   "fecha": "2026-11-08T23:32",
   "tipo": "rendimiento",
   "comando": "npm run build; npx gltf-transform inspect; y el script de Playwright de la sesión de D-28 (no está en scripts/; espera triángulos entre 1 000 y 100 000): abre dist/index.html por file:// en msedge a pantalla completa, clic en The Leaf, 10 s de requestAnimationFrame en Population",
-  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto; página Population con la cámara propia (D-33)",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto; página Population con la cámara propia (D-34)",
   "valores": {
     "triangulos_personaje": 7907,
     "peso_personaje_kb": 140.5,

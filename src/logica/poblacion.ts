@@ -9,7 +9,7 @@ import type { Ficha } from './fichas'
 
 type Vec3 = [number, number, number]
 
-/** El texto de la ficha (en inglés, D-24), aprobado por la persona el 2026-11-08; la fila del crédito, D-32. */
+/** El texto de la ficha (en inglés, D-24), aprobado por la persona el 2026-11-08; la fila del crédito, D-33. */
 export const FICHA_POBLACION: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' | 'parrafos' | 'datos' | 'lema'> = {
   icono: '👽',
   titulo: 'Population',
@@ -31,7 +31,7 @@ export const FICHA_POBLACION: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' | 'pa
     ['Hobby', 'grinding'],
     ['Other hobby', 'burning'],
     ['Home', 'a hammock by the sea'],
-    // Crédito que pide la licencia CC BY del modelo (D-32, datos/modelos-ia/poblacion/ORIGEN.md).
+    // Crédito que pide la licencia CC BY del modelo (D-33, datos/modelos-ia/poblacion/ORIGEN.md).
     ['3D model', '“Alien Frank” by DavidePrestino (Sketchfab), CC BY 4.0, modified'],
   ],
   lema: "Grind it slow, burn it slower: on this beach nobody's in a hurry.",
@@ -71,7 +71,7 @@ export function colorDeGuayabera(i: number): number {
 }
 
 /**
- * La cámara propia de la página (D-33): a la altura de los ojos, mirando al mar, para que se vean
+ * La cámara propia de la página (D-34): a la altura de los ojos, mirando al mar, para que se vean
  * el cielo y el horizonte. El Grinder grande queda al frente a la izquierda y la ronda al centro.
  */
 export const VISTA_POBLACION: CamaraDePagina = {
@@ -184,17 +184,17 @@ export interface Pieza {
 }
 
 /**
- * La playa (D-28, D-33), compuesta como la captura que pidió la persona: arena con un sendero más
+ * La playa (D-28, D-34), compuesta como la captura que pidió la persona: arena con un sendero más
  * oscuro, el mar (la bebida azul, D-10) hasta el horizonte, cielo azul, 2 palmeras con una hamaca,
  * una cerca de madera que lleva hacia la ronda, una roca grande a la derecha, un árbol en Y al
  * frente a la derecha, una islita al fondo y matas de pasto al frente.
  */
 export const PLAYA = {
-  /** El terreno de arena (D-34): un rectángulo con relieve, de `desdeZ` (bajo el mar) a `hastaZ`. */
+  /** El terreno de arena (D-35): un rectángulo con relieve, de `desdeZ` (bajo el mar) a `hastaZ`. */
   arena: { ancho: 110, desdeZ: -15, hastaZ: 16, segmentosX: 140, segmentosZ: 48, color: 0xf3dfae },
   /** El mar empieza en esta z y sigue hacia atrás hasta el horizonte. */
   mar: { orillaZ: -11, fondo: 100, ancho: 220, color: 0x26c6ff, colorEspuma: 0xe8fbff },
-  /** Cielo de atardecer en degradado (D-34) y niebla del color del horizonte, que funde el mar con el cielo. */
+  /** Cielo de atardecer en degradado (D-35) y niebla del color del horizonte, que funde el mar con el cielo. */
   cielo: { arriba: 0x2c2f73, medio: 0xb45d8a, horizonte: 0xff9a52, niebla: 0xf2a172, radio: 100, nieblaDesde: 25, nieblaHasta: 100 },
   /**
    * El sol bajo sobre el mar, detrás de la escena y a la izquierda: de ahí sale la luz cálida y
@@ -278,7 +278,7 @@ function zonasOcupadas(): { centro: [number, number]; radio: number }[] {
   ]
 }
 
-/** El relieve de la arena (D-34): dunas suaves, más planas donde hay gente o cosas. */
+/** El relieve de la arena (D-35): dunas suaves, más planas donde hay gente o cosas. */
 export const RELIEVE: OpcionesArena = {
   semilla: 11,
   orillaZ: PLAYA.mar.orillaZ,
@@ -293,7 +293,7 @@ export const RELIEVE: OpcionesArena = {
   ],
 }
 
-/** Los colores de la arena: seca con manchas, mojada en la orilla y un sendero más oscuro (D-34). */
+/** Los colores de la arena: seca con manchas, mojada en la orilla y un sendero más oscuro (D-35). */
 export const COLORES_ARENA: ColoresArena = {
   seca: 0xf3dfae,
   manchas: 0xdcc08a,
@@ -302,7 +302,7 @@ export const COLORES_ARENA: ColoresArena = {
   zonaSendero: { centro: [3, -1], radioX: 5, radioZ: 9 },
 }
 
-/** Los adornos de la arena (D-34): cuántos de cada uno y dónde no van. */
+/** Los adornos de la arena (D-35): cuántos de cada uno y dónde no van. */
 export const ADORNOS: OpcionesAdornos = {
   semilla: 23,
   area: { xMin: -14, xMax: 14, zMin: PLAYA.mar.orillaZ + 0.3, zMax: 8 },

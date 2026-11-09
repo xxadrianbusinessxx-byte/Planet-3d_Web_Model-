@@ -48,7 +48,7 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 - `fps_ciudad` — Cuadros por segundo con la cámara en una ciudad · sin umbral: preguntar la meta
 - `carga_ciudad_s` — Tiempo en que aparece la ciudad al bajar desde el espacio · sin umbral: preguntar la meta
-- `triangulos_personaje` — Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona; 3 000 → 8 000 por D-32) · umbral 8000 triángulos (dura)
+- `triangulos_personaje` — Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona; 3 000 → 8 000 por D-33) · umbral 8000 triángulos (dura)
 - `peso_personaje_kb` — Peso del modelo de personaje más pesado en src/modelos/, ya optimizado (límite de R7 para una persona) · umbral 150 KB (dura)
 
 ## Últimos informes

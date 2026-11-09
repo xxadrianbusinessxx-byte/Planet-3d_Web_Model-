@@ -5,22 +5,22 @@ Talla: M · Fase: F2 (sección poblacion) · Respaldo: commit `780d4a0` (D-04), 
 ## 1. Qué se hizo
 
 La persona pidió usar el modelo que descargó, «Alien Frank», en vez del Grinder modelado en
-Blender de D-31 (informe `2026-11-08_f2-poblacion-grinder-blender.md`).
+Blender de D-32 (informe `2026-11-08_f2-poblacion-grinder-blender.md`).
 
 | Archivo | Cambio | Por qué |
 |---|---|---|
-| `datos/modelos-ia/poblacion/alien-frank.zip`, `.blend` y `.glb` (fuera de git) | la descarga, y el modelo revisado en Blender por el MCP: chanclas lisas sin el logo de Havaianas, ojos negros brillantes, sin mapas normales ni AO, *Decimate* de 21 374 a 7 907 triángulos, 1,99 m con el origen en los pies, brazos de pose T a colgando (fijado como reposo), esqueleto `torso`/`hombro-der`/`hombro-izq` con pesos propios y las 4 anclas | D-29, D-32 |
+| `datos/modelos-ia/poblacion/alien-frank.zip`, `.blend` y `.glb` (fuera de git) | la descarga, y el modelo revisado en Blender por el MCP: chanclas lisas sin el logo de Havaianas, ojos negros brillantes, sin mapas normales ni AO, *Decimate* de 21 374 a 7 907 triángulos, 1,99 m con el origen en los pies, brazos de pose T a colgando (fijado como reposo), esqueleto `torso`/`hombro-der`/`hombro-izq` con pesos propios y las 4 anclas | D-29, D-33 |
 | `datos/modelos-ia/poblacion/ORIGEN.md` (fuera de git, en el worktree) | autor, enlace, licencia CC BY 4.0 y la lista de cambios | ORDEN §4; CC BY pide indicar los cambios |
 | `src/modelos/alien-frank.glb` | **nuevo**: `resize` (piel 512 px, camisa 256 px), `webp --quality 70` y `meshopt` → 140,5 KB | R7 |
-| `src/modelos/grinder.glb` | **se quita**: nadie lo importa ya (su fuente sigue en `datos/` y en el commit `780d4a0`) | D-32 |
-| `src/mundo/poblacion.ts` | carga `alien-frank.glb`; los Lambert llevan la textura del modelo (`map`); se quitan la guayabera por código y sus geometrías | D-32 |
+| `src/modelos/grinder.glb` | **se quita**: nadie lo importa ya (su fuente sigue en `datos/` y en el commit `780d4a0`) | D-33 |
+| `src/mundo/poblacion.ts` | carga `alien-frank.glb`; los Lambert llevan la textura del modelo (`map`); se quitan la guayabera por código y sus geometrías | D-33 |
 | `src/logica/poblacion.ts` | la ficha suma la fila «3D model» con el crédito | CC BY: crédito visible en la obra |
-| `docs/sistema/metricas.json` | `triangulos_personaje`: umbral 3 000 → 8 000 (lo decidió la persona, R4) | D-32 |
-| `DECISIONES.md` (D-32; D-31 marcada como reemplazada en parte) · `pendientes.json` · `ESTADO-ACTUAL.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
+| `docs/sistema/metricas.json` | `triangulos_personaje`: umbral 3 000 → 8 000 (lo decidió la persona, R4) | D-33 |
+| `DECISIONES.md` (D-33; D-32 marcada como reemplazada en parte) · `pendientes.json` · `ESTADO-ACTUAL.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
 
 ## 3. Cómo se ejecutó y se midió
 
-| Métrica | Antes (Blender, D-31) | Después (Alien Frank) | Instrumento | Archivo en `mediciones/` |
+| Métrica | Antes (Blender, D-32) | Después (Alien Frank) | Instrumento | Archivo en `mediciones/` |
 |---|---|---|---|---|
 | `triangulos_personaje` (≤ 8 000) | 2 716 | **7 907** | `npx gltf-transform inspect` | `2026-11-08_2318_poblacion.json` |
 | `peso_personaje_kb` (≤ 150) | 26,3 KB | **140,5 KB** | tamaño de `src/modelos/alien-frank.glb` | ídem |
@@ -55,7 +55,7 @@ Blender de D-31 (informe `2026-11-08_f2-poblacion-grinder-blender.md`).
 - **Marca:** la textura de las chanclas era el logo de Havaianas; se quitó.
 - **R7:** el modelo pasó por `gltf-transform` y entra en sus límites (7 907 de 8 000 triángulos;
   140,5 de 150 KB). **R8:** las texturas WebP van embebidas en el `.glb` y este en el HTML.
-- **R4:** el umbral de triángulos sube porque lo eligió la persona en esta tarea; queda en D-32.
+- **R4:** el umbral de triángulos sube porque lo eligió la persona en esta tarea; queda en D-33.
 - **D-30:** cada `.blend` se guardó antes de ejecutar Python; la ventana de Blender que abrió el
   agente se cerró al terminar.
 

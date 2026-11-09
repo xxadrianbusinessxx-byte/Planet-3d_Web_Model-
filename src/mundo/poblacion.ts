@@ -1,7 +1,7 @@
-// La página «Population» vuelta objetos de three (D-13, D-28, D-33): los Grinders (el cuerpo con
-// su camisa es «Alien Frank», src/modelos/alien-frank.glb, D-32), sus accesorios enganchados en
+// La página «Population» vuelta objetos de three (D-13, D-28, D-34): los Grinders (el cuerpo con
+// su camisa es «Alien Frank», src/modelos/alien-frank.glb, D-33), sus accesorios enganchados en
 // sus anclas, la playa (cielo, mar, palmeras, hamaca, cerca, roca, árbol: src/modelos/playa.glb),
-// la arena con relieve y adornos, el atardecer con sus sombras (D-34), el humo y el movimiento suave. Dónde va cada cosa
+// la arena con relieve y adornos, el atardecer con sus sombras (D-35), el humo y el movimiento suave. Dónde va cada cosa
 // y cómo se mueve lo decide src/logica/poblacion.ts; aquí solo se dibuja y se lee el reloj.
 import {
   CylinderGeometry,
@@ -111,7 +111,7 @@ async function cargarGlb(url: string, archivo: string, nodos: readonly string[],
   return gltf.scene
 }
 
-/** El molde del cuerpo (src/modelos/alien-frank.glb, revisado en Blender, D-32): se carga una vez. */
+/** El molde del cuerpo (src/modelos/alien-frank.glb, revisado en Blender, D-33): se carga una vez. */
 let molde: Promise<Object3D> | null = null
 
 function cargarMolde(): Promise<Object3D> {
@@ -127,7 +127,7 @@ function cargarMolde(): Promise<Object3D> {
   return molde
 }
 
-/** Las piezas de la playa (src/modelos/playa.glb, modeladas en Blender, D-33): se cargan una vez. */
+/** Las piezas de la playa (src/modelos/playa.glb, modeladas en Blender, D-34): se cargan una vez. */
 let piezas: Promise<Object3D> | null = null
 
 function cargarPiezas(): Promise<Object3D> {

@@ -26,7 +26,7 @@ export interface Escenario {
 
 const VISTA_FIJA: Vista = { posicion: [0, 7, 16], objetivo: [-3, 0, 0] }
 
-/** La cámara propia de una página que la necesita (D-33); las demás usan la fija del continente. */
+/** La cámara propia de una página que la necesita (D-34); las demás usan la fija del continente. */
 export type CamaraDePagina = Pick<Escenario, 'camara' | 'apertura'>
 
 /**

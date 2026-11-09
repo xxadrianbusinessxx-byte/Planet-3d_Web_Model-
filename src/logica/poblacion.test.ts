@@ -159,7 +159,7 @@ describe('playa', () => {
   })
 })
 
-describe('atardecer y arena (D-34)', () => {
+describe('atardecer y arena (D-35)', () => {
   it('el sol está dentro del cielo, sobre el horizonte y detrás de la escena (sombras hacia la cámara)', () => {
     const [x, y, z] = PLAYA.sol.posicion
     expect(Math.hypot(x, y, z) + PLAYA.sol.radio).toBeLessThan(PLAYA.cielo.radio)

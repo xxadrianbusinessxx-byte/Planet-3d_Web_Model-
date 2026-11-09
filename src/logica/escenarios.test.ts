@@ -26,7 +26,7 @@ describe('escenarios', () => {
     }
   })
 
-  it('una página puede traer su propia cámara y lo demás queda igual (D-33)', () => {
+  it('una página puede traer su propia cámara y lo demás queda igual (D-34)', () => {
     const propia = { camara: { posicion: [1, 2, 3], objetivo: [0, 1, 0] } as const, apertura: 55 }
     const e = escenarioDe('hoja', { camara: { posicion: [1, 2, 3], objetivo: [0, 1, 0] }, apertura: 55 })
     expect(e.camara).toEqual(propia.camara)

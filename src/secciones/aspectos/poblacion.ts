@@ -10,5 +10,5 @@ export const PAGINA: PaginaAspecto = {
   pestana: 'Population',
   ficha: FICHA_POBLACION,
   armar: armarPoblacion,
-  camara: VISTA_POBLACION, // a la altura de los ojos, con cielo y mar (D-33)
+  camara: VISTA_POBLACION, // a la altura de los ojos, con cielo y mar (D-34)
 }

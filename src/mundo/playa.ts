@@ -1,4 +1,4 @@
-// La playa de la página «Population» vuelta objetos de three (D-33, D-34): el cielo de atardecer,
+// La playa de la página «Population» vuelta objetos de three (D-34, D-35): el cielo de atardecer,
 // el sol con su reflejo, las luces y la sombra, la arena con relieve y color, sus adornos, el mar,
 // la islita y la hamaca. Dónde va cada cosa lo deciden src/logica/poblacion.ts y
 // src/logica/arena.ts; las piezas de Blender y los Grinders los pone src/mundo/poblacion.ts.
@@ -35,10 +35,10 @@ import {
 import { crearColorArena, repartirAdornos, type Adorno, type TipoAdorno } from '../logica/arena'
 import { ADORNOS, COLORES_ARENA, largoDeHamaca, PLAYA, RELIEVE, VISTA_POBLACION } from '../logica/poblacion'
 
-/** La altura de la arena en (x, z), de src/logica/arena.ts (D-34). */
+/** La altura de la arena en (x, z), de src/logica/arena.ts (D-35). */
 export type Altura = (x: number, z: number) => number
 
-/** Que proyecte y reciba sombra todo lo que cuelga de `o` (D-34). */
+/** Que proyecte y reciba sombra todo lo que cuelga de `o` (D-35). */
 export function conSombra(o: Object3D, proyecta = true): void {
   o.traverse((m) => {
     if (m instanceof Mesh) {

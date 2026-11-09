@@ -2,7 +2,7 @@
   "fecha": "2026-11-08T23:45",
   "tipo": "rendimiento",
   "comando": "npm run build; el script de Playwright de la sesión de D-28 (no está en scripts/; espera triángulos entre 1 000 y 100 000): abre dist/index.html por file:// en msedge a pantalla completa, clic en The Leaf, 10 s de requestAnimationFrame en Population",
-  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto; Population al atardecer con sombras (D-34)",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto; Population al atardecer con sombras (D-35)",
   "valores": {
     "peso_html_mb": 0.94
   },

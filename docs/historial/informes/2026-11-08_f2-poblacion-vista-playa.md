@@ -12,13 +12,13 @@ Frank en lugar de esos aliens.
 
 | Archivo | Cambio | Por qué |
 |---|---|---|
-| `src/logica/escenarios.ts` (+ prueba) · `src/secciones/aspectos/pagina.ts` · `src/secciones/vista-continente.ts` | **común**: una página puede traer su propia cámara fija (`camara?: CamaraDePagina`); las demás quedan igual | D-33, la cámara fija mira hacia abajo y no deja ver el cielo |
+| `src/logica/escenarios.ts` (+ prueba) · `src/secciones/aspectos/pagina.ts` · `src/secciones/vista-continente.ts` | **común**: una página puede traer su propia cámara fija (`camara?: CamaraDePagina`); las demás quedan igual | D-34, la cámara fija mira hacia abajo y no deja ver el cielo |
 | `src/logica/poblacion.ts` (+ 7 pruebas nuevas) | `VISTA_POBLACION`; la playa nueva (`PLAYA`: arena, sendero, mar hasta el horizonte, cielo, palmeras, hamaca, cerca, roca, árbol, islita, pasto); `tramosDeCerca`; el grande y la ronda en su sitio nuevo | lo que se decide va en código puro |
-| `src/mundo/poblacion.ts` | cielo en degradado con niebla del horizonte; el mar hasta el horizonte; las piezas de `playa.glb` (cargador común con el de Frank); fuera la palapa y una hamaca | D-33 |
-| `src/secciones/aspectos/poblacion.ts` | declara `camara: VISTA_POBLACION` | D-33 |
+| `src/mundo/poblacion.ts` | cielo en degradado con niebla del horizonte; el mar hasta el horizonte; las piezas de `playa.glb` (cargador común con el de Frank); fuera la palapa y una hamaca | D-34 |
+| `src/secciones/aspectos/poblacion.ts` | declara `camara: VISTA_POBLACION` | D-34 |
 | `src/modelos/playa.glb` | **nuevo**: palmera, roca, árbol en Y y tramo de cerca, modelados en Blender por el MCP (584 triángulos, 18,5 KB) | propio, D-29 |
 | `datos/modelos-ia/roblox-toolbox-no-usar/` (fuera de git) | la carpeta «MODELOS 3d», movida de la raíz del repo, donde no estaba ignorada | decisión de la persona |
-| `DECISIONES.md` (D-33) · `pendientes.json` (`ficha-poblacion-camisa`) · `ESTADO-ACTUAL.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
+| `DECISIONES.md` (D-34) · `pendientes.json` (`ficha-poblacion-camisa`) · `ESTADO-ACTUAL.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
 
 ## 2. Lo que no se usó y por qué
 

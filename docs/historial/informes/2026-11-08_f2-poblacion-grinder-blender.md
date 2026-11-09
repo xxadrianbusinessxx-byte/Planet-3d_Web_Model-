@@ -6,13 +6,13 @@ Talla: M · Fase: F2 (sección poblacion) · Respaldo: commit `9d32a73` (D-04), 
 
 | Archivo | Cambio | Por qué |
 |---|---|---|
-| `datos/modelos-ia/poblacion/grinder.blend` y `grinder.glb` (fuera de git, carpeta principal) | **nuevo**: el cuerpo del Grinder modelado en Blender 5.2 por el MCP: *Skin* + una subdivisión, cabeza de pera torneada, ojos almendrados, mejillas, boca y short; esqueleto `torso`, `hombro-der` y `hombro-izq` con pesos por cercanía al esqueleto de piel; 4 vacíos `ancla-*` | D-29, D-30, D-31 |
+| `datos/modelos-ia/poblacion/grinder.blend` y `grinder.glb` (fuera de git, carpeta principal) | **nuevo**: el cuerpo del Grinder modelado en Blender 5.2 por el MCP: *Skin* + una subdivisión, cabeza de pera torneada, ojos almendrados, mejillas, boca y short; esqueleto `torso`, `hombro-der` y `hombro-izq` con pesos por cercanía al esqueleto de piel; 4 vacíos `ancla-*` | D-29, D-30, D-32 |
 | `datos/modelos-ia/poblacion/ORIGEN.md` (fuera de git, **en el worktree**) | origen, licencia (propio), qué se tomó de la referencia y qué no, triángulos | ORDEN §4 |
 | `src/modelos/grinder.glb` | **nuevo**: optimizado con `gltf-transform meshopt` (98 KB → 26,3 KB) | R7 |
-| `src/mundo/poblacion.ts` | `crearCuerpo` clona el modelo (`SkeletonUtils.clone`), cuelga cada hueso de hombro de un pivote para que `ponerBrazo` lo gire como antes y busca las anclas por nombre; `cargarMolde` lo carga una vez (`GLTFLoader` + `MeshoptDecoder`) y cambia sus materiales por Lambert lisos; los Grinders se ponen al estar listo el molde (`ponerGrinders`), con aviso si falla (D-09). Se quitaron las geometrías y materiales del cuerpo por código. La copa de la gorra pasa de 0,62 a 0,8 de alto | D-31 |
+| `src/mundo/poblacion.ts` | `crearCuerpo` clona el modelo (`SkeletonUtils.clone`), cuelga cada hueso de hombro de un pivote para que `ponerBrazo` lo gire como antes y busca las anclas por nombre; `cargarMolde` lo carga una vez (`GLTFLoader` + `MeshoptDecoder`) y cambia sus materiales por Lambert lisos; los Grinders se ponen al estar listo el molde (`ponerGrinders`), con aviso si falla (D-09). Se quitaron las geometrías y materiales del cuerpo por código. La copa de la gorra pasa de 0,62 a 0,8 de alto | D-32 |
 | `package.json` | `@gltf-transform/cli` 4.5.1 (desarrollo) | ORDEN §4 |
 | `docs/sistema/metricas.json` | `triangulos_personaje` (≤ 3 000) y `peso_personaje_kb` (≤ 150), duras, F2 | respuesta de la persona |
-| `DECISIONES.md` (D-31) · `pendientes.json` (`limites-modelo-ia` con respuesta parcial; lección `plantilla-gltf-transform-anclas`) · `docs/perfil/ORDEN.md` §4 · `ESTADO-ACTUAL.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
+| `DECISIONES.md` (D-32) · `pendientes.json` (`limites-modelo-ia` con respuesta parcial; lección `plantilla-gltf-transform-anclas`) · `docs/perfil/ORDEN.md` §4 · `ESTADO-ACTUAL.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
 
 No se tocó la navegación común (`vista-continente.ts`, `pagina.ts`, `registro.ts`, `pestanas.ts`,
 `escenario.ts`, `index.html`) ni `src/logica/`.

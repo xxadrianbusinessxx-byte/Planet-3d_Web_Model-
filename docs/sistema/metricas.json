@@ -73,7 +73,7 @@
     },
     {
       "id": "triangulos_personaje",
-      "titulo": "Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona; 3 000 → 8 000 por D-32)",
+      "titulo": "Triángulos del modelo de personaje más pesado en src/modelos/ (límite de R7 para una persona; 3 000 → 8 000 por D-33)",
       "unidad": "triángulos",
       "peor_si": "sube",
       "umbral": 8000,

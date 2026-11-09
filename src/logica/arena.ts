@@ -1,4 +1,4 @@
-// La arena de la playa de Population (D-34): su relieve (dunas suaves y la bajada hacia el mar),
+// La arena de la playa de Population (D-35): su relieve (dunas suaves y la bajada hacia el mar),
 // su color por zonas (arena seca con manchas, arena mojada en la orilla, un sendero más oscuro) y
 // dónde va cada adorno (piedritas, conchas, estrellas de mar, troncos, matas de pasto). Todo sale
 // de una semilla: la misma playa cada vez. src/mundo/poblacion.ts lo vuelve objetos de three.

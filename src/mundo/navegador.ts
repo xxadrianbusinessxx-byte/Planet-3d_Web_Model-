@@ -54,7 +54,7 @@ export function crearRenderizador(): WebGLRenderer {
   // Primera palanca de rendimiento en gráficos integrados (docs/perfil/ORDEN.md §3).
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
   renderer.setSize(window.innerWidth, window.innerHeight)
-  // Sombras (D-34): solo cuestan donde una luz las proyecta (hoy, el atardecer de Population).
+  // Sombras (D-35): solo cuestan donde una luz las proyecta (hoy, el atardecer de Population).
   renderer.shadowMap.enabled = true
   renderer.shadowMap.type = PCFShadowMap
   document.body.appendChild(renderer.domElement)

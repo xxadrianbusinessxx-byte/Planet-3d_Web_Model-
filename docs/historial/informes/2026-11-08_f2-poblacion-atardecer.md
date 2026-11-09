@@ -9,12 +9,12 @@ un atardecer.
 
 | Archivo | Cambio | Por qué |
 |---|---|---|
-| `src/logica/arena.ts` (+ 11 pruebas) | **nuevo**: altura de la arena (dunas, bajada al mar, zonas planas donde hay gente), su color por zonas y el reparto de adornos sin pisar a nadie; todo con semilla | D-34; lo que decide va en código puro |
-| `src/logica/poblacion.ts` (+ 3 pruebas) | `RELIEVE`, `COLORES_ARENA`, `ADORNOS`; el cielo de atardecer y el sol (posición, colores, luz, sombra) en `PLAYA` | D-34 |
-| `src/mundo/poblacion.ts` | terreno con relieve y color por vértice; adornos instanciados (piedritas, conchas, estrellas, troncos, pasto); cielo en 3 tonos; sol con halo y reflejo; recolorea las luces de su escena; sombras (la del sol se recalcula 15 veces por segundo); cada pieza y cada Frank a la altura del terreno; humo redondo | D-34 |
+| `src/logica/arena.ts` (+ 11 pruebas) | **nuevo**: altura de la arena (dunas, bajada al mar, zonas planas donde hay gente), su color por zonas y el reparto de adornos sin pisar a nadie; todo con semilla | D-35; lo que decide va en código puro |
+| `src/logica/poblacion.ts` (+ 3 pruebas) | `RELIEVE`, `COLORES_ARENA`, `ADORNOS`; el cielo de atardecer y el sol (posición, colores, luz, sombra) en `PLAYA` | D-35 |
+| `src/mundo/poblacion.ts` | terreno con relieve y color por vértice; adornos instanciados (piedritas, conchas, estrellas, troncos, pasto); cielo en 3 tonos; sol con halo y reflejo; recolorea las luces de su escena; sombras (la del sol se recalcula 15 veces por segundo); cada pieza y cada Frank a la altura del terreno; humo redondo | D-35 |
 | `src/mundo/playa.ts` | **nuevo**: el dibujo de la playa sale de `poblacion.ts`, que pasaba de 600 líneas (N2) | orden |
 | `src/mundo/navegador.ts` | **común**: `renderer.shadowMap.enabled` | sin esto no hay sombras reales |
-| `DECISIONES.md` (D-34) · `ESTADO-ACTUAL.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
+| `DECISIONES.md` (D-35) · `ESTADO-ACTUAL.md` | lo que dejó de ser verdad | CLAUDE.md §4 |
 
 ## 3. Cómo se ejecutó y se midió
 

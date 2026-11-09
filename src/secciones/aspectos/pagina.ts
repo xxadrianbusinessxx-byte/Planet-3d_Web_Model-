@@ -18,7 +18,7 @@ export interface PaginaAspecto {
   ficha: TextoDeAspecto
   /** Agrega a la escena fija (suelo y fondo blancos) lo que muestra este aspecto. */
   armar: (escena: Scene) => void
-  /** Opcional (D-33): su propia cámara fija, si la del continente no le sirve. */
+  /** Opcional (D-34): su propia cámara fija, si la del continente no le sirve. */
   camara?: CamaraDePagina
 }
 

@@ -107,7 +107,7 @@
     {
       "riesgo": "medio",
       "quien": "persona",
-      "respuesta": "Persona (un personaje): ≤ 8 000 triángulos (era 3 000; D-32) y ≤ 150 KB optimizado (Adrian, 2026-11-08; D-31; metricas.json triangulos_personaje y peso_personaje_kb). Falta el vehículo y el edificio.",
+      "respuesta": "Persona (un personaje): ≤ 8 000 triángulos (era 3 000; D-33) y ≤ 150 KB optimizado (Adrian, 2026-11-08; D-32; metricas.json triangulos_personaje y peso_personaje_kb). Falta el vehículo y el edificio.",
       "revisado": "2026-11-08",
       "estado": "abierto",
       "id": "limites-modelo-ia",
@@ -189,7 +189,7 @@
       "tipo": "pregunta",
       "fase": "F2",
       "titulo": "¿Se cambia el texto de la ficha de Population, que aún dice «guayabera», ahora que llevan la camisa de planetas de Frank?",
-      "detalle": "El texto lo aprobó la persona (D-28). Ahora los Grinders llevan la camisa de planetas del modelo (D-32) y la palapa ya no está (D-33): el párrafo 1, «Dress code» y «Home is a hammock under a palapa» quedaron desfasados.",
+      "detalle": "El texto lo aprobó la persona (D-28). Ahora los Grinders llevan la camisa de planetas del modelo (D-33) y la palapa ya no está (D-34): el párrafo 1, «Dress code» y «Home is a hammock under a palapa» quedaron desfasados.",
       "riesgo": "bajo",
       "quien": "persona",
       "destino": "src/logica/poblacion.ts",
