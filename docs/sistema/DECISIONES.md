@@ -548,7 +548,7 @@ Formato:
   responde la parte de vehículo de `limites-modelo-ia`). (7) El texto de la ficha lo aprobó la
   persona. De forma, elegido por el agente: el modelo se prepara en Blender sin ventana (el
   Blender abierto lo usaba otra sesión) con el script que queda junto al modelo en
-  `datos/modelos-ia/transporte/` (su `ORIGEN.md`); 5 223 triángulos y 58,9 KB. Las bocanadas son
+  `datos/modelos-ia/transporte/` (su origen, en `datos/modelos-ia/transporte/ORIGEN.md`); 5 223 triángulos y 58,9 KB. Las bocanadas son
   chicas (radio ≤ 0,85 m) y las nubes de adelante pasan por debajo del avión, lejos de la cámara:
   con bocanadas grandes saliendo de la nariz la página bajaba a 61–63 fps.
 - **Alternativas:** hamaca voladora, platillos o un autobús; una parada en la playa o una
