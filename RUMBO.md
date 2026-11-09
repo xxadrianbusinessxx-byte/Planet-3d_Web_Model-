@@ -37,11 +37,11 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - **otra-pc** [medio] — Probar el HTML portátil en otra PC, sin internet · persona
 - **invitar-colaborador** [medio] — Invitar a la otra persona como colaboradora del repo en GitHub · persona
 - **perfil-nuevo** [bajo] — ¿Lo que se llenó en docs/perfil/ sirve como perfil nuevo para la plantilla? · persona
-- **instalar-blender** [bajo] — Instalar Blender (gratis) para revisar los modelos IA · persona
 - **licencia-modelos-ia** [bajo] — Anotar origen y licencia de cada modelo IA · agente
 - **plantilla-git-crear-proyecto** [bajo] — crear_proyecto.py con "git": true debe permitir .git y .gitignore en la raíz y sembrar un .gitignore · agente
 - **plantilla-respaldo-git** [bajo] — Con git, el respaldo debería poder ser un commit: respaldar.py, sesion.py y CLAUDE.md §4 solo conocen el .zip · agente
 - **plantilla-medir-fps-playwright** [bajo] — Medir fps con Playwright: la pantalla completa se pide por CDP y se comprueba el tamaño del lienzo · agente
+- **plantilla-entrada-otras-ia** [bajo] — La plantilla debería traer un AGENTS.md de apunte a CLAUDE.md · agente
 
 ## Métricas de esta fase
 
@@ -53,6 +53,6 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 - 2026-11-08_f2-ramas-main-colaborativa.md
 - 2026-11-08_f2-poblacion-modelos-externos.md
 - 2026-11-08_f2-poblacion-grinders-playa.md
+- 2026-11-08_f2-poblacion-blender-mcp.md
 - 2026-11-08_f2-novedades-repo.md
-- 2026-11-08_f2-espacial-paginas-aspectos.md
 <!-- FIN GENERADO -->

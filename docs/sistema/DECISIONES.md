@@ -384,3 +384,23 @@ Formato:
 - **Por qué:** lo pidió la persona al ver la página Population: el modelo por código se ve plano.
 - **Revisar cuando:** llegue el primer modelo y se mida cuánto pesa el HTML portátil con él
   (D-12) y cuántos fps quedan.
+
+## D-30 · Blender 5.2 con el addon MCP para que la IA trabaje dentro de Blender
+- 2026-11-08 · persona
+- **Decisión:** se instala **Blender 5.2.3 LTS** (winget, instalador oficial) y el addon
+  **«MCP for Blender»** (`blender-mcp`, de ahujasid en GitHub, addon 1.8 y servidor 2.0.0), para
+  que la IA cree, revise, anime y exporte modelos dentro de Blender (D-29). El servidor se
+  registró en la configuración de usuario de Claude Code (`~/.claude.json` → `mcpServers.blender`,
+  `blender-mcp.exe` instalado con `uv tool`, telemetría apagada). **Reglas de uso:** (1) la
+  persona abre Blender y, en la barra lateral (N) → pestaña del MCP, deja el servidor
+  corriendo (escucha solo en `localhost:9876`); (2) una sola app conectada a la vez; (3) la
+  herramienta que ejecuta Python en Blender corre código sin límites: **guardar el `.blend`
+  antes**; (4) los modelos que baje (Sketchfab, Poly Haven, Poly Pizza…) siguen las licencias y
+  la prohibición de personajes con dueño de D-29 y D-13, y pasan por `docs/perfil/ORDEN.md` §4;
+  (5) generar con Meshy, Tripo o Hyper3D desde el addon pide claves: **nunca en el código ni en
+  git** (R5) y sin gastar créditos sin OK (R6).
+- **Alternativas:** Blender sin MCP, con scripts sin ventana (`blender --background --python`),
+  que sigue sirviendo para lotes; solo la persona usando Blender a mano.
+- **Por qué:** lo pidió la persona para que todo se vea mejor sin modelar a mano.
+- **Revisar cuando:** la otra persona quiera usarlo (cada quien lo instala en su PC) o el addon
+  pida algo de pago.

@@ -82,15 +82,15 @@ nunca sin OK (R6).
 | ídem, **personajes y animales ya animados** | **Quaternius** (quaternius.com) | CC0; trae caminar, correr, saludar, sentarse… |
 | ídem, de todo | **Sketchfab** (sketchfab.com) | filtrar *Downloadable* y licencia CC; revisar la de cada modelo |
 | Animar un personaje (esqueleto y movimientos) | **Mixamo** (mixamo.com) | gratis con cuenta de Adobe; esqueleto automático y cientos de animaciones para cuerpos de dos piernas |
-| Revisar, recortar, animar y exportar | **Blender** (blender.org) | gratis; pendiente `instalar-blender` |
+| Revisar, recortar, animar y exportar | **Blender** (blender.org) | gratis; instalado con el addon MCP, que deja a la IA trabajar dentro de Blender (D-30) |
 
 ### Paso a paso
 
 1. **Conseguir el modelo** en una de las páginas. Pedir o buscar estilo *low poly*, colores
    planos y pocas texturas. Preferir `.glb`; si solo hay `.fbx` u `.obj`, Blender lo convierte.
 2. **Entregarlo a la IA** (ver abajo). En bruto va a `datos/modelos-ia/`, fuera de git.
-3. **Blender** (lo puede hacer la persona o la IA con un script de Blender sin ventana,
-   `blender --background --python <script>.py`, una vez instalado): escala en metros, origen en
+3. **Blender** (lo puede hacer la persona, la IA por el addon MCP con Blender abierto (D-30)
+   o la IA con un script sin ventana, `blender --background --python <script>.py`): escala en metros, origen en
    la base, mirando al frente; *Decimate* si sobran triángulos; quitar caras sobrantes; las
    **anclas** de accesorios como objetos vacíos con su nombre (las del Grinder, en
    `ANCLAS_GRINDER` de `src/logica/poblacion.ts`); **animaciones** como acciones con nombre

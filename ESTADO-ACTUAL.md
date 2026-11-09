@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-08 (Grinders D-28; modelos externos low-poly D-29)
+- **Última revisión:** 2026-11-08 (Grinders D-28; modelos externos D-29; Blender con MCP D-30)
 
 ---
 
@@ -32,7 +32,8 @@ compartidos), 24 GB de RAM; libre: C: 41 GB, E: 505 GB.
   2.3.4, typescript 7.0.2, vitest 5.1.0, playwright 1.65.0 (usa el Edge 157 del sistema; no
   descarga navegadores). `@gltf-transform/cli` aún no (se instala al llegar el primer modelo, D-29).
 - **Pantalla:** 1920×1080 a 74 Hz: es el tope de fps medible.
-- **Blender:** no instalado (pendiente `instalar-blender`, F2 desde D-29).
+- **Blender:** 5.2.3 LTS (winget) con el addon «MCP for Blender» 1.8 activado y su servidor
+  `blender-mcp` 2.0.0 (`uv tool`) registrado en `~/.claude.json`; se usa con Blender abierto (D-30).
 
 ## 3. Fuentes únicas
 
