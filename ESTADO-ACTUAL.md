@@ -4,7 +4,7 @@ Regla de mantenimiento: **este archivo se actualiza en el mismo cambio que lo vu
 falso.** Si pasa de 150 líneas, lo que sobra es historial y va a `docs/historial/`.
 Aquí va lo **instalado y probado**, no lo planeado (lo planeado está en `RUMBO.md`).
 
-- **Última revisión:** 2026-11-09 (D-28 a D-37: población, Lifestyle y Transport)
+- **Última revisión:** 2026-11-09 (D-28 a D-37: población, Lifestyle y Transport; las 4 páginas de The Mushroom del colaborador ya en `main`)
 
 ---
 
@@ -64,6 +64,7 @@ Cada concepto tiene **un** lugar. Si aparece en otro, ese otro está mal (R1).
 | HTML portátil: un solo `dist/index.html` de 1,51 MB que abre por `file://` sin internet | `npm run build && npm run probar` | `mediciones/2026-11-09_0605_rendimiento.json` |
 | Vista espacial: 75 fps (tope de la pantalla) y carga de 0,74 s a 1920×1080 en esta laptop; umbrales duros 60 fps y 2 s (D-17) | `npm run medir` | `mediciones/2026-11-09_0605_rendimiento.json` |
 | Página Transport (The Leaf): The Bongliner, el bong volador de Adrian (`bongliner.glb`), entre nubes rosas y verdes, con humo y una ciudad low-poly abajo; cámara propia (D-36) | `npm test` (`transporte`) y a mano | `mediciones/2026-11-09_0602_transporte.json` |
+| Las 4 páginas de The Mushroom, hechas por el colaborador (Dulio) en `colaborativa` y juntadas a `main`; borradores por código (D-29): Climate («Pink Rain»: lluvia rosa en ciclo llovizna, aguacero y esporas que suben; charcos con ondas, glitter, neblina), Flora (Bud, Crystal y Shroom Trees, Poppy Bushes y Pink Blooms en un claro), Fauna (Chill Sloth, Giggle Slug, Speed Squirrel y Pink Moth en un claro con horizonte curvo) y Environment (Booze River, Butt Hills, Vape Clouds, Pill Rocks y lago rosa). Cada una arma su fondo propio, apaga la cuadrícula del escenario (`src/mundo/fondo-pagina.ts`) y pone todo a la izquierda de la ficha; las pruebas lo exigen con `src/logica/encuadre.ts` (proyección con la cámara fija) | `npm test` (`clima`, `flora`, `fauna`, `medio-ambiente` y `encuadre.test.ts`) y a mano | sin medición propia aún |
 | Al abrir cada sesión de Claude Code (hook de `.claude/settings.json`) y después de cada push, `scripts/novedades.py` resume lo nuevo de `main` y `colaborativa` en GitHub (D-21); marca con 🚀 los commits `LANZAMIENTO:` y solo pide juntar esos (D-27); al final recomienda tomar las secciones sin dueño y usar modelos externos low-poly (D-29) | `python scripts/test_novedades.py` (7 pruebas) y `python scripts/novedades.py` | — |
 | Ante un error (sin WebGL, fallo en el bucle) la página muestra un aviso en vez de quedar en blanco (D-09) | revisión; no hay prueba automática del caso sin WebGL | — |
 
