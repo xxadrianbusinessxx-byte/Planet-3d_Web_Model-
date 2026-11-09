@@ -168,6 +168,16 @@
       "reservada_el": "2026-11-08",
       "rama": "colaborativa",
       "estado": "reservada"
+    },
+    {
+      "id": "gastronomia",
+      "titulo": "Gastronomy",
+      "fase": "F2",
+      "continente": "the-leaf",
+      "quien": "colaborador",
+      "reservada_el": "2026-11-09",
+      "rama": "colaborativa",
+      "estado": "en-curso"
     }
   ]
 }

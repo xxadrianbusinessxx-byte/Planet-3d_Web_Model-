@@ -55,9 +55,9 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 ## Últimos informes
 
+- 2026-11-09_noche3-supuestos.md
 - 2026-11-09_noche2-supuestos.md
 - 2026-11-09_noche-supuestos.md
 - 2026-11-09_f2-transporte-bongliner.md
 - 2026-11-09_f2-mushroom-4-paginas.md
-- 2026-11-09_f2-estilo-de-vida-casino.md
 <!-- FIN GENERADO -->

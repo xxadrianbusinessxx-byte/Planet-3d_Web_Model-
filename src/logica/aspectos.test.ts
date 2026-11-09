@@ -3,7 +3,7 @@ import { aspectosDe, CONTINENTE_EN_REPARTO, otraPagina, todosLosAspectos } from 
 
 describe('aspectosDe (desde reparto.json, D-25)', () => {
   it('cada continente tiene sus aspectos, en el orden del reparto', () => {
-    expect(aspectosDe('hoja')).toEqual(['poblacion', 'transporte', 'estilo-de-vida'])
+    expect(aspectosDe('hoja')).toEqual(['poblacion', 'transporte', 'estilo-de-vida', 'gastronomia'])
     expect(aspectosDe('hongo')).toEqual(['clima', 'flora', 'fauna', 'medio-ambiente'])
     expect(aspectosDe('diamante')).toEqual(['zonas-de-trabajo', 'trabajos', 'recursos-naturales'])
   })
