@@ -423,6 +423,20 @@
       "respuesta": "Se adelantan a F2 todos los aspectos de los continentes (D-27).",
       "revisado": "2026-11-08",
       "estado": "cerrado"
+    },
+    {
+      "id": "plantilla-d1-ignora-gitignore",
+      "tipo": "plantilla",
+      "division": "nucleo",
+      "fase": "F2",
+      "titulo": "D1 (rutas vivas) no debe dar por buena una ruta que solo existe en una carpeta ignorada por git",
+      "detalle": "planeta-3d, 2026-11-09: DECISIONES citaba `ORIGEN.md` suelto; en la laptop verificar_docs.ruta_existe lo encontraba con rglob dentro de datos/ (ignorada por .gitignore) y daba verde, pero un clon limpio desde GitHub fallaba D1. Arreglo propuesto: que el rglob salte lo que git ignora (git check-ignore o git ls-files) o que una prueba de verificar corra sobre un clon limpio.",
+      "riesgo": "bajo",
+      "quien": "agente",
+      "destino": "scripts/verificar_docs.py",
+      "respuesta": null,
+      "revisado": "2026-11-09",
+      "estado": "abierto"
     }
   ]
 }
