@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { seVeJuntoALaFicha } from './encuadre'
 import {
   COLORES_FAUNA,
   FICHA_FAUNA,
@@ -93,6 +94,22 @@ describe('mothPos y polvo', () => {
   it('rechaza índices inválidos', () => {
     expect(() => polvoMoth(-1, 0)).toThrow(RangeError)
     expect(() => polvoMoth(POLVO.cuentas, 0)).toThrow(RangeError)
+  })
+})
+
+describe('encuadre', () => {
+  it('los cuatro animales se ven desde la cámara fija, sin quedar bajo la ficha', () => {
+    expect(seVeJuntoALaFicha([SLOTH.x, SLOTH.y, SLOTH.z])).toBe(true)
+    expect(seVeJuntoALaFicha([SLOTH.x, SLOTH.y - 1.5 * SLOTH.escala, SLOTH.z])).toBe(true)
+    expect(seVeJuntoALaFicha([SLUG.x, 0, SLUG.z])).toBe(true)
+    for (let t = 0; t < MOTH.periodoS; t += 0.2) {
+      const m = mothPos(t)
+      expect(seVeJuntoALaFicha([m.x, m.y, m.z]), `polilla en t=${t.toFixed(1)}`).toBe(true)
+    }
+    for (let t = 0; t < SQUIRREL.vueltaS; t += 0.1) {
+      const s = squirrelPos(t)
+      expect(seVeJuntoALaFicha([s.x, 0.5, s.z]), `ardilla en t=${t.toFixed(1)}`).toBe(true)
+    }
   })
 })
 

@@ -52,14 +52,18 @@ export const COLORES_FAUNA = {
   rama: 0x6b3e1f,
 } as const
 
+// Dónde va cada animal: todos en la parte que se ve desde la cámara fija, a la izquierda de
+// la ficha (src/logica/encuadre.ts); con x > ~0 quedan tapados. `escala` agranda el dibujo
+// para que se lea a 12–20 m de la cámara.
+
 // ────────── Chill Sloth ──────────
-export const SLOTH = { x: -5, y: 3.4, z: 0, periodoSwayS: 6.2, anguloMax: 0.18 }
+export const SLOTH = { x: -7.5, y: 3.6, z: -2, escala: 1.4, periodoSwayS: 6.2, anguloMax: 0.18 }
 export function slothSway(t: number): number {
   const w = (2 * Math.PI) / SLOTH.periodoSwayS
   const tt = Number.isFinite(t) ? t : 0
   return SLOTH.anguloMax * Math.sin(tt * w)
 }
-export const HUMO_SLOTH = { bocanadas: 3, vidaS: 5, subida: 1.0, escalaMax: 0.22, opacidadMax: 0.4 }
+export const HUMO_SLOTH = { bocanadas: 5, vidaS: 5, subida: 1.6, escalaMax: 0.45, opacidadMax: 0.6 }
 export function humoSloth(i: number, t: number): { subida: number; escala: number; opacidad: number } {
   if (!Number.isInteger(i) || i < 0 || i >= HUMO_SLOTH.bocanadas) throw new RangeError('humoSloth: fuera de rango')
   const tt = Number.isFinite(t) && t > 0 ? t : 0
@@ -72,7 +76,7 @@ export function humoSloth(i: number, t: number): { subida: number; escala: numbe
 }
 
 // ────────── Giggle Slug ──────────
-export const SLUG = { x: 0.2, z: 2.5, periodoS: 0.9, amplitud: 0.18, alturaBase: 0.5 }
+export const SLUG = { x: -6, z: 4, escala: 1.6, periodoS: 0.9, amplitud: 0.18, alturaBase: 0.5 }
 export function slugJiggle(t: number): { altura: number; estirar: number } {
   const w = (2 * Math.PI) / SLUG.periodoS
   const tt = Number.isFinite(t) ? t : 0
@@ -81,7 +85,7 @@ export function slugJiggle(t: number): { altura: number; estirar: number } {
 }
 
 // ────────── Speed Squirrel ──────────
-export const SQUIRREL = { centroX: 4.8, centroZ: 1.2, radio: 0.9, vueltaS: 1.6, vibracion: 0.04 }
+export const SQUIRREL = { centroX: -2, centroZ: 3.6, escala: 1.8, radio: 1.1, vueltaS: 1.6, vibracion: 0.04 }
 export function squirrelPos(t: number): { x: number; z: number; giro: number; vib: number } {
   const tt = Number.isFinite(t) && t > 0 ? t : 0
   const a = (tt / SQUIRREL.vueltaS) * Math.PI * 2
@@ -103,7 +107,7 @@ export function rastroArdilla(i: number, t: number): { x: number; z: number; opa
 }
 
 // ────────── Pink Moth ──────────
-export const MOTH = { centroX: -1.5, centroY: 3.2, centroZ: -1.5, radio: 2.2, altura: 0.8, periodoS: 5.2 }
+export const MOTH = { centroX: -3.6, centroY: 3.0, centroZ: -2.5, escala: 2.2, radio: 2.2, altura: 0.6, periodoS: 5.2 }
 export function mothPos(t: number): { x: number; y: number; z: number; giro: number; aleteo: number } {
   const tt = Number.isFinite(t) && t > 0 ? t : 0
   const a = (tt / MOTH.periodoS) * Math.PI * 2

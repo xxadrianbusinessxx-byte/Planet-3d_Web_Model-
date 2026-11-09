@@ -15,7 +15,6 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
-  PlaneGeometry,
   SphereGeometry,
   TorusGeometry,
   type Scene,
@@ -25,6 +24,7 @@ import {
   FICHA_FAUNA,
   HUMO_SLOTH,
   humoSloth,
+  MOTH,
   mothPos,
   POLVO,
   polvoMoth,
@@ -37,6 +37,7 @@ import {
   SQUIRREL,
   squirrelPos,
 } from '../logica/fauna'
+import { ocultarCuadricula } from './fondo-pagina'
 
 void FICHA_FAUNA
 
@@ -74,9 +75,9 @@ function crearSloth(): { grupo: Group; cuerpo: Group } {
   cara.position.set(0, 0.55, 0.2)
   cuerpo.add(cara)
   for (const lx of [-0.15, 0.15]) {
-    const ojo = new Mesh(new SphereGeometry(0.06, 6, 5), matOjo)
-    ojo.position.set(lx, 0.6, 0.52)
-    ojo.scale.set(1, 0.35, 1) // ojos entrecerrados
+    const ojo = new Mesh(new SphereGeometry(0.1, 6, 5), matOjo)
+    ojo.position.set(lx, 0.62, 0.55)
+    ojo.scale.set(1.2, 0.4, 0.6) // ojos rojos entrecerrados
     cuerpo.add(ojo)
   }
   // Brazos colgando (sostenido de la rama).
@@ -90,16 +91,17 @@ function crearSloth(): { grupo: Group; cuerpo: Group } {
   cuerpo.position.set(0, -0.7, 0) // colgando del origen del grupo (debajo de la rama)
   g.add(cuerpo)
   g.position.set(SLOTH.x, SLOTH.y, SLOTH.z)
+  g.scale.setScalar(SLOTH.escala)
   return { grupo: g, cuerpo }
 }
 
 function crearRama(): Mesh {
   const rama = new Mesh(
-    new CylinderGeometry(0.15, 0.18, 4, 6),
+    new CylinderGeometry(0.15 * SLOTH.escala, 0.18 * SLOTH.escala, 5, 6),
     new MeshLambertMaterial({ color: COLORES_FAUNA.rama, flatShading: true }),
   )
   rama.rotation.z = Math.PI / 2
-  rama.position.set(SLOTH.x, SLOTH.y + 0.35, SLOTH.z)
+  rama.position.set(SLOTH.x, SLOTH.y + 0.1 * SLOTH.escala, SLOTH.z)
   return rama
 }
 
@@ -142,7 +144,9 @@ function crearSlug(): { grupo: Group; cuerpo: Mesh; hongo: Group } {
   hongo.position.set(-0.1, SLUG.alturaBase + 0.1, 0)
   g.add(hongo)
   g.position.set(SLUG.x, 0, SLUG.z)
-  g.rotation.y = -Math.PI / 2
+  g.scale.setScalar(SLUG.escala)
+  // De perfil a la cámara, mirando a la derecha (hacia la ardilla).
+  g.rotation.y = 0.25
   return { grupo: g, cuerpo, hongo }
 }
 
@@ -174,7 +178,8 @@ function crearArdilla(): Group {
   cola.position.set(0, 0.25, -0.35)
   cola.rotation.x = 0.7
   g.add(cola)
-  g.position.set(SQUIRREL.centroX, 0.3, SQUIRREL.centroZ)
+  g.position.set(SQUIRREL.centroX, 0.3 * SQUIRREL.escala, SQUIRREL.centroZ)
+  g.scale.setScalar(SQUIRREL.escala)
   return g
 }
 
@@ -185,13 +190,15 @@ function crearMoth(): { grupo: Group; alaIzq: Mesh; alaDer: Mesh } {
   const cuerpo = new Mesh(new SphereGeometry(0.1, 7, 5), matCuerpo)
   cuerpo.scale.set(0.6, 0.6, 1.6)
   g.add(cuerpo)
-  const ala = new PlaneGeometry(0.5, 0.35)
-  const alaIzq = new Mesh(ala, matAla)
-  alaIzq.position.set(-0.25, 0, 0)
-  g.add(alaIzq)
+  // Alas redondeadas que nacen del cuerpo (la geometría arranca en x = 0) y aletean
+  // girando sobre el eje del cuerpo.
+  const ala = new CircleGeometry(0.28, 7).scale(1, 1.25, 1).rotateX(-Math.PI / 2).translate(0.27, 0, 0)
   const alaDer = new Mesh(ala, matAla)
-  alaDer.position.set(0.25, 0, 0)
   g.add(alaDer)
+  const alaIzq = new Mesh(ala, matAla)
+  alaIzq.scale.x = -1
+  g.add(alaIzq)
+  g.scale.setScalar(MOTH.escala)
   return { grupo: g, alaIzq, alaDer }
 }
 
@@ -199,6 +206,7 @@ export function armarFauna(escena: Scene): void {
   escena.background = new Color(COLORES_FAUNA.cieloAbajo)
   escena.fog = new Fog(COLORES_FAUNA.niebla, 20, 55)
   escena.add(cielo())
+  ocultarCuadricula(escena)
 
   // Un anillo oscuro hacia el horizonte para que se lea como un planeta curvo.
   const horizonte = new Mesh(
@@ -243,7 +251,7 @@ export function armarFauna(escena: Scene): void {
   }
 
   // Rastro de cristales de la ardilla.
-  const geoCristal = new IcosahedronGeometry(0.08, 0)
+  const geoCristal = new IcosahedronGeometry(0.15, 0)
   const rastro: { malla: Mesh; mat: MeshBasicMaterial }[] = []
   for (let i = 0; i < RASTRO.cuentas; i++) {
     const mat = new MeshBasicMaterial({ color: COLORES_FAUNA.ardillaCristal, transparent: true, opacity: 0, depthWrite: false })
@@ -253,7 +261,7 @@ export function armarFauna(escena: Scene): void {
   }
 
   // Polvo rosa de la polilla.
-  const geoPolvo = new IcosahedronGeometry(0.06, 0)
+  const geoPolvo = new IcosahedronGeometry(0.1, 0)
   const polvo: { malla: Mesh; mat: MeshBasicMaterial }[] = []
   for (let i = 0; i < POLVO.cuentas; i++) {
     const mat = new MeshBasicMaterial({ color: COLORES_FAUNA.polillaPolvo, transparent: true, opacity: 0, depthWrite: false, fog: false })
@@ -270,7 +278,13 @@ export function armarFauna(escena: Scene): void {
     sloth.cuerpo.rotation.z = slothSway(t)
     humos.forEach((h, i) => {
       const b = humoSloth(i, t)
-      h.malla.position.set(SLOTH.x + 0.2, SLOTH.y + 0.5 + b.subida, SLOTH.z + 0.1)
+      // Sale de la boca (delante de la cara) y sube.
+      // Sale por un lado de la cara (sin taparla) y sube ladeándose.
+      h.malla.position.set(
+        SLOTH.x + (0.55 + 0.35 * b.subida) * SLOTH.escala,
+        SLOTH.y - 0.35 * SLOTH.escala + b.subida,
+        SLOTH.z + 0.6 * SLOTH.escala,
+      )
       h.malla.scale.setScalar(b.escala)
       h.mat.opacity = b.opacidad
     })
@@ -282,7 +296,7 @@ export function armarFauna(escena: Scene): void {
 
     // Ardilla.
     const s = squirrelPos(t)
-    ardilla.position.set(s.x, 0.3 + s.vib * 3, s.z)
+    ardilla.position.set(s.x, 0.3 * SQUIRREL.escala + s.vib * 3, s.z)
     ardilla.rotation.y = s.giro
     rastro.forEach((r, i) => {
       const d = rastroArdilla(i, t)
@@ -295,8 +309,8 @@ export function armarFauna(escena: Scene): void {
     moth.grupo.position.set(m.x, m.y, m.z)
     moth.grupo.rotation.y = m.giro
     const aleteo = 0.6 + 0.9 * m.aleteo
-    moth.alaIzq.rotation.y = -aleteo
-    moth.alaDer.rotation.y = aleteo
+    moth.alaIzq.rotation.z = -aleteo
+    moth.alaDer.rotation.z = aleteo
     polvo.forEach((p, i) => {
       const d = polvoMoth(i, t)
       p.malla.position.set(d.x, Math.max(0.1, d.y), d.z)
