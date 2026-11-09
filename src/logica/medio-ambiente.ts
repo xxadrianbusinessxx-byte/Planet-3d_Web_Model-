@@ -41,7 +41,7 @@ export const COLORES_MEDIO = {
   colillaFiltro: 0xd99a4a,
   colillaCeniza: 0x6e6a66,
   colillaBrasa: 0xff5a1f,
-  humoColilla: 0xb8b4b8,
+  humoColilla: 0x8e8892,
   vapeFresa: 0xff6aa8,
   vapeMenta: 0x9fe6c0,
   vapeChicle: 0xa8c0ff,
@@ -121,7 +121,7 @@ export const COLILLAS: ReadonlyArray<{ x: number; z: number; alto: number; giro:
 export const FRACCION_FILTRO = 0.4
 
 /** El humo que sale de la punta de cada colilla. */
-export const HUMO_COLILLA = { bocanadas: 3, vidaS: 4, subida: 1.6, escalaMax: 1.0, opacidadMax: 0.7 }
+export const HUMO_COLILLA = { bocanadas: 4, vidaS: 4, subida: 1.6, escalaMax: 0.8, opacidadMax: 0.85 }
 
 export function humoColilla(i: number, t: number): { subida: number; escala: number; opacidad: number } {
   if (!Number.isInteger(i) || i < 0 || i >= HUMO_COLILLA.bocanadas) throw new RangeError('humoColilla: fuera de rango')
