@@ -50,9 +50,9 @@ Contexto, no alcance: nada de esto entra en una tarea si la tarea no lo nombra.
 
 ## Últimos informes
 
+- 2026-11-09_noche2-supuestos.md
+- 2026-11-09_noche-supuestos.md
+- 2026-11-09_f2-mushroom-4-paginas.md
 - 2026-11-08_f2-ramas-main-colaborativa.md
 - 2026-11-08_f2-poblacion-modelos-externos.md
-- 2026-11-08_f2-poblacion-grinders-playa.md
-- 2026-11-08_f2-poblacion-blender-mcp.md
-- 2026-11-08_f2-novedades-repo.md
 <!-- FIN GENERADO -->
