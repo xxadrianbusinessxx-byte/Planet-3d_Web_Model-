@@ -25,7 +25,6 @@ import {
   FICHA_FAUNA,
   HUMO_SLOTH,
   humoSloth,
-  MOTH,
   mothPos,
   POLVO,
   polvoMoth,
