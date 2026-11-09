@@ -1,0 +1,25 @@
+{
+  "fecha": "2026-11-09T06:02",
+  "tipo": "rendimiento",
+  "comando": "npm run build; tamaño en disco de src/modelos/bongliner.glb y triángulos del script de Blender (preparar_bongliner.py); el script de Playwright de la sesión de D-36 (medir_transporte.mjs, en su scratchpad): dist/index.html por file:// en msedge a pantalla completa por CDP (R9), clic en The Leaf, → a Transport, 10 s de requestAnimationFrame",
+  "condiciones": "esta laptop (i3-1215U, Intel UHD); msedge 157.0.4341.42; lienzo 1920×1080; Blender abierto con otra sesión. Bong acostado como avión (boquilla de nariz) y ciudad low-poly abajo (D-36)",
+  "valores": {
+    "triangulos_vehiculo": 5223,
+    "peso_vehiculo_kb": 58.9,
+    "peso_html_mb": 1.03
+  },
+  "detalle": {
+    "fps_pagina_transporte": {
+      "bong_de_pie": [75, 75, 75],
+      "acostado_humo_grande_sin_ciudad": [61.4, 63],
+      "acostado_humo_chico_con_ciudad": [75, 74, 75, 75, 66.5]
+    },
+    "percentil_95_ms": {
+      "acostado_humo_grande_sin_ciudad": 26.7,
+      "acostado_humo_chico_con_ciudad": [13.4, 13.5, 13.4, 13.5, 13.5]
+    },
+    "nota_fps": "las bocanadas grandes (radio 1,4) salían de la nariz, el punto más cerca de la cámara, y llenaban media pantalla de transparencias: bajó a 61–63 fps con p95 26,7 ms. Con radio 0,85 y las nubes de adelante lejos de la cámara volvió al tope. La corrida de 66,5 fps tiene el mismo p95 (13,5 ms): unos pocos cuadros lentos, no la página. Dos corridas con el lienzo de 1079 px se descartaron (R9).",
+    "triangulos_hud": { "bong_de_pie": 18231, "acostado_con_ciudad": 24961 },
+    "fps_espacial": { "valor": 74.8, "archivo": "mediciones/2026-11-09_0601_rendimiento.json" }
+  }
+}

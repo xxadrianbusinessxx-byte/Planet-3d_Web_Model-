@@ -1,10 +1,12 @@
 // La página «Transport» vuelta objetos de three (D-36): el cielo turquesa con las nubes rosas y
-// verdes que pasan, The Bongliner (src/modelos/bongliner.glb) flotando y su humo. Qué va dónde y
+// verdes y la ciudad de abajo que pasan, The Bongliner (src/modelos/bongliner.glb) flotando y su humo. Qué va dónde y
 // cómo se mueve lo decide src/logica/transporte.ts; aquí solo se dibuja y se lee el reloj.
 import {
   BackSide,
+  BoxGeometry,
   BufferAttribute,
   Color,
+  ConeGeometry,
   DirectionalLight,
   DoubleSide,
   Fog,
@@ -33,6 +35,9 @@ import {
   BONGLINER,
   bocanadaBong,
   CIELO,
+  CIUDAD,
+  posicionDeEdificio,
+  repartirEdificios,
   HUMO_BONG,
   MATERIALES_BONGLINER,
   NODOS_BONGLINER,
@@ -49,6 +54,7 @@ export function armarTransporte(escena: Scene): void {
   ponerLuces(escena)
   const reloj = crearCielo(escena)
   const nubes = crearNubes(escena)
+  const ciudad = crearCiudad(escena)
   const bong = new Group()
   escena.add(bong)
   const humo = crearHumo()
@@ -71,8 +77,10 @@ export function armarTransporte(escena: Scene): void {
     const t = (performance.now() - inicio) / 1000
     const p = vuelo(t)
     bong.position.set(BONGLINER.posicion[0], BONGLINER.posicion[1] + p.altura, BONGLINER.posicion[2])
-    bong.rotation.set(p.cabeceo, BONGLINER.giro, p.alabeo, 'YXZ')
+    // El .glb mira hacia +z: girar en x hacia +y baja la nariz, así que el cabeceo va con signo −.
+    bong.rotation.set(-p.cabeceo, BONGLINER.giro, p.alabeo, 'YXZ')
     nubes(t)
+    ciudad(t)
     if (boquilla) humo.mover(t)
   }
 }
@@ -192,7 +200,8 @@ function crearHumo(): { grupo: Group; mover: (t: number) => void } {
     mover(t) {
       bocanadas.forEach((b, i) => {
         const p = bocanadaBong(t, i)
-        // En el marco del bong: arriba es +y y atrás es −z (el .glb mira hacia +z).
+        // En el marco del bong: arriba es +y y atrás es −z (el .glb mira hacia +z; la boquilla es
+        // la nariz, así que el humo sale adelante y se queda atrás, por encima del avión).
         b.position.set(0, p.subida, -p.atras)
         b.scale.setScalar(p.escala)
         b.material.opacity = p.opacidad
@@ -250,4 +259,50 @@ async function cargarBongliner(): Promise<Object3D> {
   gltf.scene.getObjectByName('vidrio')!.renderOrder = 2
   gltf.scene.scale.setScalar(BONGLINER.escala)
   return gltf.scene
+}
+
+/**
+ * La ciudad de abajo: el suelo, los bloques (una malla instanciada, con un color por edificio) y
+ * las puntas de las torres (otra). Devuelve la función que la hace pasar en el segundo `t`.
+ */
+function crearCiudad(escena: Scene): (t: number) => void {
+  const edificios = repartirEdificios()
+  const torres = edificios.filter((e) => e.punta)
+
+  const suelo = new Mesh(new PlaneGeometry(CIUDAD.lado * 1.6, CIUDAD.lado * 1.6), new MeshLambertMaterial({ color: CIUDAD.suelo }))
+  suelo.rotation.x = -Math.PI / 2
+  suelo.position.set(CIUDAD.centro[0], CIUDAD.altura, CIUDAD.centro[1])
+  escena.add(suelo)
+
+  // La base de cada pieza en y = 0, para escalarla hacia arriba.
+  const caja = new BoxGeometry(1, 1, 1).translate(0, 0.5, 0)
+  const punta = new ConeGeometry(Math.SQRT1_2, 1, 4).rotateY(Math.PI / 4).translate(0, 0.5, 0)
+  const material = new MeshLambertMaterial({ flatShading: true })
+  const bloques = new InstancedMesh(caja, material, edificios.length)
+  const puntas = new InstancedMesh(punta, material, torres.length)
+  const color = new Color()
+  edificios.forEach((e, i) => bloques.setColorAt(i, color.set(e.color)))
+  torres.forEach((e, i) => puntas.setColorAt(i, color.set(e.color).multiplyScalar(0.85)))
+  for (const m of [bloques, puntas]) {
+    m.frustumCulled = false // los edificios dan la vuelta por todo el cuadrado
+    escena.add(m)
+  }
+
+  const m = new Matrix4()
+  const sinGiro = new Quaternion()
+  const escala = new Vector3()
+  const lugar = new Vector3()
+  return (t) => {
+    let k = 0
+    edificios.forEach((e, i) => {
+      const [x, z] = posicionDeEdificio(e, t)
+      bloques.setMatrixAt(i, m.compose(lugar.set(x, CIUDAD.altura, z), sinGiro, escala.set(e.ancho, e.alto, e.fondo)))
+      if (e.punta) {
+        lugar.y = CIUDAD.altura + e.alto
+        puntas.setMatrixAt(k++, m.compose(lugar, sinGiro, escala.set(e.ancho, e.ancho * 1.3, e.fondo)))
+      }
+    })
+    bloques.instanceMatrix.needsUpdate = true
+    puntas.instanceMatrix.needsUpdate = true
+  }
 }

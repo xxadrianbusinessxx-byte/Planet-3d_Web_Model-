@@ -37,11 +37,12 @@ export const FICHA_TRANSPORTE: Pick<Ficha, 'icono' | 'titulo' | 'subtitulo' | 'p
 }
 
 /**
- * La cámara propia de la página (D-34): de lado y un poco de frente, en el aire; mira a la
- * derecha del bong para que la ficha (a la derecha) no lo tape.
+ * La cámara propia de la página (D-34): en el aire, de lado, un poco de frente y un poco desde
+ * arriba para que se vean las alas; mira a la derecha del bong para que la ficha (a la derecha)
+ * no lo tape.
  */
 export const VISTA_TRANSPORTE: CamaraDePagina = {
-  camara: { posicion: [2.5, 1.8, 13], objetivo: [2, 0.2, 0] },
+  camara: { posicion: [2.4, 4.2, 11], objetivo: [1.8, -0.3, 0] },
   apertura: 45,
 }
 
@@ -67,10 +68,13 @@ export const MATERIALES_BONGLINER: Record<string, { color: number; tipo: TipoMat
   'luz-verde': { color: 0x20ff50, tipo: 'luz' },
 }
 
-/** Dónde vuela el bong: el centro de su altura en el origen, de frente hacia la izquierda de la cámara. */
+/**
+ * Dónde vuela el bong: acostado como avión, con la boquilla de nariz (D-36), de frente hacia la
+ * izquierda de la cámara.
+ */
 export const BONGLINER = {
-  /** El .glb tiene la base del bulbo en y = 0 y mide 5,4 m: se baja a la mitad. */
-  posicion: [0, -2.7, 0] as Vec3,
+  /** El .glb tiene su centro en el origen (5,4 m de largo y 6,2 m de envergadura). */
+  posicion: [0, 0, 0] as Vec3,
   /** Giro sobre el eje vertical (0 = de frente a la cámara, +z); negativo = hacia la izquierda. */
   giro: -0.75,
   escala: 1,
@@ -85,7 +89,7 @@ export const VUELO = {
   cabeceo: 0.04,
 }
 
-/** La pose del bong en el segundo `t`: cuánto sube (m), alabeo y cabeceo (rad). */
+/** La pose del bong en el segundo `t`: cuánto sube (m), alabeo y cabeceo (rad; + = nariz arriba). */
 export function vuelo(t: number): { altura: number; alabeo: number; cabeceo: number } {
   const s = Number.isFinite(t) ? t : 0
   const wa = (2 * Math.PI) / VUELO.periodoAlturaS
@@ -111,7 +115,7 @@ export const CIELO = {
   /** Menor que el plano lejano de la cámara del escenario (120). */
   radio: 100,
   nieblaDesde: 30,
-  nieblaHasta: 85,
+  nieblaHasta: 90,
 }
 
 /** Las nubes: rosas y verdes, medio transparentes, como las del planeta (D-19). */
@@ -120,7 +124,7 @@ export const NUBES = {
   rosa: (ROSA_NUBE[0] << 16) | (ROSA_NUBE[1] << 8) | ROSA_NUBE[2],
   verde: (VERDE_NUBE[0] << 16) | (VERDE_NUBE[1] << 8) | VERDE_NUBE[2],
   opacidad: 0.55,
-  /** Cuántas detrás del bong y cuántas delante (abajo o arriba, sin taparlo). */
+  /** Cuántas detrás del bong y cuántas delante (por debajo, sin taparlo). */
   detras: 16,
   delante: 4,
   /** El tramo por el que pasan: entran detrás de la cámara y se pierden en la niebla. */
@@ -146,8 +150,9 @@ export interface Nube {
 }
 
 /**
- * Las nubes de la página, siempre las mismas (semilla). Las de atrás van lejos del bong; las de
- * adelante pasan entre él y la cámara, pero por abajo o por arriba, para no taparlo.
+ * Las nubes de la página, siempre las mismas (semilla). Las de atrás van lejos del bong y por
+ * encima de la ciudad; las de adelante pasan por debajo del bong (entre él y la ciudad), cerca de
+ * él y no de la cámara, para no taparlo ni llenar la pantalla.
  */
 export function repartirNubes(semilla: number = NUBES.semilla): Nube[] {
   const azar = crearAleatorio(semilla)
@@ -163,8 +168,8 @@ export function repartirNubes(semilla: number = NUBES.semilla): Nube[] {
       bolitas.push({ desplazamiento: [entre(-0.4, 0.4), entre(0, 0.6), entre(-1.6, 1.6)], radio: entre(0.7, 1.3) })
     }
     nubes.push({
-      lateral: adelante ? entre(3.5, 6.5) : entre(-34, -6),
-      altura: adelante ? (azar() < 0.5 ? entre(-8, -4.5) : entre(4.5, 7)) : entre(-10, 12),
+      lateral: adelante ? entre(0.5, 3) : entre(-34, -6),
+      altura: adelante ? entre(-8, -4.5) : entre(-4, 12),
       // Repartidas a lo largo del tramo, con un poco de desorden.
       inicio: ((i + entre(0, 0.8)) / total) * NUBES.largo,
       escala: adelante ? entre(0.8, 1.3) : entre(1.2, 2.4),
@@ -190,7 +195,7 @@ export function posicionDeNube(nube: Nube, t: number, giro: number = BONGLINER.g
 }
 
 /** El humo de la boquilla: bocanadas grandes que suben, se quedan atrás y se pierden. */
-export const HUMO_BONG = { bocanadas: 4, vidaS: 6, subida: 2.2, atras: 3.5, escalaMin: 0.25, escalaMax: 1.4, opacidadMax: 0.8 }
+export const HUMO_BONG = { bocanadas: 4, vidaS: 6, subida: 1.6, atras: 4, escalaMin: 0.2, escalaMax: 0.85, opacidadMax: 0.75 }
 
 /**
  * La bocanada `i` en el segundo `t`, en el marco del bong desde la boquilla: cuánto subió, cuánto
@@ -207,4 +212,87 @@ export function bocanadaBong(t: number, i: number): { subida: number; atras: num
     escala: HUMO_BONG.escalaMin + (HUMO_BONG.escalaMax - HUMO_BONG.escalaMin) * Math.sqrt(avance),
     opacidad: HUMO_BONG.opacidadMax * Math.min(1, avance * 8) * (1 - avance),
   }
+}
+
+/**
+ * La ciudad de abajo (D-36): bloques de colores pastel con techo plano y algunas torres con punta,
+ * muy por debajo del bong; la niebla la funde con el cielo. Pasa al revés del frente del bong, a
+ * la misma velocidad que las nubes, y cada edificio vuelve a entrar por el otro lado del cuadrado.
+ */
+export const CIUDAD = {
+  semilla: 2026,
+  /** A cuántos metros por debajo del bong está el suelo. */
+  altura: -40,
+  /** El cuadrado de ciudad, en metros, centrado bajo la cámara; sus bordes quedan en la niebla. */
+  lado: 196,
+  /** Una manzana por celda, con su calle alrededor. */
+  paso: 8,
+  /** Qué parte de las manzanas queda vacía (plazas y parques). */
+  vacias: 0.12,
+  anchoMin: 3,
+  anchoMax: 5.2,
+  altoMin: 1.5,
+  altoMax: 5,
+  /** Qué parte son torres (más altas, más delgadas y con punta). */
+  torres: 0.1,
+  altoTorreMax: 11,
+  colores: [0xffb3d9, 0xa8f0c0, 0x8ee8f0, 0xd9c2ff, 0xfff0a8, 0xf7f7f7] as const,
+  suelo: 0x6fcf8f,
+  /** Su centro en el plano [x, z]: bajo la vista de la cámara, que mira hacia −z. */
+  centro: [2, -10] as [number, number],
+}
+
+export interface Edificio {
+  /** Posición de su base en el plano, desde el centro de la ciudad, al principio (t = 0). */
+  x: number
+  z: number
+  ancho: number
+  fondo: number
+  alto: number
+  color: number
+  punta: boolean
+}
+
+/** Los edificios de la ciudad, siempre los mismos (semilla): uno por manzana, salvo las vacías. */
+export function repartirEdificios(semilla: number = CIUDAD.semilla): Edificio[] {
+  const azar = crearAleatorio(semilla)
+  const entre = (a: number, b: number) => a + (b - a) * azar()
+  const celdas = Math.floor(CIUDAD.lado / CIUDAD.paso)
+  const lista: Edificio[] = []
+  for (let i = 0; i < celdas; i++) {
+    for (let j = 0; j < celdas; j++) {
+      if (azar() < CIUDAD.vacias) continue
+      const torre = azar() < CIUDAD.torres
+      const ancho = entre(CIUDAD.anchoMin, CIUDAD.anchoMax)
+      lista.push({
+        x: (i + 0.5) * CIUDAD.paso - CIUDAD.lado / 2 + entre(-0.6, 0.6),
+        z: (j + 0.5) * CIUDAD.paso - CIUDAD.lado / 2 + entre(-0.6, 0.6),
+        ancho: torre ? ancho * 0.7 : ancho,
+        fondo: torre ? ancho * 0.7 : entre(CIUDAD.anchoMin, CIUDAD.anchoMax),
+        alto: torre ? entre(CIUDAD.altoMax, CIUDAD.altoTorreMax) : entre(CIUDAD.altoMin, CIUDAD.altoMax),
+        color: CIUDAD.colores[Math.floor(azar() * CIUDAD.colores.length)],
+        punta: torre,
+      })
+    }
+  }
+  return lista
+}
+
+/** Vuelve un valor al intervalo [−lado/2, lado/2) (el cuadrado da la vuelta como un toro). */
+function envolver(v: number, lado: number): number {
+  return ((((v + lado / 2) % lado) + lado) % lado) - lado / 2
+}
+
+/**
+ * Dónde está la base de un edificio en el segundo `t`, en el plano [x, z] del mundo: la ciudad
+ * avanza al revés del frente del bong y cada edificio que sale del cuadrado entra por el otro lado.
+ */
+export function posicionDeEdificio(e: Edificio, t: number, giro: number = BONGLINER.giro): [number, number] {
+  const s = Number.isFinite(t) && t > 0 ? t : 0
+  const [fx, fz] = frenteDelBong(giro)
+  const recorrido = NUBES.velocidad * s
+  return [
+    CIUDAD.centro[0] + envolver(e.x - fx * recorrido, CIUDAD.lado),
+    CIUDAD.centro[1] + envolver(e.z - fz * recorrido, CIUDAD.lado),
+  ]
 }

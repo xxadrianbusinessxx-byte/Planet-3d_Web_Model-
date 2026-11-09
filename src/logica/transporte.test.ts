@@ -13,6 +13,9 @@ import {
   repartirNubes,
   VUELO,
   vuelo,
+  CIUDAD,
+  posicionDeEdificio,
+  repartirEdificios,
 } from './transporte'
 
 describe('bocanadaBong', () => {
@@ -95,9 +98,11 @@ describe('repartirNubes', () => {
     }
     expect(new Set(nubes.map((n) => n.color))).toEqual(new Set(['rosa', 'verde']))
   })
-  it('ninguna tapa al bong: las de adelante pasan por abajo o por arriba', () => {
+  it('ninguna tapa al bong: las de adelante pasan por abajo y todas van sobre la ciudad', () => {
     for (const n of nubes.slice(0, NUBES.detras)) expect(n.lateral).toBeLessThanOrEqual(-6)
-    for (const n of nubes.slice(NUBES.detras)) expect(Math.abs(n.altura)).toBeGreaterThanOrEqual(4.5)
+    for (const n of nubes.slice(NUBES.detras)) expect(n.altura).toBeLessThanOrEqual(-4.5)
+    // La bolita más baja (radio ≤ 1,3 × escala ≤ 2,4) no llega a la torre más alta.
+    for (const n of nubes) expect(n.altura - 1.3 * n.escala).toBeGreaterThan(CIUDAD.altura + CIUDAD.altoTorreMax)
   })
 })
 
@@ -159,5 +164,52 @@ describe('src/modelos/bongliner.glb', () => {
     const triangulos = glb.meshes.flatMap((m) => m.primitives).reduce((s, p) => s + glb.accessors[p.indices].count / 3, 0)
     expect(triangulos).toBeLessThanOrEqual(8000)
     expect(BONGLINER.escala).toBe(1)
+  })
+})
+
+describe('repartirEdificios', () => {
+  const ciudad = repartirEdificios()
+  it('misma semilla, misma ciudad; otra semilla, otra', () => {
+    expect(repartirEdificios()).toEqual(ciudad)
+    expect(repartirEdificios(1)).not.toEqual(ciudad)
+  })
+  it('una por manzana como mucho, con algunas vacías y algunas torres', () => {
+    const celdas = Math.floor(CIUDAD.lado / CIUDAD.paso) ** 2
+    expect(ciudad.length).toBeLessThan(celdas)
+    expect(ciudad.length).toBeGreaterThan(celdas * 0.7)
+    expect(ciudad.some((e) => e.punta)).toBe(true)
+    expect(ciudad.some((e) => !e.punta)).toBe(true)
+  })
+  it('caben en su manzana y en su altura', () => {
+    for (const e of ciudad) {
+      expect(Math.max(e.ancho, e.fondo)).toBeLessThan(CIUDAD.paso)
+      expect(e.alto).toBeGreaterThanOrEqual(CIUDAD.altoMin)
+      expect(e.alto).toBeLessThanOrEqual(CIUDAD.altoTorreMax)
+      expect(Math.abs(e.x)).toBeLessThanOrEqual(CIUDAD.lado / 2)
+      expect(Math.abs(e.z)).toBeLessThanOrEqual(CIUDAD.lado / 2)
+    }
+  })
+})
+
+describe('posicionDeEdificio', () => {
+  const e = repartirEdificios()[0]
+  it('un tiempo raro es el principio', () => {
+    expect(posicionDeEdificio(e, Number.NaN)).toEqual(posicionDeEdificio(e, 0))
+    expect(posicionDeEdificio(e, -2)).toEqual(posicionDeEdificio(e, 0))
+  })
+  it('nunca sale del cuadrado de la ciudad', () => {
+    for (let t = 0; t < 400; t += 3.7) {
+      const [x, z] = posicionDeEdificio(e, t)
+      expect(Math.abs(x - CIUDAD.centro[0])).toBeLessThanOrEqual(CIUDAD.lado / 2)
+      expect(Math.abs(z - CIUDAD.centro[1])).toBeLessThanOrEqual(CIUDAD.lado / 2)
+    }
+  })
+  it('avanza al revés del frente del bong, como las nubes', () => {
+    const [fx, fz] = frenteDelBong()
+    // Uno en el centro, para no cruzar el borde en un segundo.
+    const centro = { ...e, x: 0, z: 0 }
+    const a = posicionDeEdificio(centro, 1)
+    const b = posicionDeEdificio(centro, 2)
+    expect((b[0] - a[0]) * fx + (b[1] - a[1]) * fz).toBeCloseTo(-NUBES.velocidad)
   })
 })

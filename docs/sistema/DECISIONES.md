@@ -509,18 +509,24 @@ Formato:
   de la Toolbox; por eso sí entra, a diferencia de los modelos de D-34). Va **sin las texturas de
   material de Roblox**: colores lisos. (2) **Vidrio verde translúcido** con **agua azul
   radiactiva** en el bulbo (la bebida del planeta, D-10), alas y motores **plateados**, luces roja
-  y verde en las puntas. (3) **En el cielo**: turquesa de día con **nubes rosas y verdes** medio
-  transparentes (como las del planeta, D-19), con su cámara propia (D-34). (4) **Humo solo por la
+  y verde en las puntas. **Vuela acostado como avión, con la boquilla de nariz** (así lo armó: las
+  alas quedan hacia atrás y los motores debajo; el bulbo con el agua es la cola). (3) **En el
+  cielo**: turquesa de día con **nubes rosas y verdes** medio transparentes (como las del planeta,
+  D-19), con su cámara propia (D-34), y **muy abajo una ciudad colorida low-poly** (bloques pastel
+  y algunas torres con punta, por código e instanciados) que la niebla funde con el cielo. (4) **Humo solo por la
   boquilla**, en bocanadas que suben y se quedan atrás. (5) **Suave y lento**: el bong flota en el
-  cuadro (sube y baja, se ladea) y **las nubes pasan** de frente hacia atrás. (6) **Límite por
+  cuadro (sube y baja, se ladea, cabecea) y **las nubes y la ciudad pasan** de frente hacia atrás. (6) **Límite por
   vehículo: ≤ 8 000 triángulos y ≤ 150 KB** optimizado (`triangulos_vehiculo`, `peso_vehiculo_kb`;
   responde la parte de vehículo de `limites-modelo-ia`). (7) El texto de la ficha lo aprobó la
   persona. De forma, elegido por el agente: el modelo se prepara en Blender sin ventana (el
   Blender abierto lo usaba otra sesión) con el script que queda junto al modelo en
-  `datos/modelos-ia/transporte/` (su `ORIGEN.md`); 5 143 triángulos y 58,2 KB.
+  `datos/modelos-ia/transporte/` (su `ORIGEN.md`); 5 223 triángulos y 58,9 KB. Las bocanadas son
+  chicas (radio ≤ 0,85 m) y las nubes de adelante pasan por debajo del avión, lejos de la cámara:
+  con bocanadas grandes saliendo de la nariz la página bajaba a 61–63 fps.
 - **Alternativas:** hamaca voladora, platillos o un autobús; una parada en la playa o una
   carretera de arena; vidrio claro o gris como en Roblox; atardecer como Population; humo
-  también por los motores; cruzar la pantalla o volar en círculos; 5 000 o 3 000 triángulos.
+  también por los motores; cruzar la pantalla o volar en círculos; 5 000 o 3 000 triángulos; el
+  bong de pie (como salió de Roblox); el bulbo de nariz; un pueblito de playa o rascacielos abajo.
 - **Por qué:** lo decidió la persona; el modelo es suyo, cabe en el límite sin perder detalle y la
   página queda en el tope de fps.
 - **Revisar cuando:** llegue otro vehículo (el límite vale para todos) o la página necesite más
