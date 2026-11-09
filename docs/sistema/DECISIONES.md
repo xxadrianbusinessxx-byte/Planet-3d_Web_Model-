@@ -327,7 +327,7 @@ Formato:
 - **Por qué:** así se puede trabajar cada aspecto en su propia sesión sin pisar a las demás.
 - **Revisar cuando:** un aspecto necesite moverse dentro de su escena o su propia cámara.
 
-## D-27 · Cada quien entrega lo suyo; solo se junta lo que se lanza
+## D-27 · Cada quien entrega lo suyo; solo se junta lo que se lanza — **en parte reemplazada por D-31** (de quién son flora y recursos naturales)
 - 2026-11-08 · persona
 - **Decisión:** (1) Los aspectos de los continentes **pasan de F3 a F2** en `reparto.json`, para
   trabajarlos ya. (2) **El colaborador entrega sus secciones**: clima, fauna, medio ambiente,
@@ -404,6 +404,16 @@ Formato:
 - **Por qué:** lo pidió la persona para que todo se vea mejor sin modelar a mano.
 - **Revisar cuando:** la otra persona quiera usarlo (cada quien lo instala en su PC) o el addon
   pida algo de pago.
+
+## D-31 · Flora y recursos naturales pasan al colaborador (cambia D-27 en parte)
+- 2026-11-08 · persona
+- **Decisión:** Adrian suelta **flora** (The Mushroom) y **recursos-naturales** (The Diamond);
+  quedan reservadas a «colaborador» en la rama `colaborativa` (`reparto.json`). El colaborador
+  entrega clima, fauna, flora, medio ambiente, recursos naturales, trabajos y zonas de trabajo;
+  Adrian, espacial, estilo de vida, población y transporte.
+- **Alternativas:** dejarlas libres para que el colaborador las elija al entrar.
+- **Por qué:** lo pidió la persona: son para el colaborador.
+- **Revisar cuando:** se una el colaborador (poner su nombre en el reparto).
 
 ## D-32 · El cuerpo del Grinder es un modelo de Blender con esqueleto (límites de personaje)
 - 2026-11-08 · persona (límites, esqueleto, accesorios, sombreado); agente (la forma)

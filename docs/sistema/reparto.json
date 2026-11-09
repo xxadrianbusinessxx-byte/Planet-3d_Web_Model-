@@ -114,9 +114,9 @@
       "titulo": "Flora inventada",
       "fase": "F2",
       "continente": "the-mushroom",
-      "quien": "Adrian",
+      "quien": "colaborador",
       "reservada_el": "2026-11-08",
-      "rama": "main",
+      "rama": "colaborativa",
       "estado": "reservada"
     },
     {
@@ -134,9 +134,9 @@
       "titulo": "Recursos naturales",
       "fase": "F2",
       "continente": "the-diamond",
-      "quien": "Adrian",
+      "quien": "colaborador",
       "reservada_el": "2026-11-08",
-      "rama": "main",
+      "rama": "colaborativa",
       "estado": "reservada"
     },
     {
